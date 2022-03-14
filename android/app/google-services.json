@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "270206624365",
+    "project_id": "ibloov-ccf4a",
+    "storage_bucket": "ibloov-ccf4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270206624365:android:1c31e4017396b221675564",
+        "android_client_info": {
+          "package_name": "com.ibloov.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270206624365-g2hpl5e09lj1f7c1aoet3t9eeeo3dtam.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6Hl0Wd27geipT2okQ19B9du72UjBvkrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270206624365-g2hpl5e09lj1f7c1aoet3t9eeeo3dtam.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
