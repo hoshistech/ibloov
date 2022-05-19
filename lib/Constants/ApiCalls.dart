@@ -15,7 +15,7 @@ import 'Methods.dart';
 
 class ApiCalls{
 
-  static String urlMain = 'https://ibloov-auth-staging.herokuapp.com/';
+  static String urlMain = 'https://ibloov-auth-staging-868mc.ondigitalocean.app/ibloov-auth2/';
 
   static String urlSignup = urlMain + 'auth/signup';
   static String urlVerifyAccount = urlMain + 'auth/verify-account';
@@ -121,6 +121,7 @@ class ApiCalls{
       if (response.statusCode == 201) {
         Navigator.pop(context);
         var responseLogin = json.decode(await response.stream.bytesToString());
+        debugPrint("Response: $responseLogin");
 
         //pref.setBool('isLoggedIn', true);
         //pref.setString('token', responseLogin['data']['token']);
