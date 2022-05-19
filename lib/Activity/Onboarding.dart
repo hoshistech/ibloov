@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -391,10 +392,12 @@ class OnboardingState extends State<Onboarding> {
                         ),
 
                       ),
-                      Container(
+                      if(Platform.isIOS)
+                        Container(
                         height: height * 0.01,
                       ),
-                      Container(
+                      if(Platform.isIOS)
+                        Container(
                         child: Card(
                           color: Colors.transparent,
                           elevation: 3.0,

@@ -13,7 +13,7 @@ import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Activity/ShowQRCode.dart';
+// import '../Activity/ShowQRCode.dart';
 
 Position currentPosition;
 String currentAddress = 'Fetching location...';
