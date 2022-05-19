@@ -62,10 +62,13 @@ class ApiCalls{
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+
+      debugPrint("Login Response: $jsonBody");
 
       if (response.statusCode == 200) {
         Navigator.pop(context);
-        var responseLogin = json.decode(await response.stream.bytesToString());
+        var responseLogin = jsonBody;
 
         pref.setString('token', responseLogin['data']['token']);
         pref.setBool('google', false);
@@ -87,7 +90,7 @@ class ApiCalls{
       } else {
         Navigator.pop(context);
         if(response.statusCode == 400){
-          Methods.showError(json.decode(await response.stream.bytesToString())['error']);
+          Methods.showError(jsonBody['error']);
         } else
           Methods.showError(response.reasonPhrase);
       }
