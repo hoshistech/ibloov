@@ -184,7 +184,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
                         .then((token){
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => ForgetPassword(token, email)),
+                            MaterialPageRoute(builder: (context) => ForgotPasswordOtpScreen(token, email)),
                           );
                     });
                   }

@@ -60,6 +60,7 @@ dependencies:
   social_share: ^2.2.1
   webview_flutter: ^0.3.15+1
   add_2_calendar: ^2.1.2
+  sign_in_with_apple: ^4.0.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.8.0

@@ -120,11 +120,15 @@ class Methods {
   }
 
   static authGoogle(context, type) async {
-    final GoogleSignInAccount googleSignInAccount = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount googleSignInAccount = await GoogleSignIn().signIn();
 
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
-      ApiCalls.authGoogle(googleSignInAuthentication.idToken, context, type);
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+        ApiCalls.authGoogle(googleSignInAuthentication.idToken, context, type);
+      }
+    } catch(e) {
+      debugPrint("Google signAuth Error: ${e.toString()}");
     }
   }
 

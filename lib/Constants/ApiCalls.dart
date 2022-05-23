@@ -29,7 +29,7 @@ class ApiCalls{
   static String urlUserDetails = urlMain + 'user/';
   static String urlUserFollowerCount = urlMain + 'user/profile/';
   static String urlFeedback = urlMain + 'feedback';
-  static String urlEventList = urlMain + 'event/explore?long=';
+  static String urlEventList = urlMain + 'event/explore?';
   static String urlGetCategories = urlMain + 'category';
   static String urlToggleLike = urlMain + 'event/';
   static String urlEventDetails = urlMain + 'event/';
@@ -120,11 +120,13 @@ class ApiCalls{
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+      debugPrint("Signup Response: $jsonBody");
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var responseLogin = json.decode(await response.stream.bytesToString());
-        debugPrint("Response: $responseLogin");
+        var responseLogin = jsonBody;
+
 
         //pref.setBool('isLoggedIn', true);
         //pref.setString('token', responseLogin['data']['token']);
@@ -145,8 +147,8 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        if(response.statusCode == 422){
-          Methods.showError('Email has been taken');
+        if(jsonBody != null){
+          Methods.showError(jsonBody["error"]);
         } else
           Methods.showError(response.reasonPhrase);
       }
@@ -171,7 +173,7 @@ class ApiCalls{
         Navigator.pop(context);
         var responseLogin = json.decode(await response.stream.bytesToString());
 
-        print('Social: $responseLogin');
+        debugPrint('Social: $responseLogin');
 
         pref.setString('token', responseLogin['data']['token']);
         pref.setBool('google', true);
@@ -273,15 +275,17 @@ class ApiCalls{
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+      debugPrint("resetPasswordOtp: $jsonBody");
 
       if (response.statusCode == 200) {
-        var responseData = json.decode(await response.stream.bytesToString());
+        var responseData = jsonBody;
         //Methods.showError(responseData['message']);
         //Methods.showError("$responseData");
         return responseData['data'];
       }
       else {
-        Methods.showError('Can\'t get new OTP for ${response.reasonPhrase}');
+        Methods.showError('Can\'t get new OTP for ${jsonBody["error"] ?? response.reasonPhrase}');
         return null;
       }
 
@@ -305,6 +309,8 @@ class ApiCalls{
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+      debugPrint("resetPassword: $jsonBody");
 
       if (response.statusCode == 200) {
         Navigator.pop(context);
@@ -315,7 +321,7 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t set new Password for ${response.reasonPhrase}');
+        Methods.showError('Can\'t set new Password for ${jsonBody["error"] ?? response.reasonPhrase}');
       }
 
     }  on Exception catch(e) {
@@ -470,14 +476,17 @@ class ApiCalls{
     //Methods.showLoaderDialog(context);
 
     try{
-      var request = http.Request('GET', Uri.parse(urlEventList + '$longitude&lat=$latitude'));
+      var request = http.Request('GET', Uri.parse(urlEventList + 'longitude=$longitude&latitude=$latitude'));
 
       http.StreamedResponse response = await request.send();
 
-      print('Request header: $request');
+      debugPrint('Request header: $request');
+      final jsonString = await response.stream.bytesToString();
+
+      debugPrint('exploreEvent: $jsonString');
 
       if (response.statusCode == 200) {
-        var data = await response.stream.bytesToString();
+        var data = jsonString;
 
         print('Events: $data');
 
@@ -506,9 +515,12 @@ class ApiCalls{
       http.StreamedResponse response = await request.send();
 
       print('Request header: $request');
+      final jsonString = await response.stream.bytesToString();
+
+      debugPrint('eventCategories: $jsonString');
 
       if (response.statusCode == 200) {
-        return await response.stream.bytesToString();
+        return jsonString;
       }
       else {
         Methods.showError(response.reasonPhrase);
