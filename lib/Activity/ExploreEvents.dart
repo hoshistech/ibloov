@@ -31,8 +31,8 @@ class ExploreEventsState extends State<ExploreEvents> {
   bool isLoading = true, isMap = false, isMsgShown = false;
   int countEvent = 0;
   String catIndex = "0";
-  List categories = new List();
-  var data;
+  List categories = [];
+  Map<String, dynamic> eventData;
 
   List listHeader = [
     {
@@ -62,7 +62,7 @@ class ExploreEventsState extends State<ExploreEvents> {
   GoogleMapController mapController;
   final Set<Marker> _markers = {};
   bool stat = true;
-  List<double> lat = new List(), lng = new List();
+  List<double> lat = [], lng = [];
   //Position currentPosition;
   //String currentAddress;
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
@@ -98,7 +98,7 @@ class ExploreEventsState extends State<ExploreEvents> {
           .then((value){
         setState(() {
           if(value != null){
-            data = json.decode(value);
+            eventData = json.decode(value);
             isLoading = false;
           } else {
             Navigator.pop(context);
@@ -246,17 +246,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                     backMethod();
                                   },
                                   child: Padding(
-                                    child: Text(
-                                      "Back",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontFamily: 'SF_Pro_700',
-                                          fontSize: 17.0,
-                                          color: ColorList.colorBack,
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.none
-                                      ),
-                                    ),
+                                    child: Icon(Icons.arrow_back, color: ColorList.colorBack, size: 30),
                                     padding: EdgeInsets.all(0.0),
                                   )
                               ),
@@ -284,7 +274,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                   height: 25.0,
                                 ),
                                 Container(
-                                  width: 15.0,
+                                  width: 18.0,
                                 ),
                                 Text(
                                   'Explore Events',
@@ -293,7 +283,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                     fontFamily: 'SF_Pro_900',
                                     decoration: TextDecoration.none,
                                     fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w900,
                                     color: ColorList.colorPrimary,
                                   ),
                                 ),
@@ -346,7 +336,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                           ),
                         ],
                       ),
-                      padding: EdgeInsets.fromLTRB(15, 35, 15, 10),
+                      padding: EdgeInsets.fromLTRB(15, 35, 15, 5),
                     ),
                   ],
                 )
@@ -447,8 +437,8 @@ class ExploreEventsState extends State<ExploreEvents> {
     var listEvent = new List();
     var idEvents = new List();
 
-    for(int i=0; i<data['data'].length; i++){
-      var sublistEvent = data['data'][listHeader.elementAt(i)['name']];
+    for(int i=0; i<eventData['data'].length; i++){
+      var sublistEvent = eventData['data'][listHeader.elementAt(i)['name']];
       for(int j=0; j<sublistEvent.length; j++){
         if(!idEvents.contains(sublistEvent[j]['_id'])){
           listEvent.add(sublistEvent[j]);
@@ -504,15 +494,18 @@ class ExploreEventsState extends State<ExploreEvents> {
     var dataArray;
 
     if(catIndex != "0")
-      dataArray = data['data'][listHeader.elementAt(0)['name']]
+      dataArray = eventData['data'][listHeader.elementAt(0)['name']]
           .where((item) => item['category']['_id'] == catIndex).toList();
     else
-      dataArray = data['data'][listHeader.elementAt(0)['name']];
+      dataArray = eventData['data'][listHeader.elementAt(0)['name']];
+
+    debugPrint("current DataArray: $dataArray");
+    debugPrint("listHeader: ${listHeader.elementAt(0)['name']}");
 
     if(dataArray.length > 0){
       countEvent += dataArray.length;
-      List<Widget> slides = new List();
-      List<bool> saved = new List();
+      List<Widget> slides = [];
+      List<bool> saved = [];
 
       for(int item=0; item<dataArray.length; item++){
         saved.add(false);
@@ -533,21 +526,22 @@ class ExploreEventsState extends State<ExploreEvents> {
                       child: ClipRRect(
                         child: Stack(
                           children: [
-                            Container(
-                              width: width * 0.8,
-                              height: width * 0.6,
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: ColorList.colorSplashBG,
-                                    strokeWidth: 3.0,
-                                  )
-                              ),
-                              decoration: BoxDecoration(
-                                  /*border: Border.all(color: ColorList.colorSplashBG, width: 2.0),
-                                  borderRadius: BorderRadius.all(Radius.circular(10.0),),*/
-                                  color: ColorList.colorMenuItem
-                              ),
-                            ),
+                            ///TODO: figure out why this guy is constantly loading and killing resources
+                            // Container(
+                            //   width: width * 0.8,
+                            //   height: width * 0.6,
+                            //   child: Center(
+                            //       child: CircularProgressIndicator(
+                            //         color: ColorList.colorSplashBG,
+                            //         strokeWidth: 3.0,
+                            //       )
+                            //   ),
+                            //   decoration: BoxDecoration(
+                            //       /*border: Border.all(color: ColorList.colorSplashBG, width: 2.0),
+                            //       borderRadius: BorderRadius.all(Radius.circular(10.0),),*/
+                            //       color: ColorList.colorMenuItem
+                            //   ),
+                            // ),
                             Container(
                                 width: width * 0.8,
                                 height: width * 0.6,
@@ -565,203 +559,204 @@ class ExploreEventsState extends State<ExploreEvents> {
                             Container(
                                 height: width * 0.6,
                                 width: width * 0.8,
-                                child: Column(
-                                  children: [
-                                    Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          Row(
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Card(
-                                                      elevation: 0.0,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(10.0),
-                                                      ),
-                                                      child: Padding(
-                                                        child: Column(
-                                                          children: [
-                                                            Text(
-                                                              (dataArray[item]['startTime'] == null)
-                                                                  ? '01'
-                                                                  : DateFormat('dd').format(DateTime.tryParse(dataArray[item]['startTime'])),
-                                                              textAlign: TextAlign.center,
-                                                              style: TextStyle(
-                                                                fontFamily: 'SF_Pro_700',
-                                                                decoration: TextDecoration.none,
-                                                                fontSize: 20.0,
-                                                                fontWeight: FontWeight.bold,
-                                                                color: (dataArray[item]['startTime'] == null)
-                                                                    ? ColorList.colorAccent
-                                                                    : ColorList.colorPrimary,
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              (dataArray[item]['startTime'] == null)
-                                                                  ? '01'
-                                                                  : DateFormat('MMM').format(DateTime.tryParse(dataArray[item]['startTime'])),
-                                                              textAlign: TextAlign.center,
-                                                              style: TextStyle(
-                                                                fontFamily: 'SF_Pro_400',
-                                                                decoration: TextDecoration.none,
-                                                                fontSize: 14.0,
-                                                                fontWeight: FontWeight.normal,
-                                                                color: (dataArray[item]['startTime'] == null)
-                                                                    ? ColorList.colorAccent
-                                                                    : ColorList.colorPrimary,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        padding: EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 5.0),
-                                                      )
+                                              Card(
+                                                  elevation: 0.0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
                                                   ),
-                                                  Spacer(),
-                                                  /*Card(
-                                                      color: ColorList.colorPrimary,
-                                                      elevation: 0.0,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(25.0),
-                                                      ),
-                                                      child: Padding(
-                                                        child: Text(
-                                                          (dataArray[item]['noOfRegistrations'] > 99) ? '99+' : '${dataArray[item]['noOfRegistrations']}',
+                                                  child: Padding(
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          (dataArray[item]['startTime'] == null)
+                                                              ? '01'
+                                                              : DateFormat('dd').format(DateTime.tryParse(dataArray[item]['startTime'])),
                                                           textAlign: TextAlign.center,
                                                           style: TextStyle(
                                                             fontFamily: 'SF_Pro_700',
                                                             decoration: TextDecoration.none,
                                                             fontSize: 20.0,
                                                             fontWeight: FontWeight.bold,
-                                                            color: ColorList.colorAccent,
+                                                            color: (dataArray[item]['startTime'] == null)
+                                                                ? ColorList.colorAccent
+                                                                : ColorList.colorPrimary,
                                                           ),
                                                         ),
-                                                        padding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
-                                                      )
-                                                  ),*/
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: width * 0.12,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5.0),
-                                                child: Text(
-                                                  (dataArray[item]['category'] != null)
-                                                      ? dataArray[item]['category']['name']
-                                                      : '',
-                                                  textAlign: TextAlign.start,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontFamily: 'SF_Pro_400',
-                                                    decoration: TextDecoration.none,
-                                                    fontSize: 13.0,
-                                                    fontWeight: FontWeight.normal,
-                                                    color: ColorList.colorAccent,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: width * 0.012,
-                                              ),
-                                              SizedBox(
-                                                width: width * 0.8,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                                                  child: Text(
-                                                    dataArray[item]['title'],
-                                                    textAlign: TextAlign.start,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontFamily: 'SF_Pro_700',
-                                                      decoration: TextDecoration.none,
-                                                      fontSize: 22.0,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: ColorList.colorAccent,
+                                                        Text(
+                                                          (dataArray[item]['startTime'] == null)
+                                                              ? '01'
+                                                              : DateFormat('MMM').format(DateTime.tryParse(dataArray[item]['startTime'])),
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_400',
+                                                            decoration: TextDecoration.none,
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.normal,
+                                                            color: (dataArray[item]['startTime'] == null)
+                                                                ? ColorList.colorAccent
+                                                                : ColorList.colorPrimary,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
+                                                    padding: EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 5.0),
+                                                  )
+                                              ),
+                                              Spacer(),
+                                              /*Card(
+                                                  color: ColorList.colorPrimary,
+                                                  elevation: 0.0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(25.0),
                                                   ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: width * 0.012,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 5.0),
-                                                child: Text(
-                                                  '${(dataArray[item]['location'] != null && dataArray[item]['location']['name'] != null)
-                                                      ? '${dataArray[item]['location']['name']}, '
-                                                      : ''}${(dataArray[item]['location'] != null && dataArray[item]['location']['city'] != null)
-                                                          ? dataArray[item]['location']['city']
-                                                          : ''}',
-                                                  textAlign: TextAlign.start,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontFamily: 'SF_Pro_400',
-                                                    decoration: TextDecoration.none,
-                                                    fontSize: 12.0,
-                                                    fontWeight: FontWeight.normal,
-                                                    color: ColorList.colorAccent,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: width * 0.02,
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left: 5.0),
+                                                  child: Padding(
                                                     child: Text(
-                                                      Methods.getLowestPrice(dataArray[item]['tickets'], true),
+                                                      (dataArray[item]['noOfRegistrations'] > 99) ? '99+' : '${dataArray[item]['noOfRegistrations']}',
+                                                      textAlign: TextAlign.center,
                                                       style: TextStyle(
                                                         fontFamily: 'SF_Pro_700',
                                                         decoration: TextDecoration.none,
-                                                        fontSize: 16.0,
+                                                        fontSize: 20.0,
                                                         fontWeight: FontWeight.bold,
                                                         color: ColorList.colorAccent,
                                                       ),
                                                     ),
+                                                    padding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+                                                  )
+                                              ),*/
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: width * 0.05,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 5.0),
+                                            child: Text(
+                                              (dataArray[item]['category'] != null)
+                                                  ? dataArray[item]['category']['name']
+                                                  : '',
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'SF_Pro_400',
+                                                decoration: TextDecoration.none,
+                                                fontSize: 13.0,
+                                                fontWeight: FontWeight.normal,
+                                                color: ColorList.colorAccent,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: width * 0.012,
+                                          ),
+                                          SizedBox(
+                                            width: width * 0.8,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                                              child: Text(
+                                                dataArray[item]['title'],
+                                                textAlign: TextAlign.start,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontFamily: 'SF_Pro_700',
+                                                  decoration: TextDecoration.none,
+                                                  fontSize: 22.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: ColorList.colorAccent,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: width * 0.012,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 5.0),
+                                            child: Text(
+                                              // '${(dataArray[item]['location'] != null && dataArray[item]['location']['name'] != null)
+                                              //     ? '${dataArray[item]['location']['name']}, '
+                                              //     : ''}${(dataArray[item]['location'] != null && dataArray[item]['location']['city'] != null)
+                                              //         ? dataArray[item]['location']['city']
+                                              //         : ''}',
+                                              '${(dataArray[item]['location'] != null && dataArray[item]['location']['city'] != null)
+                                                  ? '${dataArray[item]['location']['city']}, '
+                                                  : ''},${(dataArray[item]['location'] != null && dataArray[item]['location']['country'] != null)
+                                                  ? dataArray[item]['location']['country']
+                                                  : ''}',
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'SF_Pro_400',
+                                                decoration: TextDecoration.none,
+                                                fontSize: 12.0,
+                                                fontWeight: FontWeight.normal,
+                                                color: ColorList.colorAccent,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: width * 0.006,
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 5.0),
+                                                child: Text(
+                                                  Methods.getLowestPrice(dataArray[item]['tickets'], true),
+                                                  style: TextStyle(
+                                                    fontFamily: 'SF_Pro_700',
+                                                    decoration: TextDecoration.none,
+                                                    fontSize: 16.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: ColorList.colorAccent,
                                                   ),
-                                                  Spacer(),
-                                                  InkWell(
-                                                    onTap: (){
-                                                      Methods.shareEvent(dataArray[item]['link']);
-                                                    },
-                                                    child: Icon(Icons.share_outlined, size: 20, color: ColorList.colorAccent,),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  InkWell(
-                                                    onTap: (){
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              InkWell(
+                                                onTap: (){
+                                                  Methods.shareEvent(dataArray[item]['link']);
+                                                },
+                                                child: Icon(Icons.share_outlined, size: 20, color: ColorList.colorAccent,),
+                                              ),
+                                              SizedBox(width: 10),
+                                              InkWell(
+                                                onTap: (){
 
+                                                  setState(() {
+                                                    dataArray[item]['userLiked'] = !dataArray[item]['userLiked'];
+                                                  });
+
+                                                  ApiCalls.toggleLike(dataArray[item]['_id'])
+                                                      .then((value){
+                                                    if(!value)
                                                       setState(() {
                                                         dataArray[item]['userLiked'] = !dataArray[item]['userLiked'];
                                                       });
-
-                                                      ApiCalls.toggleLike(dataArray[item]['_id'])
-                                                          .then((value){
-                                                        if(!value)
-                                                          setState(() {
-                                                            dataArray[item]['userLiked'] = !dataArray[item]['userLiked'];
-                                                          });
-                                                      });
-                                                    },
-                                                    child: Icon(
-                                                      (dataArray[item]['userLiked']) ? Icons.favorite : Icons.favorite_outline,
-                                                      size: 20,
-                                                      color: (dataArray[item]['userLiked']) ? ColorList.colorRed : ColorList.colorAccent,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  (dataArray[item]['userLiked']) ? Icons.favorite : Icons.favorite_outline,
+                                                  size: 20,
+                                                  color: (dataArray[item]['userLiked']) ? ColorList.colorRed : ColorList.colorAccent,
+                                                ),
+                                              ),
                                             ],
-                                          ),
-                                          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                                        )
+                                          )
+                                        ],
+                                      ),
+                                      padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                                     )
-                                  ],
                                 )
                             )
                           ],
@@ -818,7 +813,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                     onTap: (){
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => EventList(0, data['data'])
+                        MaterialPageRoute(builder: (context) => EventList(0, eventData['data'])
                         ),
                       );
                     },
@@ -850,10 +845,10 @@ class ExploreEventsState extends State<ExploreEvents> {
     var dataArray;
 
     if(catIndex != "0")
-      dataArray = data['data'][listHeader.elementAt(index)['name']]
+      dataArray = eventData['data'][listHeader.elementAt(index)['name']]
           .where((item) => item['category']['_id'] == catIndex).toList();
     else
-      dataArray = data['data'][listHeader.elementAt(index)['name']];
+      dataArray = eventData['data'][listHeader.elementAt(index)['name']];
 
     if(dataArray.length > 0){
 
@@ -899,7 +894,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                     onTap: (){
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => EventList(index, data['data'])
+                        MaterialPageRoute(builder: (context) => EventList(index, eventData['data'])
                         ),
                       );
                     },
@@ -909,9 +904,10 @@ class ExploreEventsState extends State<ExploreEvents> {
           ),
           Container(
             //padding: EdgeInsets.only(top: 15.0),
+            height: 220.0,
             child: ListView.builder(
               physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
+              // shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: (dataArray.length >= 3) ? 3 : dataArray.length,
               itemBuilder: (BuildContext context, int item) =>
@@ -931,24 +927,24 @@ class ExploreEventsState extends State<ExploreEvents> {
                               child: ClipRRect(
                                 child: Stack(
                                   children: [
-                                    Container(
-                                      width: width * 0.6,
-                                      height: width * 0.5,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: ColorList.colorSplashBG,
-                                          strokeWidth: 3.0,
-                                        )
-                                      ),
-                                      decoration: BoxDecoration(
-                                        /*border: Border.all(color: ColorList.colorSplashBG, width: 2.0),
-                                        borderRadius: BorderRadius.all(Radius.circular(10.0),),*/
-                                        color: ColorList.colorMenuItem
-                                      ),
-                                    ),
+                                    // Container(
+                                    //   width: width * 0.6,
+                                    //   height: width * 0.5,
+                                    //   child: Center(
+                                    //     child: CircularProgressIndicator(
+                                    //       color: ColorList.colorSplashBG,
+                                    //       strokeWidth: 3.0,
+                                    //     )
+                                    //   ),
+                                    //   decoration: BoxDecoration(
+                                    //     /*border: Border.all(color: ColorList.colorSplashBG, width: 2.0),
+                                    //     borderRadius: BorderRadius.all(Radius.circular(10.0),),*/
+                                    //     color: ColorList.colorMenuItem
+                                    //   ),
+                                    // ),
                                     Container(
                                         width: width * 0.6,
-                                        height: width * 0.5,
+                                        height: width * 0.8,
                                         child: Container(
                                           height: width * 0.5,
                                           color: ColorList.colorPrimary.withOpacity(0.5),
@@ -962,7 +958,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                     ),
                                     Container(
                                         width: width * 0.6,
-                                        height: width * 0.5,
+                                        height: width * 0.8,
                                         child: Column(
                                           children: [
                                             Align(
@@ -990,8 +986,8 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                                       style: TextStyle(
                                                                         fontFamily: 'SF_Pro_700',
                                                                         decoration: TextDecoration.none,
-                                                                        fontSize: 20.0,
-                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 14.0,
+                                                                        fontWeight: FontWeight.w700,
                                                                         color: (dataArray[item]['startTime'] == null)
                                                                             ? ColorList.colorAccent
                                                                             : ColorList.colorPrimary,
@@ -1005,7 +1001,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                                       style: TextStyle(
                                                                         fontFamily: 'SF_Pro_400',
                                                                         decoration: TextDecoration.none,
-                                                                        fontSize: 14.0,
+                                                                        fontSize: 12.0,
                                                                         fontWeight: FontWeight.normal,
                                                                         color: (dataArray[item]['startTime'] == null)
                                                                             ? ColorList.colorAccent
@@ -1072,7 +1068,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                               style: TextStyle(
                                                                 fontFamily: 'SF_Pro_400',
                                                                 decoration: TextDecoration.none,
-                                                                fontSize: 13.0,
+                                                                fontSize: 12.0,
                                                                 fontWeight: FontWeight.normal,
                                                                 color: ColorList.colorAccent,
                                                               ),
@@ -1081,23 +1077,20 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                         ],
                                                       ),
                                                       SizedBox(
-                                                        height: width * 0.01,
+                                                        height: width * 0.005,
                                                       ),
-                                                      SizedBox(
-                                                        width: width * 0.6,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                                                          child: Text(
-                                                            dataArray[item]['title'],
-                                                            textAlign: TextAlign.start,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style: TextStyle(
-                                                              fontFamily: 'SF_Pro_700',
-                                                              decoration: TextDecoration.none,
-                                                              fontSize: 22.0,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: ColorList.colorAccent,
-                                                            ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                                                        child: Text(
+                                                          dataArray[item]['title'],
+                                                          textAlign: TextAlign.start,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_700',
+                                                            decoration: TextDecoration.none,
+                                                            fontSize: 20.0,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: ColorList.colorAccent,
                                                           ),
                                                         ),
                                                       ),
@@ -1124,54 +1117,57 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                         ),
                                                       ),
                                                       SizedBox(
-                                                        height: width * 0.01,
+                                                        height: width * 0.05,
                                                       ),
-                                                      Row(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        children: [
-                                                          Padding(
-                                                            padding: EdgeInsets.only(left: 5.0),
-                                                            child: Text(
-                                                              Methods.getLowestPrice(dataArray[item]['tickets'], true),
-                                                              style: TextStyle(
-                                                                fontFamily: 'SF_Pro_700',
-                                                                decoration: TextDecoration.none,
-                                                                fontSize: 16.0,
-                                                                fontWeight: FontWeight.bold,
-                                                                color: ColorList.colorAccent,
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right: 8),
+                                                        child: Row(
+                                                          mainAxisSize: MainAxisSize.max,
+                                                          children: [
+                                                            Padding(
+                                                              padding: EdgeInsets.only(left: 5.0),
+                                                              child: Text(
+                                                                Methods.getLowestPrice(dataArray[item]['tickets'], true),
+                                                                style: TextStyle(
+                                                                  fontFamily: 'SF_Pro_700',
+                                                                  decoration: TextDecoration.none,
+                                                                  fontSize: 16.0,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  color: ColorList.colorAccent,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          Spacer(),
-                                                          InkWell(
-                                                            onTap: (){
-                                                              Methods.shareEvent(dataArray[item]['link']);
-                                                            },
-                                                            child: Icon(Icons.share_outlined, size: 20, color: ColorList.colorAccent,),
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                          InkWell(
-                                                            onTap: (){
-
-                                                              setState(() {
-                                                                dataArray[item]['userLiked'] = !dataArray[item]['userLiked'];
-                                                              });
-
-                                                              ApiCalls.toggleLike(dataArray[item]['_id'])
-                                                                  .then((value){
-                                                                if(!value)
-                                                                  setState(() {
-                                                                    dataArray[item]['userLiked'] = !dataArray[item]['userLiked'];
-                                                                  });
-                                                              });
-                                                            },
-                                                            child: Icon(
-                                                              (dataArray[item]['userLiked']) ? Icons.favorite : Icons.favorite_outline,
-                                                              size: 20,
-                                                              color: (dataArray[item]['userLiked']) ? ColorList.colorRed : ColorList.colorAccent,
+                                                            Spacer(),
+                                                            InkWell(
+                                                              onTap: (){
+                                                                Methods.shareEvent(dataArray[item]['link']);
+                                                              },
+                                                              child: Icon(Icons.share_outlined, size: 20, color: ColorList.colorAccent,),
                                                             ),
-                                                          ),
-                                                        ],
+                                                            SizedBox(width: 10),
+                                                            InkWell(
+                                                              onTap: (){
+
+                                                                setState(() {
+                                                                  dataArray[item]['userLiked'] = !dataArray[item]['userLiked'];
+                                                                });
+
+                                                                ApiCalls.toggleLike(dataArray[item]['_id'])
+                                                                    .then((value){
+                                                                  if(!value)
+                                                                    setState(() {
+                                                                      dataArray[item]['userLiked'] = !dataArray[item]['userLiked'];
+                                                                    });
+                                                                });
+                                                              },
+                                                              child: Icon(
+                                                                (dataArray[item]['userLiked']) ? Icons.favorite : Icons.favorite_outline,
+                                                                size: 20,
+                                                                color: (dataArray[item]['userLiked']) ? ColorList.colorRed : ColorList.colorAccent,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       )
                                                     ],
                                                   ),
@@ -1190,7 +1186,6 @@ class ExploreEventsState extends State<ExploreEvents> {
                       )
                   ),
             ),
-            height: 200.0,
           ),
         ],
       );
