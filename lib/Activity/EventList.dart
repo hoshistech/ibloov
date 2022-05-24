@@ -161,7 +161,7 @@ class EventListState extends State<EventList> {
                   Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.fromLTRB(height * 0.025, height * 0.05,
+                        padding: EdgeInsets.fromLTRB(height * 0.025, height * 0.06,
                             height * 0.025, height * 0.025),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -171,7 +171,7 @@ class EventListState extends State<EventList> {
                                 Navigator.pop(context);
                               },
                               child: Text(
-                                "Back",
+                                "Go Back",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                     fontFamily: 'SF_Pro_700',
@@ -231,10 +231,10 @@ class EventListState extends State<EventList> {
                       SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            height * 0.025, 0, height * 0.075, height * 0.025),
-                        child: Flexible(
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              height * 0.025, 0, height * 0.075, height * 0.025),
                           child: Text(
                             listOfValue.elementAt(widget.index)['details'],
                             textAlign: TextAlign.start,
