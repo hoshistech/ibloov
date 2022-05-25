@@ -947,7 +947,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                         height: width * 0.8,
                                         child: Container(
                                           height: width * 0.5,
-                                          color: ColorList.colorPrimary.withOpacity(0.5),
+                                          color: ColorList.colorPrimary.withOpacity(0.6),
                                         ),
                                       decoration: BoxDecoration(
                                         image: DecorationImage(

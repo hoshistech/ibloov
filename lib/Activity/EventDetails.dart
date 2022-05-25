@@ -105,10 +105,13 @@ class EventDetailsState extends State<EventDetails>{
                         physics: BouncingScrollPhysics(),
                         child: Column(
                           children: [
+                            // Container(
+                            //   height: MediaQuery.of(context).padding.top + 10,
+                            //   color: ColorList.colorGray,
+                            // ),
                             Container(
                                 width: double.infinity,
                                 height: height * 0.55,
-                                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10),
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
@@ -132,7 +135,7 @@ class EventDetailsState extends State<EventDetails>{
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(height * 0.02, 0, height * 0.02, 0),
+                                      padding: EdgeInsets.fromLTRB(height * 0.02, MediaQuery.of(context).padding.top + 10, height * 0.02, 0),
                                       child: Column(
                                         children: [
                                           Container(
@@ -1014,7 +1017,7 @@ class EventDetailsState extends State<EventDetails>{
                               shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(10.0),
                               ),
-                              elevation: 5.0,
+                              elevation: 3.0,
                               onPressed: (){
                                 Methods.getProfileCompleteStatus()
                                     .then((complete){

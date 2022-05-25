@@ -279,7 +279,7 @@ class Methods {
         currency = data[i]['currency']['htmlCode'];
       }
     }
-    return data.length > 0 ? "  -  ${unescape.convert(currency)}${formattedAmount(highest)}" : "";
+    return data.length > 1 ? "  -  ${unescape.convert(currency)}${formattedAmount(highest)}" : "";
   }
 
   static getCurrentUserData(context) async {
