@@ -252,7 +252,7 @@ class Methods {
       }
 
       for(int i=0; i<data.length; i++){
-        if(data[0]['price'] != null && lowest > data[i]['price']) {
+        if(data[i]['price'] != null && lowest > data[i]['price']) {
           lowest = data[i]['price'];
           currency = data[i]['currency']['htmlCode'];
         }
@@ -274,7 +274,7 @@ class Methods {
       currency = data[0]['currency']['htmlCode'];
     }
     for(int i=0; i<data.length; i++){
-      if(data[0]['price'] != null && highest < data[i]['price']) {
+      if(data[i]['price'] != null && (highest < data[i]['price'])) {
         highest = data[i]['price'];
         currency = data[i]['currency']['htmlCode'];
       }
