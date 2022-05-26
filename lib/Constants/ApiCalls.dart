@@ -22,6 +22,7 @@ class ApiCalls{
   static String urlResendOTP = urlMain + 'auth/resend-verification';
   static String urlLogin = urlMain + 'auth/login';
   static String urlGoogle = urlMain + 'auth/google';
+  static String urlApple = urlMain + 'auth/apple';
   static String urlResetPasswordOTP = urlMain + 'auth/password/forgot';
   static String urlResetPassword = urlMain + 'auth/password/reset';
   static String urlRefreshToken = urlMain + 'auth/refresh-token/';
@@ -193,6 +194,53 @@ class ApiCalls{
         Navigator.pop(context);
         var data = await response.stream.bytesToString();
         print('Login error: $data');
+        if(response.statusCode == 400){
+          Methods.showError(json.decode(data)['error']);
+        } else
+          Methods.showError(response.reasonPhrase);
+      }
+    } on Exception catch(e) {
+      Navigator.pop(context);
+      print('Login exception: $e');
+      Methods.showError('$e');
+    }
+  }
+
+  static authApple(token, context, type) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    Methods.showLoaderDialog(context);
+
+    try {
+      var request = http.Request('POST', Uri.parse(urlApple));
+      request.body = json.encode({"token": token});
+      request.headers.addAll(headersJSON);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        Navigator.pop(context);
+        var responseLogin = json.decode(await response.stream.bytesToString());
+
+        debugPrint('Apple Social: $responseLogin');
+
+        pref.setString('token', responseLogin['data']['token']);
+        pref.setBool('apple', true);
+        Methods.saveUserData(pref, responseLogin['data']['user']);
+
+        if(responseLogin['message'].toString().toLowerCase().contains('login'))
+          Methods.showToast(responseLogin['message']);
+
+        Navigator.pushReplacement(
+            context,
+            (responseLogin['message'].toString().toLowerCase().contains('login'))
+                ? MaterialPageRoute(builder: (context) => Home())
+                : MaterialPageRoute(builder: (context) => SelectInterest('Reg', null, null, null))
+        );
+
+      } else {
+        Navigator.pop(context);
+        var data = await response.stream.bytesToString();
+        debugPrint('Login error: $data');
         if(response.statusCode == 400){
           Methods.showError(json.decode(data)['error']);
         } else

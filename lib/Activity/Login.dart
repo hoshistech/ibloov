@@ -381,8 +381,8 @@ class LoginState extends State<Login>{
                             ),
                             child: InkWell(
                               onTap: (){
-                                Methods.showComingSoon();
-                                //Methods.showToast("Continue with Apple");
+                                // Methods.showComingSoon();
+                                Methods.authApple(context, 'login');
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(15.0),

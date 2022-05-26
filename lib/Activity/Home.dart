@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class _HomeState extends State<Home> {
           onWillPop: onWillPop
         ),
         bottomNavigationBar: CurvedNavigationBar(
-          height: 55,
+          height: Platform.isIOS ? 60 : 56,
           animationDuration: Duration(milliseconds: 500),
           buttonBackgroundColor: ColorList.colorSplashBG, //button bg
           backgroundColor: ColorList.colorPrimary.withOpacity(0.1), //nav selected top

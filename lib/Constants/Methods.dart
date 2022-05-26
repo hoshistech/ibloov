@@ -17,6 +17,7 @@ import 'package:ibloov/Activity/Login.dart';
 import 'package:ibloov/Activity/SearchResult.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:social_share/social_share.dart';
 
@@ -129,6 +130,25 @@ class Methods {
       }
     } catch(e) {
       debugPrint("Google signAuth Error: ${e.toString()}");
+    }
+  }
+
+  static authApple(context, type) async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      debugPrint("$credential");
+      ApiCalls.authApple(credential.authorizationCode, context, type);
+
+      // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+      // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+    } catch(e) {
+      debugPrint("Apple signAuth Error: ${e.toString()}");
     }
   }
 

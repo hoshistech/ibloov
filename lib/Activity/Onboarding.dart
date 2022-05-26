@@ -414,8 +414,8 @@ class OnboardingState extends State<Onboarding> {
                                 ),
                                 child: InkWell(
                                   onTap: (){
-                                    Methods.showComingSoon();
-                                    //Methods.showToast("Sign up with Apple");
+                                    // Methods.showComingSoon();
+                                    Methods.authApple(context, 'signup');
                                   },
                                   child: Padding(
                                     padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),

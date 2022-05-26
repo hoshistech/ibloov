@@ -14,19 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "270206624365-0rgibj4rs6apt9chb45t703e83s65hjq.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ibloov.app",
-            "certificate_hash": "0a192c98f4c890686db9488d69925da550b894b0"
-          }
-        },
-        {
-          "client_id": "270206624365-b2751h7p8kp05joceglqj8kb89es0j18.apps.googleusercontent.com",
+          "client_id": "270206624365-49pgd92e37j3a6tlu7ot0ttc681t0bev.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ibloov.app",
             "certificate_hash": "2d26bfad5543b920265f19f530f2b0e2f4b1d6c5"
+          }
+        },
+        {
+          "client_id": "270206624365-tqku4vod0c1bl9t5u9sin5qmgk3i50n1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibloov.app",
+            "certificate_hash": "166fc611e2d21cabe018861a3003f267a9cfb96e"
           }
         },
         {
