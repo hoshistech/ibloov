@@ -140,7 +140,7 @@ class _TicketQRCodeState extends State<TicketQRCode> {
                         height: (!widget.purchase) ? height * 0.75 : height * 0.8,
                         child: ListView.builder(
                           physics: ClampingScrollPhysics(),
-                          shrinkWrap: true,
+                          // shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemCount: tickets.length,
                           itemBuilder: (BuildContext context, int item) =>
@@ -163,93 +163,104 @@ class _TicketQRCodeState extends State<TicketQRCode> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(top: height * 0.02),
-                                              child: Container(
-                                                width: height * 0.15,
-                                                height: height * 0.15,
-                                                decoration: BoxDecoration(color: ColorList.colorAccent),
-                                                child: Image.memory(base64Decode(tickets[item]['qrcode'].split(',')[1]))
+                                            Center(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(top: height * 0.02),
+                                                child: Container(
+                                                  width: height * 0.15,
+                                                  height: height * 0.15,
+                                                  decoration: BoxDecoration(color: ColorList.colorAccent),
+                                                  child: Image.memory(base64Decode(tickets[item]['qrcode'].split(',')[1]))
+                                                ),
                                               ),
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(vertical: height * 0.02),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(vertical: height * 0.02, horizontal: 15),
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                 children: [
-                                                  Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        "Order ID",
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF_Pro_600',
-                                                          fontSize: 14.0,
-                                                          fontWeight: FontWeight.normal,
-                                                          color: ColorList.colorGray
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "Order ID",
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_600',
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.normal,
+                                                            color: ColorList.colorGray
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        tickets[item]['orderRef'],
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF_Pro_900',
-                                                          fontSize: 14.0,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: ColorList.colorPrimary
-                                                        ),
-                                                      )
-                                                    ],
+                                                        Text(
+                                                          tickets[item]['orderRef'],
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_900',
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: ColorList.colorPrimary
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        "Ticket Type",
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF_Pro_600',
-                                                          fontSize: 14.0,
-                                                          fontWeight: FontWeight.normal,
-                                                          color: ColorList.colorGray
+                                                  const SizedBox(width: 10),
+                                                  Expanded(
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "Ticket Type",
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_600',
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.normal,
+                                                            color: ColorList.colorGray
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        Methods.allWordsCapitalize(tickets[item]['ticket']['type']),
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF_Pro_900',
-                                                          fontSize: 14.0,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: ColorList.colorPrimary
-                                                        ),
-                                                      )
-                                                    ],
+                                                        Text(
+                                                          Methods.allWordsCapitalize(tickets[item]['ticket']['type']),
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_900',
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: ColorList.colorPrimary
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        "Status",
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF_Pro_600',
-                                                          fontSize: 14.0,
-                                                          fontWeight: FontWeight.normal,
-                                                          color: ColorList.colorGray
+                                                  Expanded(
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "Status",
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_600',
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.normal,
+                                                            color: ColorList.colorGray
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        Methods.allWordsCapitalize(tickets[item]['status'].replaceAll('_', ' ')),
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF_Pro_900',
-                                                          fontSize: 14.0,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: ColorList.colorPrimary
-                                                        ),
-                                                      )
-                                                    ],
+                                                        Text(
+                                                          Methods.allWordsCapitalize(tickets[item]['status'].replaceAll('_', ' ')),
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF_Pro_900',
+                                                            fontSize: 14.0,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: ColorList.colorPrimary
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   )
                                                 ],
                                               ),
