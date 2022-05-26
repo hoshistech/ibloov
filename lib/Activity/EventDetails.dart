@@ -115,7 +115,7 @@ class EventDetailsState extends State<EventDetails>{
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: isLoading ? '' : Methods.getImage(data['banner'], 'placeholder'),
+                                    image: isLoading ? '' : Methods.getImage(data != null ? data['banner'] : 'placeholder', 'placeholder'),
                                   ),
                                 ),
                                 child: Stack(
@@ -945,7 +945,7 @@ class EventDetailsState extends State<EventDetails>{
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 70,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: ColorList.colorAccent,
                       boxShadow: [
@@ -1033,7 +1033,6 @@ class EventDetailsState extends State<EventDetails>{
                                     }
                                   });
                                 });
-
                               },
                               child: Text(
                                 'Buy tickets',
@@ -1051,7 +1050,7 @@ class EventDetailsState extends State<EventDetails>{
                         ),
                       ],
                     ),
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.fromLTRB(14.0, 10, 14, 15),
                   ),
                 )
               ],

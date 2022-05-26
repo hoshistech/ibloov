@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "270206624365-0rgibj4rs6apt9chb45t703e83s65hjq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibloov.app",
+            "certificate_hash": "0a192c98f4c890686db9488d69925da550b894b0"
+          }
+        },
+        {
+          "client_id": "270206624365-b2751h7p8kp05joceglqj8kb89es0j18.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibloov.app",
+            "certificate_hash": "2d26bfad5543b920265f19f530f2b0e2f4b1d6c5"
+          }
+        },
+        {
           "client_id": "270206624365-g2hpl5e09lj1f7c1aoet3t9eeeo3dtam.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +45,13 @@
             {
               "client_id": "270206624365-g2hpl5e09lj1f7c1aoet3t9eeeo3dtam.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "270206624365-6v3hbi1a5550gn17r9b5ff9obpvbqqn6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.events.ibloov.dev"
+              }
             }
           ]
         }

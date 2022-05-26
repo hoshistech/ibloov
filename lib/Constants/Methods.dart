@@ -167,7 +167,7 @@ class Methods {
   }
 
   static getImage(url, String placeholder) {
-    if(url == null)
+    if(url == null || url == '')
       return AssetImage('assets/images/$placeholder.png');
     else
       return NetworkImage(url);
