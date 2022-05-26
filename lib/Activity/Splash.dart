@@ -85,7 +85,9 @@ class SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    startSplashScreenTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      startSplashScreenTimer();
+    });
 
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;

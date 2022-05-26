@@ -53,14 +53,16 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    body = HomeWidget();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      body = HomeWidget();
 
-    Methods.getProfileCompleteStatus()
-        .then((complete){
-      setState(() {
-        if(!complete){
-          Methods.showCompleteDialog(context, height, width, false);
-        }
+      Methods.getProfileCompleteStatus()
+          .then((complete){
+        setState(() {
+          if(!complete){
+            Methods.showCompleteDialog(context, height, width, false);
+          }
+        });
       });
     });
   }

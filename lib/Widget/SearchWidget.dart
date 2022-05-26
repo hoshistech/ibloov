@@ -24,10 +24,16 @@ class SearchWidgetState extends State<SearchWidget>{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     getCategories();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;

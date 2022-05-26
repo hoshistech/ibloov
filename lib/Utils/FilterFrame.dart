@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:ibloov/Activity/SelectLocation.dart';
 
-import 'package:ibloov/Activity/TicketPurchasedSuccess.dart';
-
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
-import 'package:ibloov/Widget/HomeWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FilterFrame extends StatefulWidget{
@@ -397,7 +395,7 @@ class FilterFrameState extends State<FilterFrame>{
 
   _getAddressFromLatLng() async {
     try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+      List<Placemark> p = await placemarkFromCoordinates(
           Methods.currentPosition.latitude, Methods.currentPosition.longitude);
 
       Placemark place = p[0];
@@ -417,7 +415,7 @@ class FilterFrameState extends State<FilterFrame>{
 
   Future<void> getPref(stat) async {
     prefs = await SharedPreferences.getInstance();
-    Methods.currentPosition = new Position(latitude: prefs.getDouble('latitude'), longitude: prefs.getDouble('longitude'));
+    Methods.currentPosition = Position(latitude: prefs.getDouble('latitude'), longitude: prefs.getDouble('longitude'));
     Methods.currentAddress = prefs.getString('Methods.currentAddress');
 
     if(stat)

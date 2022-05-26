@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
+import 'package:ibloov/Constants/Methods.dart';
 
 import 'Signup.dart';
 import 'SignupSuccess.dart';
@@ -16,12 +18,9 @@ class EnableLocation extends StatefulWidget {
 }
 
 class EnableLocationState extends State<EnableLocation> {
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
   _getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
+    Methods.determinePosition().then((Position position) {
       setState(() {
         _currentPosition = position;
       });
@@ -34,7 +33,7 @@ class EnableLocationState extends State<EnableLocation> {
 
   _getAddressFromLatLng() async {
     try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+      List<Placemark> p = await placemarkFromCoordinates(
           _currentPosition.latitude, _currentPosition.longitude);
 
       Placemark place = p[0];

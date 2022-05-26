@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ibloov/Constants/ApiCalls.dart';
@@ -65,7 +66,6 @@ class ExploreEventsState extends State<ExploreEvents> {
   List<double> lat = [], lng = [];
   //Position currentPosition;
   //String currentAddress;
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
   @override
   void initState() {
@@ -129,7 +129,7 @@ class ExploreEventsState extends State<ExploreEvents> {
 
   _getAddressFromLatLng() async {
     try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+      List<Placemark> p = await placemarkFromCoordinates(
           widget.currentPosition.latitude, widget.currentPosition.longitude);
 
       Placemark place = p[0];
