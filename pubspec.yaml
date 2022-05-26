@@ -58,7 +58,7 @@ dependencies:
   google_sign_in: ^5.2.1
   url_launcher: ^6.0.18
   social_share: ^2.2.1
-  webview_flutter: ^0.3.15+1
+  webview_flutter: ^3.0.4
   add_2_calendar: ^2.1.2
   sign_in_with_apple: ^4.0.0
 

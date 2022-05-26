@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ibloov/Activity/Home.dart';
 import 'package:ibloov/Constants/ApiCalls.dart';
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
@@ -12,6 +13,9 @@ import 'package:intl/intl.dart';
 import 'TicketQRCode.dart';
 
 class MyTickets extends StatefulWidget{
+  bool fromPaystackCheckout;
+  MyTickets({this.fromPaystackCheckout = false});
+
   @override
   MyTicketsState createState () => MyTicketsState();
 }
@@ -82,7 +86,14 @@ class MyTicketsState extends State<MyTickets>{
                 flexibleSpace: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).requestFocus(new FocusNode());
-                    Navigator.pop(context);
+                    if(widget.fromPaystackCheckout) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home())
+                      );
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
                   child: Container(
                     alignment: Alignment.centerLeft,

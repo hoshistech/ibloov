@@ -32,6 +32,7 @@ class _SelectTicketState extends State<SelectTicket> {
   var colorsBlend = [Colors.blue, Colors.red, Colors.green];
   var ticket = [], user = {};
   var unescape = HtmlUnescape();
+  int totalTickets = 0;
 
   FestEvents event;
 
@@ -42,12 +43,11 @@ class _SelectTicketState extends State<SelectTicket> {
     organiser = widget.organiser;
     event = widget.event;
 
-    ApiCalls.fetchEventTickets(context, festId)
-        .then((value){
+    ApiCalls.fetchEventTickets(context, festId).then((value) {
       setState(() {
-        if(value != null){
+        if (value != null) {
           data = json.decode(value)['data'];
-          for(int i=0; i<data.length; i++){
+          for (int i = 0; i < data.length; i++) {
             ticket.add([data[i]['_id'], data[i]['name'], 0]);
           }
         } else {
@@ -69,14 +69,13 @@ class _SelectTicketState extends State<SelectTicket> {
       height = 2.15 * height;
     }
 
-    Methods.getCurrentUserData(context)
-        .then((value){
+    Methods.getCurrentUserData(context).then((value) {
       setState(() {
         user = value;
       });
     });
 
-    if(data != null){
+    if (data != null) {
       return Scaffold(
         body: Container(
           child: SingleChildScrollView(
@@ -125,32 +124,36 @@ class _SelectTicketState extends State<SelectTicket> {
                   padding: const EdgeInsets.only(left: 20.0, top: 10),
                   child: Container(
                       child: Text(
-                        festName,
-                        style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
-                      )),
+                    festName,
+                    style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
+                  )),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, top: 10),
                   child: Container(
                       child: Text(
-                        event.day.toString() +
-                            ", " + event.date +
-                            " " + event.month +
-                            " " + event.year +
-                            "\t\t" + event.time,
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[500]),
-                      )),
+                    event.day.toString() +
+                        ", " +
+                        event.date +
+                        " " +
+                        event.month +
+                        " " +
+                        event.year +
+                        "\t\t" +
+                        event.time,
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[500]),
+                  )),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, top: 20),
                   child: Container(
                       child: Text(
-                        "Tickets",
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                      )),
+                    "Tickets",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 20.0, bottom: height * 0.11),
@@ -158,101 +161,102 @@ class _SelectTicketState extends State<SelectTicket> {
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: data.length,
-                    itemBuilder: (BuildContext context, int item) =>
-                        Row(
-                          children: [
-                            Container(
-                              height: height * 0.075,
-                            ),
-                            Container(
-                              width: width * 0.10,
-                              height: width * 0.10,
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: colors[item % 3]),
-                              child: Image(
-                                  image: AssetImage("assets/images/ticket.png"),
-                                  color: colorsBlend[item % 3],
-                                  colorBlendMode: BlendMode.srcIn,
-                                  fit: BoxFit.cover
+                    itemBuilder: (BuildContext context, int item) => Row(
+                      children: [
+                        Container(
+                          height: height * 0.075,
+                        ),
+                        Container(
+                          width: width * 0.10,
+                          height: width * 0.10,
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: colors[item % 3]),
+                          child: Image(
+                              image: AssetImage("assets/images/ticket.png"),
+                              color: colorsBlend[item % 3],
+                              colorBlendMode: BlendMode.srcIn,
+                              fit: BoxFit.cover),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data[item]['name'],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[800]),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    data[item]['name'],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[800]),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
+                              Row(
+                                mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        '${unescape.convert(data[item]['currency']['htmlCode'])}${Methods.formattedAmount(data[item]['price'])}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[700]),
-                                      ),
-                                      Text(
-                                        " per person",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[400]),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: EdgeInsets.only(left: 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: CircleBorder(),
-                                          shadowColor: Colors.black,
-                                          primary: Colors.white,
-                                          onPrimary: Colors.grey),
-                                      onPressed: () {
-                                        setState(() {
-                                          if (ticket[item][2] > 0)
-                                            ticket[item][2]--;
-                                        });
-                                      },
-                                      child: Text("-", style: TextStyle(color: Colors.black))),
                                   Text(
-                                    ticket[item][2].toString(),
+                                    '${unescape.convert(data[item]['currency']['htmlCode'])}${Methods.formattedAmount(data[item]['price'])}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey[700]),
                                   ),
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: CircleBorder(),
-                                          shadowColor: Colors.black,
-                                          primary: Colors.white,
-                                          onPrimary: Colors.grey),
-                                      onPressed: () {
-                                        setState(() {
-                                          ticket[item][2]++;
-                                        });
-                                      },
-                                      child: Text("+", style: TextStyle(color: Colors.black)))
+                                  Text(
+                                    " per person",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[400]),
+                                  ),
                                 ],
-                              ),
-                            ),
-                          ],
+                              )
+                            ],
+                          ),
                         ),
+                        Spacer(),
+                        Padding(
+                          padding: EdgeInsets.only(left: 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: CircleBorder(),
+                                      shadowColor: Colors.black,
+                                      primary: Colors.white,
+                                      onPrimary: Colors.grey),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (ticket[item][2] > 0)
+                                        ticket[item][2]--;
+                                      totalTickets = ticket[item][2];
+                                    });
+                                  },
+                                  child: Text("-",
+                                      style: TextStyle(color: Colors.black))),
+                              Text(
+                                ticket[item][2].toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[700]),
+                              ),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: CircleBorder(),
+                                      shadowColor: Colors.black,
+                                      primary: Colors.white,
+                                      onPrimary: Colors.grey),
+                                  onPressed: () {
+                                    setState(() {
+                                      ticket[item][2]++;
+                                      totalTickets = ticket[item][2];
+                                    });
+                                  },
+                                  child: Text("+",
+                                      style: TextStyle(color: Colors.black)))
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -290,9 +294,9 @@ class _SelectTicketState extends State<SelectTicket> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      Text("  "),
+                      Text(" $totalTickets for "),
                       Text(
-                        "${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}",
+                        "${Methods.getLowestPrice(data, false, multiplier: totalTickets == 0 ? 1 : totalTickets)}${Methods.getHighestPrice(data, multiplier: totalTickets == 0 ? 1 : totalTickets)}",
                         style: TextStyle(
                             fontFamily: 'SF_Pro_700',
                             color: Colors.grey[700],
@@ -301,11 +305,13 @@ class _SelectTicketState extends State<SelectTicket> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 5,),
-                  Text(
-                    "Get ticket now on early bird",
-                    style: TextStyle(fontSize: 11),
-                  )
+                  SizedBox(
+                    height: 5,
+                  ),
+                  // Text(
+                  //   "Get ticket now on early bird",
+                  //   style: TextStyle(fontSize: 11),
+                  // )
                 ],
               ),
               MaterialButton(
@@ -313,9 +319,9 @@ class _SelectTicketState extends State<SelectTicket> {
                   var extraTicketNumber = 0;
                   List _tickets = [];
 
-                  for(int i=0; i<data.length; i++){
+                  for (int i = 0; i < data.length; i++) {
                     extraTicketNumber += ticket[i][2];
-                    if(ticket[i][2] > 0){
+                    if (ticket[i][2] > 0) {
                       var ticketData = {};
                       ticketData['id'] = "${ticket[i][0]}";
                       ticketData['name'] = "${ticket[i][1]}";
@@ -328,26 +334,17 @@ class _SelectTicketState extends State<SelectTicket> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ExtraTicketRegistration(
-                                    festId,
-                                    festName,
-                                    extraTicketNumber,
-                                    _tickets,
-                                    event,
-                                    "${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}"
-                                )
-                        )
-                    );
+                            builder: (context) => ExtraTicketRegistration(
+                                festId,
+                                festName,
+                                extraTicketNumber,
+                                _tickets,
+                                event,
+                                "${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}")));
                   } else if (extraTicketNumber > 0) {
                     List userData = [];
                     userData.add(user);
-                    PaymentFrame(
-                        context,
-                        _tickets,
-                        event,
-                        userData
-                    );
+                    PaymentFrame(context, _tickets, event, userData);
                   } else if (extraTicketNumber == 0) {
                     Methods.showError('Please select a ticket!');
                   }
@@ -376,7 +373,9 @@ class _SelectTicketState extends State<SelectTicket> {
         ),
       );
     } else {
-      return Container(color: ColorList.colorAccent,);
+      return Container(
+        color: ColorList.colorAccent,
+      );
     }
   }
 }

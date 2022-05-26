@@ -238,7 +238,7 @@ class Methods {
     return _selectedPosition;
   }
 
-  static getLowestPrice(data, free) {
+  static getLowestPrice(data, free, {int multiplier = 1}) {
     int lowest = 0;
     String currency = '';
 
@@ -259,10 +259,10 @@ class Methods {
       }
     }
     //return (lowest == 0 && free) ? 'Free' : "${unescape.convert(currency)}${formattedAmount(lowest)}";
-    return "${unescape.convert(currency)}${formattedAmount(lowest)}";
+    return "${unescape.convert(currency)}${formattedAmount(lowest * multiplier)}";
   }
 
-  static getHighestPrice(data) {
+  static getHighestPrice(data, {int multiplier = 1}) {
     int highest = 0;
     String currency;
 
@@ -279,7 +279,7 @@ class Methods {
         currency = data[i]['currency']['htmlCode'];
       }
     }
-    return data.length > 1 ? "  -  ${unescape.convert(currency)}${formattedAmount(highest)}" : "";
+    return data.length > 1 ? "  -  ${unescape.convert(currency)}${formattedAmount(highest * multiplier)}" : "";
   }
 
   static getCurrentUserData(context) async {

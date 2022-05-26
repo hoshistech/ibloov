@@ -250,18 +250,18 @@ class _MultipleDatesOptionsState extends State<MultipleDatesOptions> {
       itemBuilder: (BuildContext context, int index) {
         return InkWell(
           onTap: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder:(context) =>
-            //             SelectTicket(
-            //                 events[index].id,
-            //                 festName,
-            //                 organiser,
-            //                 events[index]
-            //             )
-            //     )
-            // );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder:(context) =>
+                        SelectTicket(
+                            events[index].id,
+                            festName,
+                            organiser,
+                            events[index]
+                        )
+                )
+            );
           },
           child: ClipPath(
             clipper:

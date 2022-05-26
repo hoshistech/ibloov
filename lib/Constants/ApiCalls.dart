@@ -699,6 +699,8 @@ class ApiCalls{
       request.headers.addAll(headers);
       request.body = jsonEncode(data);
 
+      debugPrint("createOrderRequest: ${request.body}");
+
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 201) {
