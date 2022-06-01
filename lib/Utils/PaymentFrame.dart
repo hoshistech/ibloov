@@ -46,16 +46,16 @@ class PaymentFrame {
     ApiCalls.createOrder(context, jsonObject).then((value) {
       if (value != null) {
         responseOrder = json.decode(value)['data'];
-        debugPrint('Create Order Data: ${responseOrder['currency']}');
         getCost();
-        if (responseOrder['price'] > 0) {
+        if (responseOrder['price'] != null && responseOrder['price'] > 0) {
           // slideSheet();
-          //goto PayStack payment link
+          debugPrint("goingToPayStackLink");
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => PaymentCheckout(responseOrder['paymentLink'])));
-        } else
+        } else {
+          debugPrint("creatingFreeOrders");
           ApiCalls.createFreeOrder(context, responseOrder['_id']).then((value) {
             if (value != null) {
               print(json.decode(value)['data']);
@@ -66,6 +66,7 @@ class PaymentFrame {
                           json.encode(json.decode(value)['data']))));
             }
           });
+        }
       }
     });
   }

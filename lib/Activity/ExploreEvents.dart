@@ -552,7 +552,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: Methods.getImage(dataArray[item]['banner'], 'placeholder'),
+                                    image: Methods.getSmallEventCardImage(dataArray[item]['banner']),
                                   ),
                                 )
                             ),
@@ -952,7 +952,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: Methods.getImage(dataArray[item]['banner'], 'placeholder'),
+                                          image: Methods.getSmallEventCardImage(dataArray[item]['banner']),
                                         ),
                                       )
                                     ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +116,7 @@ class EventDetailsState extends State<EventDetails>{
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: isLoading ? '' : Methods.getImage(data != null ? data['banner'] : 'placeholder', 'placeholder'),
+                                    image: isLoading ? '' : Methods.getLargeEventCardImage(data['banner']),
                                   ),
                                 ),
                                 child: Stack(
@@ -945,7 +946,7 @@ class EventDetailsState extends State<EventDetails>{
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 100,
+                    height: Platform.isIOS ? 100 : 70,
                     decoration: BoxDecoration(
                       color: ColorList.colorAccent,
                       boxShadow: [
@@ -1050,7 +1051,7 @@ class EventDetailsState extends State<EventDetails>{
                         ),
                       ],
                     ),
-                    padding: EdgeInsets.fromLTRB(14.0, 10, 14, 15),
+                    padding: EdgeInsets.fromLTRB(14.0, 10, 14, Platform.isIOS ? 15: 5),
                   ),
                 )
               ],
@@ -1146,6 +1147,7 @@ class EventDetailsState extends State<EventDetails>{
     var tickets = data['tickets'];
     // debugPrint("Last ticket: ${tickets[tickets.length - 1]['salesEnd']}");
     debugPrint("ticket length: ${tickets.length}");
+    debugPrint("tickets: ${data["_id"]}");
 
     return (tickets.length > 0 && tickets[tickets.length - 1]['salesEnd'] != null)
         ? DateFormat('dd MMM yyyy').format(DateTime.tryParse(tickets[tickets.length - 1]['salesEnd']))

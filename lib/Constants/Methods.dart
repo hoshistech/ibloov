@@ -192,8 +192,8 @@ class Methods {
         ],
       );
 
-      debugPrint("$credential");
-      ApiCalls.authApple(credential.authorizationCode, context, type);
+      debugPrint("Credential: ${credential.authorizationCode}");
+      ApiCalls.authApple(credential.identityToken, context, type);
 
       // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
       // after they have been validated with Apple (see `Integration` section for more information on how to do this)
@@ -239,6 +239,20 @@ class Methods {
   static getImage(url, String placeholder) {
     if(url == null || url == '')
       return AssetImage('assets/images/$placeholder.png');
+    else
+      return NetworkImage(url);
+  }
+
+  static getSmallEventCardImage(url) {
+    if(url == null || url == '')
+      return AssetImage('assets/images/event_small.png');
+    else
+      return NetworkImage(url);
+  }
+
+  static getLargeEventCardImage(url) {
+    if(url == null || url == '')
+      return AssetImage('assets/images/event_large.png');
     else
       return NetworkImage(url);
   }
@@ -364,6 +378,10 @@ class Methods {
 
   static formattedAmount(amount) {
     final value = new NumberFormat("#,##0", "en_US");
+    debugPrint("amount to format: $amount");
+    if(amount == null) {
+      return "0";
+    }
     return value.format(amount);
   }
 

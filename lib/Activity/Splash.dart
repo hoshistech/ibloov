@@ -29,33 +29,32 @@ class SplashState extends State<Splash> {
     });
   }
 
-  getToken(){
+  getToken(BuildContext context) {
     isLoggedIn
-        ? ApiCalls.refreshToken(context)
-              .then((value){
-                if(value)
-                  navigationToNextPage();
-              })
+        ? ApiCalls.refreshToken(context).then((value) {
+            if (value) navigationToNextPage();
+          })
         : navigationToNextPage();
-
   }
 
   void navigationToNextPage() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-          builder: (context) => isLoggedIn ? Home() : Onboarding()
-      ),
+          builder: (context) => isLoggedIn ? Home() : Onboarding()),
     );
   }
 
-  startSplashScreenTimer() async {
-
+  startSplashScreenTimer(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-    var _duration = new Duration(seconds: 3);
-    return new Timer(_duration, getToken);
+    var _duration = Duration(seconds: 3);
+
+    Future.delayed(Duration(seconds: 3), () {
+      getToken(context);
+    });
+    // return new Timer(_duration, getToken(context));
   }
 
   String getVersion() {
@@ -74,99 +73,96 @@ class SplashState extends State<Splash> {
       systemNavigationBarColor: Colors.transparent,
     );
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-
   }
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      startSplashScreenTimer();
+      startSplashScreenTimer(context);
     });
 
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: WillPopScope(
-        child: Stack(
-          children: [
-            FutureBuilder(
-              future: Methods.initializeFirebase(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  print('Error initializing Firebase!');
-                } else {
-                  print('Firebase initialized successfully!');
-                }
-                return Container();
-              },
+        body: WillPopScope(
+      child: Stack(
+        children: [
+          FutureBuilder(
+            future: Methods.initializeFirebase(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print('Error initializing Firebase!');
+              } else {
+                print('Firebase initialized successfully!');
+              }
+              return Container();
+            },
+          ),
+          Container(
+            constraints: BoxConstraints.expand(),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/splash.png'),
+                fit: BoxFit.cover,
+              ),
             ),
-            Container(
-              constraints: BoxConstraints.expand(),
+            child: Center(
+                child: Container(
+              width: width / 2.5,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/splash.png'),
-                  fit: BoxFit.cover,
+                  image: AssetImage('assets/images/logo.png'),
                 ),
               ),
-              child: Center(
-                  child: Container(
-                    width: width/2.5,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/logo.png'),
-                      ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: width / 3.5,
+                  ),
+                  Text(
+                    'Fun awaits you!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'SF_Pro_700',
+                      decoration: TextDecoration.none,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: width/3.5,
-                        ),
-                        Text(
-                          'Fun awaits you!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'SF_Pro_700',
-                            decoration: TextDecoration.none,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                  ),
+                ],
+              ),
+            )),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Container(
+                child: Text(getVersion(),
+                    style: TextStyle(
+                        fontFamily: 'SF_Pro_600',
+                        decoration: TextDecoration.none,
+                        fontSize: 12.0,
+                        color: Colors.white)),
+                color: Colors.transparent,
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Container(
-                  child: Text(getVersion(),
-                      style: TextStyle(
-                          fontFamily: 'SF_Pro_600',
-                          decoration: TextDecoration.none,
-                          fontSize: 12.0,
-                          color: Colors.white
-                      )),
-                  color: Colors.transparent,
-                ),
-              ),
-            )
-          ],
-        ),
-        onWillPop: () {
-          return Future.value(false);
-        },
-      )
-    );
+          )
+        ],
+      ),
+      onWillPop: () {
+        return Future.value(false);
+      },
+    ));
   }
 }

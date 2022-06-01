@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
         extendBody: true,
         body: WillPopScope(
-          child: body,
+          child: body ?? SizedBox(),
           onWillPop: onWillPop
         ),
         bottomNavigationBar: CurvedNavigationBar(

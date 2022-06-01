@@ -215,13 +215,15 @@ class ApiCalls{
       request.body = json.encode({"token": token});
       request.headers.addAll(headersJSON);
 
+      debugPrint('AppleSocialRequest: ${request.body}');
+
       http.StreamedResponse response = await request.send();
+      final jsonResponse = json.decode(await response.stream.bytesToString());
+      debugPrint('AppleSocialResponse: $jsonResponse');
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         Navigator.pop(context);
-        var responseLogin = json.decode(await response.stream.bytesToString());
-
-        debugPrint('Apple Social: $responseLogin');
+        var responseLogin = jsonResponse;
 
         pref.setString('token', responseLogin['data']['token']);
         pref.setBool('apple', true);
@@ -239,16 +241,15 @@ class ApiCalls{
 
       } else {
         Navigator.pop(context);
-        var data = await response.stream.bytesToString();
-        debugPrint('Login error: $data');
+        debugPrint('Login error: $jsonResponse');
         if(response.statusCode == 400){
-          Methods.showError(json.decode(data)['error']);
+          Methods.showError(jsonResponse['error']);
         } else
           Methods.showError(response.reasonPhrase);
       }
     } on Exception catch(e) {
       Navigator.pop(context);
-      print('Login exception: $e');
+      debugPrint('Login exception: $e');
       Methods.showError('$e');
     }
   }
@@ -751,23 +752,27 @@ class ApiCalls{
 
       http.StreamedResponse response = await request.send();
 
+      final jsonResponse = await response.stream.bytesToString();
+
+      debugPrint("createOrderResponse: $jsonResponse");
+
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var responseData = await response.stream.bytesToString();
-        return responseData;
+        // var responseData = await response.stream.bytesToString();
+        return jsonResponse;
 
       } else {
         Navigator.pop(context);
         Methods.showError(response.reasonPhrase);
-        print(await response.stream.bytesToString());
-        return null;
+        debugPrint("createOrderError: $jsonResponse");
 
+        return null;
       }
 
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -791,22 +796,22 @@ class ApiCalls{
         "orderId": orderId
       });
 
+      debugPrint("FreeOrderRequest: ${request.body}");
+
       http.StreamedResponse response = await request.send();
+      final jsonResponse = await response.stream.bytesToString();
+      debugPrint("FreeOrderResponse: $jsonResponse");
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var responseData = await response.stream.bytesToString();
-        print(responseData);
+        var responseData = jsonResponse;
         return responseData;
 
       } else {
         Navigator.pop(context);
         Methods.showError(response.reasonPhrase);
-        print(await response.stream.bytesToString());
         return null;
-
       }
-
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');

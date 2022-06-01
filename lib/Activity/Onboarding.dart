@@ -341,57 +341,57 @@ class OnboardingState extends State<Onboarding> {
                       Container(
                         height: height * 0.01,
                       ),
-                      Container(
-                        child: Card(
-                          color: Colors.transparent,
-                          elevation: 3.0,
-                          child: ClipRect(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                              child: Container(
-                                width: width * 0.9,
-                                height: 50.0,
-                                decoration: new BoxDecoration(
-                                  color: Colors.white.withOpacity(0.0),
-                                  border: new Border.all(color: Colors.white, width: 2.0),
-                                  borderRadius: new BorderRadius.circular(10.0),
-                                ),
-                                child: InkWell(
-                                  onTap: (){
-                                    Methods.showComingSoon();
-                                    //Methods.showToast("Sign up with Facebook");
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Sign up with Facebook',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: 'SF_Pro_600',
-                                            decoration: TextDecoration.none,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.normal,
-                                            color: ColorList.colorAccent,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Image.asset(
-                                          'assets/images/fb.png',
-                                          width: 25.0,
-                                          height: 25.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      ),
+                      // Container(
+                      //   child: Card(
+                      //     color: Colors.transparent,
+                      //     elevation: 3.0,
+                      //     child: ClipRect(
+                      //       child: BackdropFilter(
+                      //         filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                      //         child: Container(
+                      //           width: width * 0.9,
+                      //           height: 50.0,
+                      //           decoration: new BoxDecoration(
+                      //             color: Colors.white.withOpacity(0.0),
+                      //             border: new Border.all(color: Colors.white, width: 2.0),
+                      //             borderRadius: new BorderRadius.circular(10.0),
+                      //           ),
+                      //           child: InkWell(
+                      //             onTap: (){
+                      //               Methods.showComingSoon();
+                      //               //Methods.showToast("Sign up with Facebook");
+                      //             },
+                      //             child: Padding(
+                      //               padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+                      //               child: Row(
+                      //                 children: [
+                      //                   Text(
+                      //                     'Sign up with Facebook',
+                      //                     textAlign: TextAlign.left,
+                      //                     style: TextStyle(
+                      //                       fontFamily: 'SF_Pro_600',
+                      //                       decoration: TextDecoration.none,
+                      //                       fontSize: 15.0,
+                      //                       fontWeight: FontWeight.normal,
+                      //                       color: ColorList.colorAccent,
+                      //                     ),
+                      //                   ),
+                      //                   Spacer(),
+                      //                   Image.asset(
+                      //                     'assets/images/fb.png',
+                      //                     width: 25.0,
+                      //                     height: 25.0,
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      //
+                      // ),
                       if(Platform.isIOS)
                         Container(
                         height: height * 0.01,

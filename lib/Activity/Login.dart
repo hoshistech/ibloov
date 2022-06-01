@@ -328,44 +328,44 @@ class LoginState extends State<Login>{
                         Container(
                           height: height * 0.005,
                         ),
-                        Card(
-                          elevation: 3.0,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                          ),
-                          child: InkWell(
-                            onTap: (){
-                              Methods.showComingSoon();
-                              //Methods.showToast("Continue with Facebook");
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(15.0),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/fb_logo.png',
-                                    width: 25.0,
-                                    height: 25.0,
-                                  ),
-                                  Container(
-                                    width: width * 0.05,
-                                  ),
-                                  Text(
-                                    'Continue with Facebook',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'SF_Pro_600',
-                                      decoration: TextDecoration.none,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorList.colorGrayText,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Card(
+                        //   elevation: 3.0,
+                        //   shape: new RoundedRectangleBorder(
+                        //     borderRadius: new BorderRadius.circular(10.0),
+                        //   ),
+                        //   child: InkWell(
+                        //     onTap: (){
+                        //       Methods.showComingSoon();
+                        //       //Methods.showToast("Continue with Facebook");
+                        //     },
+                        //     child: Padding(
+                        //       padding: EdgeInsets.all(15.0),
+                        //       child: Row(
+                        //         children: [
+                        //           Image.asset(
+                        //             'assets/images/fb_logo.png',
+                        //             width: 25.0,
+                        //             height: 25.0,
+                        //           ),
+                        //           Container(
+                        //             width: width * 0.05,
+                        //           ),
+                        //           Text(
+                        //             'Continue with Facebook',
+                        //             textAlign: TextAlign.left,
+                        //             style: TextStyle(
+                        //               fontFamily: 'SF_Pro_600',
+                        //               decoration: TextDecoration.none,
+                        //               fontSize: 14.0,
+                        //               fontWeight: FontWeight.bold,
+                        //               color: ColorList.colorGrayText,
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         Visibility(
                           visible: Platform.isIOS,
                           child: Container(

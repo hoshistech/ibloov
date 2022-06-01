@@ -65,6 +65,7 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
       });
     });
 
+    debugPrint("extra ticket: $extraTicketNumber");
     for (int i = 0; i < extraTicketNumber; i++) {
       fullnameControllers.add(new TextEditingController());
       fullnameFocusNodes.add(new FocusNode());
@@ -163,7 +164,7 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Container(
-                  height: width * 0.15,
+                  // height: width * 0.15,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     color: Color.fromRGBO(66, 114, 237, 0.1),
@@ -173,10 +174,11 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
+                    padding: EdgeInsets.only(left: 25, right: 25, top: 15, bottom: 15),
                     child: Center(
                       child: Text(
-                          "Before proceeding, we noticed you are purchasing more than 1 ticket, kindly provide details of others attendees"),
+                          "Before proceeding, we noticed you are purchasing more than 1 ticket, kindly provide details of others attendees",
+                      style: TextStyle(color: ColorList.colorGray, fontSize: 12, fontWeight: FontWeight.w700, height: 1.2),),
                     ),
                   ),
                 ),
@@ -246,11 +248,11 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5,),
-                Text(
-                  "Get ticket now on early bird",
-                  style: TextStyle(fontSize: 11),
-                )
+                // SizedBox(height: 5,),
+                // Text(
+                //   "Get ticket now on early bird",
+                //   style: TextStyle(fontSize: 11),
+                // )
               ],
             ),
             MaterialButton(
@@ -291,7 +293,7 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
                   }
                 }
 
-                print(jsonEncode(user));
+                debugPrint(jsonEncode(user));
 
                 if(!isError)
                   PaymentFrame(
@@ -327,6 +329,8 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
   }
 
   Widget generateExtraTicketsField() {
+    debugPrint("tickets count: ${tickets.length}");
+
     return Column(
       children: [
         for (int i = 0; i < tickets.length; i++)
@@ -372,6 +376,7 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
                 Container(
                   child: getInputFields(i),
                 )
@@ -385,19 +390,20 @@ class _ExtraTicketRegistrationState extends State<ExtraTicketRegistration> {
   getInputFields(int index) {
 
     int quantity = tickets.elementAt(index)['quantity'];
+    debugPrint("quantity: $quantity");
 
     return ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: quantity,
+        itemCount: quantity, //>= 2 ? quantity - 1 : quantity,
         itemBuilder: (BuildContext context, int item) =>
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(height: height * 0.015),
+                Container(height: height * 0.02),
                 Text(
-                  "Extra Ticket " + (item + 1).toString(),
+                  "Ticket " + (item + 1).toString(),
                   style: TextStyle(
                       fontFamily: 'SF_Pro_400',
                       fontWeight: FontWeight.normal,
