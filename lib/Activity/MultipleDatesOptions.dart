@@ -205,29 +205,6 @@ class _MultipleDatesOptionsState extends State<MultipleDatesOptions> {
                 child: horizontalScroll(),
               ),
               SizedBox(height: height * 0.04),
-              Center(
-                child: MaterialButton(
-                  color: ColorList.colorAccent.withOpacity(0.6),
-                  minWidth: width * 0.9,
-                  height: 50.0,
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                  elevation: 3.0,
-                  onPressed: () {},
-                  child: Text(
-                    'Next',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontFamily: 'SF_Pro_600',
-                      decoration: TextDecoration.none,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
-                      color: ColorList.colorPrimary,
-                    ),
-                  ),
-                ),
-              )
             ],
           ),
         ),
