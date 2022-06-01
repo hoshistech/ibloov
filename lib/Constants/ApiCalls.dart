@@ -58,7 +58,8 @@ class ApiCalls{
       var request = http.Request('POST', Uri.parse(urlLogin));
       request.body = json.encode({
         "email": email,
-        "password": password
+        "password": password,
+        "profileType": "USER",
       });
       request.headers.addAll(headersJSON);
 

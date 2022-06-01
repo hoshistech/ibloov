@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,7 +9,6 @@ import 'package:ibloov/Constants/Methods.dart';
 
 import 'Onboarding.dart';
 import 'ForgotPassword.dart';
-import 'Signup.dart';
 
 class Login extends StatefulWidget {
   @override

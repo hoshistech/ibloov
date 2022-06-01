@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ibloov/Activity/MyTickets.dart';
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaymentCheckout extends StatefulWidget {
   final String paymentLink;
@@ -23,8 +24,7 @@ class PaymentCheckoutState extends State<PaymentCheckout> {
   @override
   void initState() {
     super.initState();
-    // Enable virtual display.
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -78,6 +78,14 @@ class PaymentCheckoutState extends State<PaymentCheckout> {
         },
         navigationDelegate: (NavigationRequest request) {
           debugPrint('allowing navigation to $request');
+
+          if (request.url.contains("tel:") ||
+              request.url.contains("mailto:")) {
+            launch(request.url);
+
+            return NavigationDecision.prevent;
+          }
+
           return NavigationDecision.navigate;
         },
         onPageStarted: (String url) {
