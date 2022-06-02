@@ -33,6 +33,7 @@ class _SelectTicketState extends State<SelectTicket> {
   var ticket = [], user = {};
   var unescape = HtmlUnescape();
   int totalTickets = 0;
+  num totalAmount = 0.0;
 
   FestEvents event;
 
@@ -62,7 +63,6 @@ class _SelectTicketState extends State<SelectTicket> {
           user = value;
         });
       });
-
     });
 
     super.initState();
@@ -159,114 +159,119 @@ class _SelectTicketState extends State<SelectTicket> {
                 Padding(
                   padding: EdgeInsets.only(left: 20.0, bottom: height * 0.11),
                   child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int item) {
-                      if(data.length == 0) {
-                        return Center(child: Text("No available tickets for this event."));
-                      } else {
-                        return Row(
-                          children: [
-                            Container(
-                              height: height * 0.075,
-                            ),
-                            Container(
-                              width: width * 0.10,
-                              height: width * 0.10,
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle, color: colors[item % 3]),
-                              child: Image(
-                                  image: AssetImage("assets/images/ticket.png"),
-                                  color: colorsBlend[item % 3],
-                                  colorBlendMode: BlendMode.srcIn,
-                                  fit: BoxFit.cover),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    data[item]['name'],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[800]),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        '${unescape.convert(data[item]['currency']['htmlCode'])}${Methods.formattedAmount(data[item]['price'])}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[700]),
-                                      ),
-                                      Text(
-                                        " per person",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[400]),
-                                      ),
-                                    ],
-                                  )
-                                ],
+                      physics: BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: data.length,
+                      itemBuilder: (BuildContext context, int item) {
+                        if (data.length == 0) {
+                          return Center(
+                              child:
+                                  Text("No available tickets for this event."));
+                        } else {
+                          return Row(
+                            children: [
+                              Container(
+                                height: height * 0.075,
                               ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: EdgeInsets.only(left: 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: CircleBorder(),
-                                          shadowColor: Colors.black,
-                                          primary: Colors.white,
-                                          onPrimary: Colors.grey),
-                                      onPressed: () {
-                                        setState(() {
-                                          if (ticket[item][2] > 0) {
-                                            ticket[item][2]--;
-                                            if(totalTickets != 0)
-                                              totalTickets--;
-                                          }
-                                        });
-                                      },
-                                      child: Text("-",
-                                          style: TextStyle(color: Colors.black))),
-                                  Text(
-                                    ticket[item][2].toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[700]),
-                                  ),
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: CircleBorder(),
-                                          shadowColor: Colors.black,
-                                          primary: Colors.white,
-                                          onPrimary: Colors.grey),
-                                      onPressed: () {
-                                        setState(() {
-                                          ticket[item][2]++;
-                                          totalTickets++;
-                                        });
-                                      },
-                                      child: Text("+",
-                                          style: TextStyle(color: Colors.black)))
-                                ],
+                              Container(
+                                width: width * 0.10,
+                                height: width * 0.10,
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: colors[item % 3]),
+                                child: Image(
+                                    image:
+                                        AssetImage("assets/images/ticket.png"),
+                                    color: colorsBlend[item % 3],
+                                    colorBlendMode: BlendMode.srcIn,
+                                    fit: BoxFit.cover),
                               ),
-                            ),
-                          ],
-                        );
-                      }
-                    }
-                  ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data[item]['name'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[800]),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          '${unescape.convert(data[item]['currency']['htmlCode'])}${Methods.formattedAmount(data[item]['price'])}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey[700]),
+                                        ),
+                                        Text(
+                                          " per person",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey[400]),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.only(left: 0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            shape: CircleBorder(),
+                                            shadowColor: Colors.black,
+                                            primary: Colors.white,
+                                            onPrimary: Colors.grey),
+                                        onPressed: () {
+                                          setState(() {
+                                            if (ticket[item][2] > 0) {
+                                              ticket[item][2]--;
+                                              if (totalTickets != 0)
+                                                totalTickets--;
+                                            }
+                                          });
+                                        },
+                                        child: Text("-",
+                                            style: TextStyle(
+                                                color: Colors.black))),
+                                    Text(
+                                      ticket[item][2].toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700]),
+                                    ),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            shape: CircleBorder(),
+                                            shadowColor: Colors.black,
+                                            primary: Colors.white,
+                                            onPrimary: Colors.grey),
+                                        onPressed: () {
+                                          setState(() {
+                                            ticket[item][2]++;
+                                            totalTickets++;
+                                          });
+                                        },
+                                        child: Text("+",
+                                            style:
+                                                TextStyle(color: Colors.black)))
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      }),
                 ),
               ],
             ),
@@ -303,14 +308,24 @@ class _SelectTicketState extends State<SelectTicket> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      Text(" $totalTickets"), //for
+                      Text(" $totalTickets",
+                          style: TextStyle(
+                              fontFamily: 'SF_Pro_700',
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14)),
+                      // Text(" for ", style: TextStyle(
+                      //     fontFamily: 'SF_Pro_700',
+                      //     color: Colors.black,
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 12)),
                       // Text(
-                      //   "${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}",
+                      //   "${Methods.formattedAmount(totalAmount)}", //${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}
                       //   style: TextStyle(
                       //       fontFamily: 'SF_Pro_700',
                       //       color: Colors.grey[700],
                       //       fontWeight: FontWeight.bold,
-                      //       fontSize: 12),
+                      //       fontSize: 14),
                       // ),
                     ],
                   ),
@@ -341,19 +356,20 @@ class _SelectTicketState extends State<SelectTicket> {
 
                   debugPrint("extraTicket: $extraTicketNumber");
 
-                  if (extraTicketNumber > 1) {
-                    debugPrint("Going to ExtraTicket");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ExtraTicketRegistration(
-                                festId,
-                                festName,
-                                extraTicketNumber,
-                                _tickets,
-                                event,
-                                "${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}")));
-                  } else if (extraTicketNumber > 0) {
+                  // if (extraTicketNumber > 1) {
+                  //   debugPrint("Going to ExtraTicket");
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => ExtraTicketRegistration(
+                  //               festId,
+                  //               festName,
+                  //               extraTicketNumber,
+                  //               _tickets,
+                  //               event,
+                  //               "${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}")));
+                  // } else
+                  if (extraTicketNumber > 0) {
                     debugPrint("Going to PaymentFrame");
                     List userData = [];
                     userData.add(user);

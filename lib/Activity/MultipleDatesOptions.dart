@@ -74,8 +74,8 @@ class _MultipleDatesOptionsState extends State<MultipleDatesOptions> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: Methods.getImage(
-                              widget.data['banner'], 'placeholder'),
+                          image: Methods.getLargeEventCardImage(
+                              widget.data['banner']),
                           //NetworkImage(.data['banner']),
                           fit: BoxFit.cover)),
                   //padding: EdgeInsets.only(top: 10),
@@ -181,7 +181,7 @@ class _MultipleDatesOptionsState extends State<MultipleDatesOptions> {
                                   Container(
                                     height: height * 0.01,
                                   ),
-                                  ratingWidget(3.6, 2500)
+                                  ratingWidget(5.0, 1)
                                 ],
                               )),
                         ],

@@ -409,29 +409,6 @@ class EventDetailsState extends State<EventDetails>{
                                     ],
                                   ),
                                   SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(height * 0.01, 0, height * 0.015, 0),
-                                        child: Image.asset("assets/images/event_details.png", height: 20,),
-                                      ),
-                                      Text(
-                                        "Attendees:  ${data['noOfRegistrations']}",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_700',
-                                            fontSize: 15.0,
-                                            color: ColorList.colorDetails,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
                                     height: height * 0.05,
                                   ),
                                 ],
@@ -1236,7 +1213,7 @@ class EventDetailsState extends State<EventDetails>{
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
-                                            image: NetworkImage(more_data[item]['banner'] ?? ""),
+                                            image: Methods.getSmallEventCardImage(more_data[item]['banner'] ?? ""),
                                           ),
                                         )
                                     ),

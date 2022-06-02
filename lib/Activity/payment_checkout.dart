@@ -20,6 +20,7 @@ class PaymentCheckoutState extends State<PaymentCheckout> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   bool _paymentWasSuccessful = false;
+  var loadingPercentage = 0;
 
   @override
   void initState() {
@@ -67,51 +68,72 @@ class PaymentCheckoutState extends State<PaymentCheckout> {
           ),
         ],
       ),
-      body: WebView(
-        initialUrl: widget.paymentLink,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          _controller.complete(webViewController);
-        },
-        javascriptChannels: <JavascriptChannel>{
-          _toasterJavascriptChannel(context),
-        },
-        navigationDelegate: (NavigationRequest request) {
-          debugPrint('allowing navigation to $request');
+      body: Stack(
+        children: [
+          WebView(
+            initialUrl: widget.paymentLink,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+            javascriptChannels: <JavascriptChannel>{
+              _toasterJavascriptChannel(context),
+            },
+            navigationDelegate: (NavigationRequest request) {
+              debugPrint('allowing navigation to $request');
 
-          if (request.url.contains("tel:") ||
-              request.url.contains("mailto:")) {
-            launch(request.url);
+              if (request.url.contains("tel:") ||
+                  request.url.contains("mailto:")) {
+                launch(request.url);
 
-            return NavigationDecision.prevent;
-          }
+                return NavigationDecision.prevent;
+              }
 
-          return NavigationDecision.navigate;
-        },
-        onPageStarted: (String url) {
-          debugPrint('Page started loading: $url');
-        },
-        onPageFinished: (String url) {
-          //https://my-app-gm6tf.ondigitalocean.app/payment-successful?trxref=PYSTK_20220526_03443320&reference=PYSTK_20220526_03443320
-          debugPrint('Page finished loading: $url');
+              return NavigationDecision.navigate;
+            },
+            onPageStarted: (String url) {
+              debugPrint('Page started loading: $url');
 
-          if (url.contains("payment-successful")) {
-            if (!_paymentWasSuccessful) {
-              Future.delayed(Duration(seconds: 3), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MyTickets(fromPaystackCheckout: true)),
-                );
+              setState(() {
+                loadingPercentage = 0;
               });
-            }
+            },
+            onProgress: (progress) {
+              setState(() {
+                loadingPercentage = progress;
+              });
+            },
+            onPageFinished: (String url) {
+              //https://my-app-gm6tf.ondigitalocean.app/payment-successful?trxref=PYSTK_20220526_03443320&reference=PYSTK_20220526_03443320
+              debugPrint('Page finished loading: $url');
 
-            _paymentWasSuccessful = true;
-          }
-        },
-        gestureNavigationEnabled: true,
-        // backgroundColor: const Color(0x00000000),
+              setState(() {
+                loadingPercentage = 100;
+              });
+
+              if (url.contains("payment-successful")) {
+                if (!_paymentWasSuccessful) {
+                  Future.delayed(Duration(seconds: 3), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MyTickets(fromPaystackCheckout: true)),
+                    );
+                  });
+                }
+
+                _paymentWasSuccessful = true;
+              }
+            },
+            gestureNavigationEnabled: true,
+            // backgroundColor: const Color(0x00000000),
+          ),
+          if (loadingPercentage < 100)
+            LinearProgressIndicator(
+              value: loadingPercentage / 100.0,
+            ),
+        ],
       ),
     );
   }

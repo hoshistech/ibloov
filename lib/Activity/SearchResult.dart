@@ -638,7 +638,7 @@ class SearchResultState extends State<SearchResult> {
                                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                                       //shape: BoxShape.circle,
                                       image: DecorationImage(
-                                          image: Methods.getImage(result3[index]['banner'], 'placeholder'),
+                                          image: Methods.getSmallEventCardImage(result3[index]['banner']),
                                           fit: BoxFit.fill
                                       ),
                                     ),

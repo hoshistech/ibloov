@@ -301,7 +301,7 @@ class EventListState extends State<EventList> {
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                     fit: BoxFit.cover,
-                                                    image: Methods.getImage(widget.data[_selectedArray][item]['banner'], 'placeholder'),
+                                                    image: Methods.getSmallEventCardImage(widget.data[_selectedArray][item]['banner']),
                                                 ),
                                               )
                                             ),

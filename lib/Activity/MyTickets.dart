@@ -265,7 +265,7 @@ class MyTicketsState extends State<MyTickets>{
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       //shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: Methods.getImage(data[index]['banner'], 'placeholder'),
+                          image: Methods.getSmallEventCardImage(data[index]['banner']),
                           fit: BoxFit.fill
                       ),
                     ),
