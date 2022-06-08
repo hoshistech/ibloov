@@ -21,7 +21,7 @@ class MyIbloovWidgetState extends State<MyIbloovWidget>{
   double posx = 100.0;
   double posy = 100.0;
   double height, width;
-  String countFollower = '', countFollowing = '';
+  String countFollower = '0', countFollowing = '0';
 
   @override
   void initState() {
@@ -175,81 +175,81 @@ class MyIbloovWidgetState extends State<MyIbloovWidget>{
             SizedBox(
               height: 70,
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    /*Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FollowersPage(),
-                        )
-                    );*/
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Follower',
-                        style: TextStyle(
-                          fontFamily: 'SF_Pro_600',
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: ColorList.colorAccent.withOpacity(0.5),
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        countFollower,
-                        style: TextStyle(
-                          fontFamily: 'SF_Pro_800',
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: ColorList.colorAccent,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 40,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    /*Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FollowingPage(),
-                        ));*/
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        'Following',
-                        style: TextStyle(
-                          fontFamily: 'SF_Pro_600',
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: ColorList.colorAccent.withOpacity(0.5),
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        countFollowing,
-                        style: TextStyle(
-                          fontFamily: 'SF_Pro_800',
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: ColorList.colorAccent,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )
+            // Row(
+            //   crossAxisAlignment: CrossAxisAlignment.center,
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     GestureDetector(
+            //       onTap: () {
+            //         /*Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => FollowersPage(),
+            //             )
+            //         );*/
+            //       },
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         children: [
+            //           Text(
+            //             'Follower',
+            //             style: TextStyle(
+            //               fontFamily: 'SF_Pro_600',
+            //               fontSize: 15,
+            //               fontWeight: FontWeight.normal,
+            //               color: ColorList.colorAccent.withOpacity(0.5),
+            //             ),
+            //           ),
+            //           SizedBox(height: 5),
+            //           Text(
+            //             countFollower,
+            //             style: TextStyle(
+            //               fontFamily: 'SF_Pro_800',
+            //               fontSize: 17,
+            //               fontWeight: FontWeight.bold,
+            //               color: ColorList.colorAccent,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     SizedBox(
+            //       width: 40,
+            //     ),
+            //     GestureDetector(
+            //       onTap: () {
+            //         /*Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => FollowingPage(),
+            //             ));*/
+            //       },
+            //       child: Column(
+            //         children: [
+            //           Text(
+            //             'Following',
+            //             style: TextStyle(
+            //               fontFamily: 'SF_Pro_600',
+            //               fontSize: 15,
+            //               fontWeight: FontWeight.normal,
+            //               color: ColorList.colorAccent.withOpacity(0.5),
+            //             ),
+            //           ),
+            //           SizedBox(height: 5),
+            //           Text(
+            //             countFollowing,
+            //             style: TextStyle(
+            //               fontFamily: 'SF_Pro_800',
+            //               fontSize: 17,
+            //               fontWeight: FontWeight.bold,
+            //               color: ColorList.colorAccent,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // )
           ],
         ),
       );
@@ -262,10 +262,10 @@ class MyIbloovWidgetState extends State<MyIbloovWidget>{
           layer(),
           profile(),
           more(),
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Methods.getComingSoon(height * 0.6, width),
-          )
+          // Container(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Methods.getComingSoon(height * 0.6, width),
+          // )
         ],
       ),
     );

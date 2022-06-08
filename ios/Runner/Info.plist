@@ -38,11 +38,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs to access your camera.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open and in the background.</string>
+	<string>Ibloov needs access to your location to enable us show you tailored events happening in your area.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>Ibloov needs access to your location during usage to enable us show you tailored events happening in your area.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>Ibloov needs access to your location when app is open to enable us show you tailored events happening in your area.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs to access your microphone for videos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

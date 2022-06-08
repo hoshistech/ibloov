@@ -503,6 +503,8 @@ class ApiCalls{
       }
       request.headers.addAll(headers);
 
+      debugPrint("Request: ${request.body}");
+
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 201) {
@@ -510,7 +512,7 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t submit ${isRating ? 'Rating' : 'Review'} for ${response.reasonPhrase}');
+        Methods.showError('Can\'t submit ${isRating ? 'Rating' : 'Review'}');
         print('Response: ${await response.stream.bytesToString()}');
         return false;
       }

@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
           //color: ColorList.colorCorousalIndicatorActive, //nav bg
           items: <Widget>[
             ImageIcon(AssetImage("assets/images/home.png"), size: 20, color: ColorList.colorNavButton),
-            ImageIcon(AssetImage("assets/images/sms.png"), size: 20, color: ColorList.colorNavButton),
+            // ImageIcon(AssetImage("assets/images/sms.png"), size: 20, color: ColorList.colorNavButton),
             ImageIcon(AssetImage("assets/images/search.png"), size: 20, color: ColorList.colorNavButton),
             ImageIcon(AssetImage("assets/images/profile.png"), size: 20, color: ColorList.colorNavButton),
             ImageIcon(AssetImage("assets/images/more_vert.png"), size: 20, color: ColorList.colorNavButton)
@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
   }
 
   _onTap(int index) async {
-    if (index == 4) {
+    if (index == 3) {
       _selectedSettingsMenuOptions = await showMenu(
         context: context,
         shape: RoundedRectangleBorder(
@@ -434,11 +434,13 @@ class _HomeState extends State<Home> {
     setState(() {
       if(_selectedIndex == 0){
         body = HomeWidget();
-      } else if(_selectedIndex == 1){
-        body = MessagesWidget();
-      } else if(_selectedIndex == 2) {
+      }
+      // else if(_selectedIndex == 1){
+      //   body = MessagesWidget();
+      // }
+      else if(_selectedIndex == 1) {
         body = SearchWidget();
-      } else if(_selectedIndex == 3) {
+      } else if(_selectedIndex == 2) {
         body = MyIbloovWidget();
       }
     });

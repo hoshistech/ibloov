@@ -1,20 +1,14 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:ibloov/Activity/CreateEvents.dart';
 import 'package:ibloov/Activity/ExploreEvents.dart';
-import 'package:ibloov/Activity/FAQ.dart';
-import 'package:ibloov/Activity/SelectLocation.dart';
-import 'package:ibloov/Activity/TicketQRCode.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// import '../Activity/ShowQRCode.dart';
 
 Position currentPosition;
 String currentAddress = 'Fetching location...';
