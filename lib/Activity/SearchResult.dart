@@ -98,29 +98,37 @@ class SearchResultState extends State<SearchResult> {
                         hintStyle: TextStyle(color: ColorList.colorGray, fontSize: 14.0),
                         alignLabelWithHint: true,
                         prefixIcon: IconButton(
-                          icon: Icon(
+                          icon: searchController.text.isNotEmpty ? Icon(
                             Icons.close,
                             color: ColorList.colorGray,
-                          ),
-                          color: ColorList.colorPrimary,
-                          onPressed: (){
-                            clearSearch();
-                            clearArrays();
-                          },
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.tune,
+                          ) : Icon(
+                            Icons.arrow_back,
                             color: ColorList.colorGray,
                           ),
                           color: ColorList.colorPrimary,
                           onPressed: (){
-                            setState(() {
-                              search = true;
-                            });
-                            Methods.openSearchFilter(context, height, width, searchFocusNode);
+                            if(searchController.text.isEmpty) {
+                              Navigator.pop(context);
+                              SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            } else {
+                              clearSearch();
+                              clearArrays();
+                            }
                           },
-                        )
+                        ),
+                        // suffixIcon: IconButton(
+                        //   icon: Icon(
+                        //     Icons.tune,
+                        //     color: ColorList.colorGray,
+                        //   ),
+                        //   color: ColorList.colorPrimary,
+                        //   onPressed: (){
+                        //     setState(() {
+                        //       search = true;
+                        //     });
+                        //     Methods.openSearchFilter(context, height, width, searchFocusNode);
+                        //   },
+                        // )
                     ),
                     onChanged: (value){
                       if(value.length > 3)
@@ -905,7 +913,7 @@ class SearchResultState extends State<SearchResult> {
                 padding: EdgeInsets.only(top: 25),
                 child: Center(
                   child: Text(
-                    'No results found',
+                    'No events found',
                     style: TextStyle(
                         fontFamily: 'SF_Pro_900',
                         fontSize: 16,
@@ -920,7 +928,7 @@ class SearchResultState extends State<SearchResult> {
                 padding: EdgeInsets.only(top: 15),
                 child: Center(
                   child: Text(
-                    'We can\'t find any item matching your search',
+                    'We can\'t find any event matching your search',
                     style: TextStyle(
                         fontFamily: 'SF_Pro_900',
                         fontSize: 12,
@@ -941,6 +949,7 @@ class SearchResultState extends State<SearchResult> {
                 onPressed: () {
                   FocusScope.of(context).requestFocus(searchFocusNode);
                   SystemChannels.textInput.invokeMethod('TextInput.show');
+                  // getData(true);
                 },
                 color: ColorList.colorSplashBG,
                 child: Text(

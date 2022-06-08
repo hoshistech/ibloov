@@ -276,18 +276,18 @@ class HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   padding: EdgeInsets.only(bottom: height * 0.15),
                   child: Stack(
                     children: [
-                      _getCircle(
-                          "create_event.png",
-                          width * 0.5,
-                          //createEventAnimation, TicketQRCode('6154fdcf27bd0deac9e44032', false)),
-                          createEventAnimation,
-                          CreateEvents()),
+                      // _getCircle(
+                      //     "create_event.png",
+                      //     width * 0.5,
+                      //     //createEventAnimation, TicketQRCode('6154fdcf27bd0deac9e44032', false)),
+                      //     createEventAnimation,
+                      //     CreateEvents()),
                       //createEventAnimation, FAQ()),
                       /*_getCircle("live_event.png", width * 0.35,
                         liveEventAnimation, CreateEvents()),*/
                       _getCircle(
                           "explore_event.png",
-                          width * 0.32,
+                          width * 0.5,  //0/32
                           exploreEventAnimation,
                           ExploreEvents(
                               "Reg", currentPosition, currentAddress)),

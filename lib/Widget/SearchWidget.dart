@@ -24,14 +24,10 @@ class SearchWidgetState extends State<SearchWidget>{
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getCategories();
+    });
     super.initState();
-  }
-
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getCategories();
   }
 
   @override
@@ -75,16 +71,16 @@ class SearchWidgetState extends State<SearchWidget>{
                           Icons.search,
                           color: ColorList.colorGray
                       ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.tune,
-                          color: ColorList.colorGray,
-                        ),
-                        color: ColorList.colorPrimary,
-                        onPressed: (){
-                          Methods.openSearchFilter(context, height, width, new FocusNode());
-                        },
-                      ),
+                      // suffixIcon: IconButton(
+                      //   icon: Icon(
+                      //     Icons.tune,
+                      //     color: ColorList.colorGray,
+                      //   ),
+                      //   color: ColorList.colorPrimary,
+                      //   onPressed: (){
+                      //     Methods.openSearchFilter(context, height, width, new FocusNode());
+                      //   },
+                      // ),
                     ),
                     onEditingComplete: (){
                       if(searchController.text == null
@@ -145,7 +141,8 @@ class SearchWidgetState extends State<SearchWidget>{
                                         child: ClipRRect(
                                           child: Stack(
                                             children: [
-                                              Container(
+                                              if(gettingCategories)
+                                                Container(
                                                 child: Center(
                                                     child: CircularProgressIndicator(
                                                       color: ColorList.colorPrimary,
@@ -232,8 +229,8 @@ class SearchWidgetState extends State<SearchWidget>{
           var data = json.decode(value)['data'];
 
           if(data.length != count){
-            print("count: $count");
-            print("length: ${data.length}");
+            debugPrint("count: $count");
+            debugPrint("length: ${data.length}");
             gettingCategories = true;
 
             categories.clear();
