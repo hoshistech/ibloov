@@ -38,9 +38,9 @@ class SettingsWidgetState extends State<SettingsWidget>{
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      account(),
-                      preferences(),
-                      security(),
+                      // account(),
+                      // preferences(),
+                      // security(),
                       about(),
                     ],
                   ),
@@ -331,7 +331,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
 
   Widget preferences() {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -549,7 +549,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
 
   Widget about() {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
