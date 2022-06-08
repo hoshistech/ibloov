@@ -216,24 +216,24 @@ class HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                         ),
                         InkWell(
                             onTap: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectLocation(currentPosition)),
-                              );
-                              debugPrint(
-                                  'Latitude before: ${currentPosition.latitude}');
-                              debugPrint(
-                                  'Longitude before: ${currentPosition.longitude}');
-                              debugPrint('Address before: $currentAddress');
-                              currentPosition = result;
-                              _getAddressFromLatLng();
-                              debugPrint(
-                                  'Latitude after: ${currentPosition.latitude}');
-                              debugPrint(
-                                  'Longitude after: ${currentPosition.longitude}');
-                              debugPrint('Address after: $currentAddress');
+                              // final result = await Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) =>
+                              //           SelectLocation(currentPosition)),
+                              // );
+                              // debugPrint(
+                              //     'Latitude before: ${currentPosition.latitude}');
+                              // debugPrint(
+                              //     'Longitude before: ${currentPosition.longitude}');
+                              // debugPrint('Address before: $currentAddress');
+                              // currentPosition = result;
+                              // _getAddressFromLatLng();
+                              // debugPrint(
+                              //     'Latitude after: ${currentPosition.latitude}');
+                              // debugPrint(
+                              //     'Longitude after: ${currentPosition.longitude}');
+                              // debugPrint('Address after: $currentAddress');
                             },
                             child:
                                 Row(mainAxisSize: MainAxisSize.min, children: [
@@ -243,24 +243,30 @@ class HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black)),
-                              Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.black,
+                              Opacity(
+                                opacity: 0.0,
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.black,
+                                ),
                               ),
                             ])),
                       ],
                     ),
                     Spacer(),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              Methods.showComingSoon();
-                            },
-                            child: Image.asset("assets/images/scanner.png")),
-                      ],
+                    Opacity(
+                      opacity: 0.0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Methods.showComingSoon();
+                              },
+                              child: Image.asset("assets/images/scanner.png")),
+                        ],
+                      ),
                     )
                   ],
                 ),

@@ -94,7 +94,7 @@ class ApiCalls{
         if(response.statusCode == 400){
           Methods.showError(jsonBody['error']);
         } else
-          Methods.showError(response.reasonPhrase);
+          Methods.showError("Login Failed");
       }
     } on Exception catch(e) {
       Navigator.pop(context);
@@ -117,7 +117,8 @@ class ApiCalls{
         "gender": gender,
         "username": username,
         "dob": dob,
-        "type": "USER"
+        "type": "USER",
+        "profileType": "USER",
       });
       request.headers.addAll(headersJSON);
 
@@ -166,7 +167,7 @@ class ApiCalls{
 
     try {
       var request = http.Request('POST', Uri.parse(urlGoogle));
-      request.body = json.encode({"token": token});
+      request.body = json.encode({"token": token, "profileType": "USER"});
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
@@ -198,7 +199,7 @@ class ApiCalls{
         if(response.statusCode == 400){
           Methods.showError(json.decode(data)['error']);
         } else
-          Methods.showError(response.reasonPhrase);
+          Methods.showError("An error occurred.");
       }
     } on Exception catch(e) {
       Navigator.pop(context);
@@ -213,7 +214,7 @@ class ApiCalls{
 
     try {
       var request = http.Request('POST', Uri.parse(urlApple));
-      request.body = json.encode({"token": token});
+      request.body = json.encode({"token": token, "profileType": "USER",});
       request.headers.addAll(headersJSON);
 
       debugPrint('AppleSocialRequest: ${request.body}');
@@ -246,7 +247,7 @@ class ApiCalls{
         if(response.statusCode == 400){
           Methods.showError(jsonResponse['error']);
         } else
-          Methods.showError(response.reasonPhrase);
+          Methods.showError("An error occurred");
       }
     } on Exception catch(e) {
       Navigator.pop(context);
