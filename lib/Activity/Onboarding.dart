@@ -2,7 +2,10 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:ibloov/Activity/data_policy_webview.dart';
+import 'package:ibloov/Activity/terms_webview.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
@@ -495,6 +498,82 @@ class OnboardingState extends State<Onboarding> {
                           ),
                         )
                       ),
+                      // Container(
+                      //   height: height * 0.005,
+                      // ),
+                      // Container(
+                      //   width: width * 0.88,
+                      //   //height: height * 0.05,
+                      //   alignment: Alignment.centerLeft,
+                      //   child: Container(
+                      //     width: width * 0.75,
+                      //     child: RichText(
+                      //       text: TextSpan(
+                      //           text: 'Review our ',
+                      //           style: TextStyle(
+                      //             fontFamily: 'SF_Pro_400',
+                      //             decoration: TextDecoration.none,
+                      //             fontSize: 14.0,
+                      //             fontWeight: FontWeight.bold,
+                      //             color: ColorList.colorGrayText,
+                      //           ),
+                      //           children: <TextSpan>[
+                      //             TextSpan(
+                      //                 text: 'terms and conditions',
+                      //                 style: TextStyle(
+                      //                   fontFamily: 'SF_Pro_400',
+                      //                   decoration: TextDecoration.underline,
+                      //                   decorationColor: ColorList.colorSplashBG,
+                      //                   fontSize: 14.0,
+                      //                   fontWeight: FontWeight.bold,
+                      //                   color: ColorList.colorSplashBG,
+                      //                 ),
+                      //                 recognizer: TapGestureRecognizer()
+                      //                   ..onTap = () {
+                      //                     Navigator.push(
+                      //                         context,
+                      //                         MaterialPageRoute(
+                      //                           builder: (context) => TermsWebView(),
+                      //                         )
+                      //                     );
+                      //                   }
+                      //             ),
+                      //             TextSpan(
+                      //               text: ' and ',
+                      //               style: TextStyle(
+                      //                 fontFamily: 'SF_Pro_400',
+                      //                 decoration: TextDecoration.none,
+                      //                 decorationColor: ColorList.colorGrayText,
+                      //                 fontSize: 14.0,
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: ColorList.colorSplashBG,
+                      //               ),
+                      //             ),
+                      //             TextSpan(
+                      //                 text: 'privacy policy',
+                      //                 style: TextStyle(
+                      //                   fontFamily: 'SF_Pro_400',
+                      //                   decoration: TextDecoration.underline,
+                      //                   decorationColor: ColorList.colorSplashBG,
+                      //                   fontSize: 14.0,
+                      //                   fontWeight: FontWeight.bold,
+                      //                   color: ColorList.colorSplashBG,
+                      //                 ),
+                      //                 recognizer: TapGestureRecognizer()
+                      //                   ..onTap = () {
+                      //                     Navigator.push(
+                      //                         context,
+                      //                         MaterialPageRoute(
+                      //                           builder: (context) => DataPolicyWebView(),
+                      //                         )
+                      //                     );
+                      //                   }
+                      //             ),
+                      //           ]
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         height: height * 0.03,
                       )
