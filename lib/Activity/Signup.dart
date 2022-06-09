@@ -80,7 +80,7 @@ class SignupState extends State<Signup>{
           colorBlendMode: BlendMode.modulate,
           width: width * 0.25,
         ),
-        flexibleSpace: Container(
+        leading: Container(
           child: GestureDetector(
               onTap: (){
                 Navigator.pushReplacement(
@@ -89,21 +89,10 @@ class SignupState extends State<Signup>{
                 );
               },
               child: Padding(
-                child: Text(
-                  "Back",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontFamily: 'SF_Pro_700',
-                      fontSize: 17.0,
-                      color: ColorList.colorBack,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none
-                  ),
-                ),
+                child: Icon(Icons.arrow_back, color: ColorList.colorPrimary, size: 30),
                 padding: EdgeInsets.only(top: 8.0),
               )
           ),
-          padding: EdgeInsets.fromLTRB(15, 40, 15, 10),
         ),
       ),
       body: SafeArea(
