@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ibloov/Activity/terms_webview.dart';
 import 'package:intl/intl.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
@@ -370,7 +371,7 @@ class GuestUserState extends State<GuestUser> {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => TermsCondition(),
+                                                  builder: (context) => TermsWebView(),
                                                 )
                                             );
                                           },

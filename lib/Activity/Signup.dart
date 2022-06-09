@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:ibloov/Activity/terms_webview.dart';
 import 'package:intl/intl.dart';
 
 import 'package:ibloov/Constants/ApiCalls.dart';
@@ -724,7 +725,7 @@ class SignupState extends State<Signup>{
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => TermsCondition(),
+                                                        builder: (context) => TermsWebView(),
                                                       )
                                                   );
                                                 }
