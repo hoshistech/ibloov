@@ -97,15 +97,7 @@ class MyTicketsState extends State<MyTickets>{
                   child: Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                      'Back',
-                      style: TextStyle(
-                        fontFamily: 'SF_Pro_400',
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal,
-                        color: ColorList.colorPrimary,
-                      ),
-                    ),
+                    child: Icon(Icons.arrow_back, color: ColorList.colorPrimary, size: 25,)
                   ),
                 ),
               ),
@@ -229,7 +221,7 @@ class MyTicketsState extends State<MyTickets>{
                                 showTicketChild(context, index, width)
                         ),
                       )
-                    : NoResult('You haven\'t purchased any tickets yet!')
+                    : NoResult(status == "ATTENDED" ? "You haven't attended any events yet!" : 'You haven\'t purchased any tickets yet!')
                 ],
               )
             ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ibloov/Activity/MyTickets.dart';
+import 'package:ibloov/Activity/faq_webview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
@@ -188,7 +189,7 @@ class _HomeState extends State<Home> {
         } else if(_selectedSettingsMenuOptions == 3){
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FAQ()
+            MaterialPageRoute(builder: (context) => FAQWebView()
             ),
           );
         } else if(_selectedSettingsMenuOptions == 4){

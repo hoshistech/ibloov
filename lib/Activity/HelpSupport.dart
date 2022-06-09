@@ -303,8 +303,8 @@ class _HelpSupportState extends State<HelpSupport> {
                                 var phone = prefs.getString('phoneNumber');
                                 if(phone.contains("+234")) {
                                   phone = phone.substring(4);
-                                  phone = "0"+phone;
-
+                                  phone = "0" + phone;
+                                }
 
                                 ApiCalls.submitHelpRequest(
                                         listOfValue[_selectedValue - 1]['text'],

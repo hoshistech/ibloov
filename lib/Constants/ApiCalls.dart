@@ -1074,13 +1074,15 @@ class ApiCalls{
 
       http.StreamedResponse response = await request.send();
 
+      final responseJson = await response.stream.bytesToString();
+      debugPrint(responseJson);
+
       if (response.statusCode == 200) {
-        String data = await response.stream.bytesToString();
-        //print(data);
+        String data = responseJson;
         return data;
       }
       else {
-        print(response.reasonPhrase);
+        debugPrint(response.reasonPhrase);
         return null;
       }
 
