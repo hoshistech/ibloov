@@ -7,16 +7,16 @@ import 'package:ibloov/Constants/ColorList.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class FAQWebView extends StatefulWidget {
+class DataPolicyWebView extends StatefulWidget {
   @override
-  FAQWebViewState createState() => FAQWebViewState();
+  DataPolicyWebViewState createState() => DataPolicyWebViewState();
 }
 
-class FAQWebViewState extends State<FAQWebView> {
+class DataPolicyWebViewState extends State<DataPolicyWebView> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   var loadingPercentage = 0;
-  final faqLink = "https://www.ibloov.com/faq";
+  final urlLink = "https://www.ibloov.com/privacy-policy";
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class FAQWebViewState extends State<FAQWebView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FAQ'),
+        title: const Text('Data Policy'),
         backgroundColor: ColorList.colorAccent,
         iconTheme: IconThemeData(color: ColorList.colorPrimary),
         titleTextStyle: TextStyle(color: ColorList.colorPrimary, fontSize: 16),
@@ -62,7 +62,7 @@ class FAQWebViewState extends State<FAQWebView> {
       body: Stack(
         children: [
           WebView(
-            initialUrl: faqLink,
+            initialUrl: urlLink,
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               _controller.complete(webViewController);

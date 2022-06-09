@@ -6,6 +6,7 @@ import 'package:ibloov/Activity/FAQ.dart';
 import 'package:ibloov/Activity/ReferFriend.dart';
 import 'package:ibloov/Activity/TermsCondition.dart';
 import 'package:ibloov/Activity/faq_webview.dart';
+import 'package:ibloov/Activity/data_policy_webview.dart';
 import 'package:ibloov/Activity/terms_webview.dart';
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
@@ -245,7 +246,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DataPrivacy(),
+                    builder: (context) => DataPolicyWebView(),
                   )
               );
             },
