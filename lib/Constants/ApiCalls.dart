@@ -36,7 +36,7 @@ class ApiCalls{
   static String urlEventDetails = urlMain + 'event/';
   static String urlCreateOrder = urlMain + 'order';
   static String urlCreatePayment = urlMain + 'payment';
-  static String urlSupport = urlMain + 'support';
+  static String urlSupport = urlMain + 'help';
   static String urlSearchEvent = urlMain + 'event?pageNumber=';
   static String urlSearchArtist = urlMain + 'artist?pageNumber=';
   static String urlSearchUser = urlMain + 'user/search?pageNumber=';
@@ -906,7 +906,7 @@ class ApiCalls{
     }
   }
 
-  static Future<bool> submitHelpRequest(helpSubject, helpDescription, context) async {
+  static Future<bool> submitHelpRequest(helpSubject, helpDescription, context, {fullName, mail, phone}) async {
 
     SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -922,12 +922,18 @@ class ApiCalls{
 
       request.body = json.encode({
         "subject": helpSubject,
-        "description": helpDescription
+        "description": helpDescription,
+        "fullName": fullName,
+        "mail": mail,
+        "phone": phone
       });
 
       request.headers.addAll(headers);
+      debugPrint('Help Request: ${request.body}');
 
       http.StreamedResponse response = await request.send();
+
+      debugPrint('Help Response: ${await response.stream.bytesToString()}');
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
@@ -935,14 +941,13 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t submit the Help Request for ${response.reasonPhrase}');
-        print('Response: ${await response.stream.bytesToString()}');
+        Methods.showError('Error submitting help request');
         return false;
       }
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return false;
     }
   }

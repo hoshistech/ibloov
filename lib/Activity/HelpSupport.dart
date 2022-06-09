@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ibloov/Constants/ApiCalls.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'FeedbackSuccess.dart';
 
@@ -33,7 +34,9 @@ class _HelpSupportState extends State<HelpSupport> {
     descriptionController = TextEditingController();
     descriptionController.addListener(() {
       setState(() {
-        (descriptionController.text.length > 0 && _selectedValue > 0) ? buttonenabled = true : buttonenabled = false;
+        (descriptionController.text.length > 0 && _selectedValue > 0)
+            ? buttonenabled = true
+            : buttonenabled = false;
       });
     });
     super.initState();
@@ -60,8 +63,7 @@ class _HelpSupportState extends State<HelpSupport> {
                 fontSize: 14.0,
                 color: ColorList.colorPrimary,
                 fontWeight: FontWeight.bold,
-                decoration: TextDecoration.none
-            ),
+                decoration: TextDecoration.none),
           ),
         ),
       );
@@ -73,7 +75,9 @@ class _HelpSupportState extends State<HelpSupport> {
     print(selectedValue);
     setState(() {
       _selectedValue = selectedValue;
-      (descriptionController.text.length > 0 && _selectedValue > 0) ? buttonenabled = true : buttonenabled = false;
+      (descriptionController.text.length > 0 && _selectedValue > 0)
+          ? buttonenabled = true
+          : buttonenabled = false;
 
       _icon = Icon(
         Icons.keyboard_arrow_down_sharp,
@@ -94,12 +98,13 @@ class _HelpSupportState extends State<HelpSupport> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(height * 0.025, height * 0.05, height * 0.025, height * 0.025),
+              padding: EdgeInsets.fromLTRB(height * 0.025, height * 0.05,
+                  height * 0.025, height * 0.025),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pop(context);
                     },
                     child: Text(
@@ -110,8 +115,7 @@ class _HelpSupportState extends State<HelpSupport> {
                           fontSize: 17.0,
                           color: ColorList.colorBack,
                           fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.none
-                      ),
+                          decoration: TextDecoration.none),
                     ),
                   ),
                   Spacer(),
@@ -209,8 +213,7 @@ class _HelpSupportState extends State<HelpSupport> {
                               fontSize: 14.0,
                               color: ColorList.colorPrimary,
                               fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none
-                          ),
+                              decoration: TextDecoration.none),
                         ),
                         value: _selectedValue,
                         items: _dropdownTestItems,
@@ -235,9 +238,7 @@ class _HelpSupportState extends State<HelpSupport> {
                 textCapitalization: TextCapitalization.sentences,
                 maxLines: null,
                 minLines: 5,
-                onTap: () {
-
-                },
+                onTap: () {},
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Type your message",
@@ -256,32 +257,32 @@ class _HelpSupportState extends State<HelpSupport> {
             ),
             Stack(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: height * 0.03),
-                  child: Center(
-                    child: SizedBox(
-                      width: width * 0.9,
-                      height: 50,
-                      child: MaterialButton(
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "Send a Message",
-                          style: TextStyle(
-                            fontFamily: 'SF_Pro_700',
-                            decoration: TextDecoration.none,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.normal,
-                            color: ColorList.colorAccent,
-                          ),
-                        ),
-                        color: ColorList.colorSplashBG.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(top: height * 0.03),
+                //   child: Center(
+                //     child: SizedBox(
+                //       width: width * 0.9,
+                //       height: 50,
+                //       child: MaterialButton(
+                //         shape: new RoundedRectangleBorder(
+                //           borderRadius: new BorderRadius.circular(10.0),
+                //         ),
+                //         onPressed: () {},
+                //         child: Text(
+                //           "Send a Message",
+                //           style: TextStyle(
+                //             fontFamily: 'SF_Pro_700',
+                //             decoration: TextDecoration.none,
+                //             fontSize: 15.0,
+                //             fontWeight: FontWeight.normal,
+                //             color: ColorList.colorAccent,
+                //           ),
+                //         ),
+                //         color: ColorList.colorSplashBG.withOpacity(0.5),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Padding(
                   padding: EdgeInsets.only(top: height * 0.03),
                   child: Center(
@@ -293,18 +294,34 @@ class _HelpSupportState extends State<HelpSupport> {
                           borderRadius: new BorderRadius.circular(10.0),
                         ),
                         onPressed: buttonenabled
-                            ? () {
-                          ApiCalls.submitHelpRequest(listOfValue[_selectedValue-1]['text'], descriptionController.text, context)
-                              .then((value){
-                            if(value)
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FeedbackSuccess()
-                                  )
-                              );
-                          });
-                        }
+                            ? () async {
+                                var prefs =
+                                    await SharedPreferences.getInstance();
+                                var fullName =
+                                    prefs.getString('fullName').split(" ")[0];
+                                var email = prefs.getString('email');
+                                var phone = prefs.getString('phoneNumber');
+                                if(phone.contains("+234")) {
+                                  phone = phone.substring(4);
+                                  phone = "0"+phone;
+
+
+                                ApiCalls.submitHelpRequest(
+                                        listOfValue[_selectedValue - 1]['text'],
+                                        descriptionController.text,
+                                        context,
+                                        fullName: fullName,
+                                        mail: email,
+                                        phone: phone)
+                                    .then((value) {
+                                  if (value)
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                FeedbackSuccess()));
+                                });
+                              }
                             : null,
                         child: Text(
                           "Send a Message",
@@ -322,8 +339,8 @@ class _HelpSupportState extends State<HelpSupport> {
                   ),
                 )
               ],
-            )
-
+            ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
