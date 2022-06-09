@@ -6,8 +6,6 @@ import 'package:ibloov/Activity/SelectInterest.dart';
 import 'package:ibloov/Activity/VerificationSuccess.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:ibloov/Activity/EnableLocation.dart';
 import 'package:ibloov/Activity/Home.dart';
 import 'package:ibloov/Activity/VerifyOTP.dart';
 
@@ -344,7 +342,8 @@ class ApiCalls{
       request.body = json.encode({
         "password": password,
         "code": otp,
-        "codeToken": token
+        "codeToken": token,
+        "profileType": "USER",
       });
       request.headers.addAll(headersJSON);
 
@@ -447,16 +446,16 @@ class ApiCalls{
       print('Request header: ${request.headers}');
       print('Request body: ${request.body}');
 
+      var jsonBody = await response.stream.bytesToString();
+
       if (response.statusCode == 200) {
-        var data = await response.stream.bytesToString();
-        print('Response: $data');
+        debugPrint('Response: $jsonBody');
         Navigator.pop(context);
-        return data;
+        return jsonBody;
       }
       else {
         Navigator.pop(context);
-        var jsonResponse = json.decode(await response.stream.bytesToString());
-        debugPrint(jsonResponse);
+        var jsonResponse = json.decode(jsonBody);
         Methods.showError(jsonResponse["error"]);
         return null;
       }
