@@ -695,69 +695,69 @@ class EventDetailsState extends State<EventDetails>{
                                                 )
                                               ],
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.only(left: height * 0.07),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    child: Card(
-                                                      color: Colors.transparent,
-                                                      elevation: 0.0,
-                                                      child: ClipRect(
-                                                        child: Container(
-                                                          //width: width * 0.3,
-                                                          height: 42.0,
-                                                          decoration: new BoxDecoration(
-                                                            color: Colors.white,
-                                                            border: new Border.all(color: ColorList.colorSplashBG, width: 1.0),
-                                                            borderRadius: new BorderRadius.circular(10.0),
-                                                          ),
-                                                          child: InkWell(
-                                                            onTap: (){
-                                                              Methods.showComingSoon();
-                                                              //Methods.showToast("Following the Organiser...");
-                                                            },
-                                                            child: Padding(
-                                                              padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-                                                              child: Row(
-                                                                children: [
-                                                                  Text(
-                                                                    'Follow',
-                                                                    textAlign: TextAlign.center,
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'SF_Pro_600',
-                                                                      decoration: TextDecoration.none,
-                                                                      fontSize: 15.0,
-                                                                      fontWeight: FontWeight.w600,
-                                                                      color: ColorList.colorSplashBG,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                                  ),
-                                                  Container(
-                                                    width: height * 0.02,
-                                                  ),
-                                                  InkWell(
-                                                    onTap: (){
-                                                      Methods.showComingSoon();
-                                                      //Methods.showToast("Messaging the Organiser...");
-                                                    },
-                                                    child: Image.asset(
-                                                      'assets/images/sms.png',
-                                                      color: ColorList.colorSeeAll,
-                                                      height: 31,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
+                                            // Padding(
+                                            //   padding: EdgeInsets.only(left: height * 0.07),
+                                            //   child: Row(
+                                            //     children: [
+                                            //       Container(
+                                            //         child: Card(
+                                            //           color: Colors.transparent,
+                                            //           elevation: 0.0,
+                                            //           child: ClipRect(
+                                            //             child: Container(
+                                            //               //width: width * 0.3,
+                                            //               height: 42.0,
+                                            //               decoration: new BoxDecoration(
+                                            //                 color: Colors.white,
+                                            //                 border: new Border.all(color: ColorList.colorSplashBG, width: 1.0),
+                                            //                 borderRadius: new BorderRadius.circular(10.0),
+                                            //               ),
+                                            //               child: InkWell(
+                                            //                 onTap: (){
+                                            //                   Methods.showComingSoon();
+                                            //                   //Methods.showToast("Following the Organiser...");
+                                            //                 },
+                                            //                 child: Padding(
+                                            //                   padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+                                            //                   child: Row(
+                                            //                     children: [
+                                            //                       Text(
+                                            //                         'Follow',
+                                            //                         textAlign: TextAlign.center,
+                                            //                         style: TextStyle(
+                                            //                           fontFamily: 'SF_Pro_600',
+                                            //                           decoration: TextDecoration.none,
+                                            //                           fontSize: 15.0,
+                                            //                           fontWeight: FontWeight.w600,
+                                            //                           color: ColorList.colorSplashBG,
+                                            //                         ),
+                                            //                       ),
+                                            //                     ],
+                                            //                   ),
+                                            //                 ),
+                                            //               ),
+                                            //             ),
+                                            //           ),
+                                            //         ),
+                                            //
+                                            //       ),
+                                            //       Container(
+                                            //         width: height * 0.02,
+                                            //       ),
+                                            //       InkWell(
+                                            //         onTap: (){
+                                            //           Methods.showComingSoon();
+                                            //           //Methods.showToast("Messaging the Organiser...");
+                                            //         },
+                                            //         child: Image.asset(
+                                            //           'assets/images/sms.png',
+                                            //           color: ColorList.colorSeeAll,
+                                            //           height: 31,
+                                            //         ),
+                                            //       )
+                                            //     ],
+                                            //   ),
+                                            // ),
                                           ],
                                         )
                                       : Container(),
@@ -796,8 +796,11 @@ class EventDetailsState extends State<EventDetails>{
                                           ]
                                         ),
                                         child: InkWell(
-                                          onTap: (){
-                                            Methods.shareEmail(data['link']);
+                                          onTap: () async  {
+                                            final pref = await SharedPreferences.getInstance();
+                                            var email = pref.getString('email');
+
+                                            Methods.shareEmail(email, data['link']);
                                           },
                                           child: Image.asset(
                                             'assets/images/mail_share.png',
@@ -853,7 +856,8 @@ class EventDetailsState extends State<EventDetails>{
                                         ),
                                         child: InkWell(
                                           onTap: (){
-                                            Methods.shareTwitter(data['link']);
+                                            // Methods.shareTwitter(data['link']);
+                                            Methods.shareEvent(data['link']);
                                           },
                                           child: Image.asset(
                                             'assets/images/twitter_share.png',

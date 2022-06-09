@@ -153,7 +153,7 @@ class _SelectTicketState extends State<SelectTicket> {
                   child: Container(
                       child: Text(
                     "Tickets",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   )),
                 ),
                 Padding(

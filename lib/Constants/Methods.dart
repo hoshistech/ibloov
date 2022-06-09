@@ -225,9 +225,9 @@ class Methods {
     );
   }
 
-  static shareEmail(url) async {
-    var _url = "mailto:?subject=Share Event&body=Hey,%20check%20out%20the%20event%20in%20the%20following%20link%20\n\n%20$url";
-    if (!await launch(_url)) throw 'Could not launch $_url';
+  static shareEmail(email, url) async {
+    var _url = "mailto:$email?subject=ShareEvent&body=Hey,%20check%20out%20the%20event%20in%20the%20following%20link%20%20$url";
+    if (!await launchUrl(Uri.parse(_url))) throw 'Could not launch $_url';
   }
 
   static shareTwitter(url) async {
