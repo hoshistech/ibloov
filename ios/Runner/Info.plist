@@ -34,9 +34,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
-	<string>This app needs to access your calender to add event.</string>
+	<string>Ibloov needs to access your calender to add event.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs to access your camera.</string>
+	<string>Ibloov needs to access your camera to enable you capture Image for use in the app.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Ibloov needs access to your location to enable us show you tailored events happening in your area.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -44,9 +44,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Ibloov needs access to your location when app is open to enable us show you tailored events happening in your area.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs to access your microphone for videos.</string>
+	<string>Ibloov needs to access your microphone to be able to record your voice/sound during a video recording for use in the app.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs to access your photo gallery to pick images.</string>
+	<string>Ibloov needs to access your photo gallery to enable you select image(s) for use in the app.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
