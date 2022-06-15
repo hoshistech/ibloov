@@ -41,7 +41,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Ibloov needs to access your calender to add event.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Ibloov needs to access your camera to enable you capture photo for your profile picture or profile background picture.</string>
+	<string>Ibloov needs to access your camera to enable you capture photo for use in your profile picture or profile background picture on Ibloov.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Ibloov needs access to your location to enable us show you tailored events happening in your area.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -51,7 +51,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Ibloov needs to access your microphone to be able to record your voice/sound during a video recording for use in the app.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ibloov needs to access your photo gallery to enable you select an image for your profile picture or profile background picture.</string>
+	<string>Ibloov needs to access your photo gallery to enable you select an image for use in your profile picture or profile background picture on Ibloov.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

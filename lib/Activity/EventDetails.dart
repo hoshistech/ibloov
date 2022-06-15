@@ -781,65 +781,65 @@ class EventDetailsState extends State<EventDetails>{
                                   ),
                                   Row(
                                     children: [
-                                      Container(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        decoration: new BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: new BorderRadius.circular(10.0),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: ColorList.colorPrimary.withOpacity(0.1),
-                                              blurRadius: 12,
-                                              offset: Offset(0,4)
-                                            )
-                                          ]
-                                        ),
-                                        child: InkWell(
-                                          onTap: () async  {
-                                            final pref = await SharedPreferences.getInstance();
-                                            var email = pref.getString('email');
-
-                                            Methods.shareEmail(email, data['link']);
-                                          },
-                                          child: Image.asset(
-                                            'assets/images/mail_share.png',
-                                            width: 15.0,
-                                            height: 15.0,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.04,
-                                      ),
-                                      Container(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        decoration: new BoxDecoration(
-                                          color: Colors.white,
-                                            borderRadius: new BorderRadius.circular(10.0),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: ColorList.colorPrimary.withOpacity(0.1),
-                                                  blurRadius: 12,
-                                                  offset: Offset(0,4)
-                                              )
-                                            ]
-                                        ),
-                                        child: InkWell(
-                                          onTap: (){
-                                            Methods.shareEvent(data['link']);
-                                          },
-                                          child: Image.asset(
-                                            'assets/images/fb_share.png',
-                                            width: 15.0,
-                                            height: 15.0,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.04,
-                                      ),
+                                      // Container(
+                                      //   width: 50.0,
+                                      //   height: 50.0,
+                                      //   decoration: new BoxDecoration(
+                                      //     color: Colors.white,
+                                      //     borderRadius: new BorderRadius.circular(10.0),
+                                      //     boxShadow: [
+                                      //       BoxShadow(
+                                      //         color: ColorList.colorPrimary.withOpacity(0.1),
+                                      //         blurRadius: 12,
+                                      //         offset: Offset(0,4)
+                                      //       )
+                                      //     ]
+                                      //   ),
+                                      //   child: InkWell(
+                                      //     onTap: () async  {
+                                      //       final pref = await SharedPreferences.getInstance();
+                                      //       var email = pref.getString('email');
+                                      //
+                                      //       Methods.shareEmail(email, data['link']);
+                                      //     },
+                                      //     child: Image.asset(
+                                      //       'assets/images/mail_share.png',
+                                      //       width: 15.0,
+                                      //       height: 15.0,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      // SizedBox(
+                                      //   width: width * 0.04,
+                                      // ),
+                                      // Container(
+                                      //   width: 50.0,
+                                      //   height: 50.0,
+                                      //   decoration: new BoxDecoration(
+                                      //     color: Colors.white,
+                                      //       borderRadius: new BorderRadius.circular(10.0),
+                                      //       boxShadow: [
+                                      //         BoxShadow(
+                                      //             color: ColorList.colorPrimary.withOpacity(0.1),
+                                      //             blurRadius: 12,
+                                      //             offset: Offset(0,4)
+                                      //         )
+                                      //       ]
+                                      //   ),
+                                      //   child: InkWell(
+                                      //     onTap: (){
+                                      //       Methods.shareEvent(data['link']);
+                                      //     },
+                                      //     child: Image.asset(
+                                      //       'assets/images/fb_share.png',
+                                      //       width: 15.0,
+                                      //       height: 15.0,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      // SizedBox(
+                                      //   width: width * 0.04,
+                                      // ),
                                       Container(
                                         width: 50.0,
                                         height: 50.0,
@@ -859,10 +859,13 @@ class EventDetailsState extends State<EventDetails>{
                                             // Methods.shareTwitter(data['link']);
                                             Methods.shareEvent(data['link']);
                                           },
-                                          child: Image.asset(
-                                            'assets/images/twitter_share.png',
-                                            width: 15.0,
-                                            height: 15.0,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Image.asset(
+                                              'assets/images/ic_share.png',
+                                              width: 15.0,
+                                              height: 15.0,
+                                            ),
                                           ),
                                         ),
                                       ),

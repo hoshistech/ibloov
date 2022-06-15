@@ -287,7 +287,7 @@ class HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       //   liveEventAnimation, CreateEvents()),
                       _getCircle(
                           "explore_event.png",
-                          width * 0.32,
+                          width * 0.5,
                           exploreEventAnimation,
                           ExploreEvents(
                               "Reg", currentPosition, currentAddress)),
@@ -336,7 +336,9 @@ class HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               child: Image(
                   image: AssetImage(
                 'assets/images/' + image,
-              ))),
+              ),
+                width: width,
+              )),
         ),
       ),
     );
