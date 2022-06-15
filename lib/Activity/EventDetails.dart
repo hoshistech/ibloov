@@ -5,10 +5,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ibloov/Activity/SelectTicket.dart';
 import 'package:ibloov/Constants/ApiCalls.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
+import 'package:ibloov/Utils/FestEvents.dart';
 import 'package:intl/intl.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -636,35 +638,29 @@ class EventDetailsState extends State<EventDetails> {
                                                                     Row(
                                                                       children: [
                                                                         Container(
-                                                                          margin: EdgeInsets.only(right: 15),
-                                                                          width: height * 0.075,
-                                                                          height: height * 0.075,
-                                                                          child: CachedNetworkImage(
-                                                                            imageUrl: performingArtists[item]['imgUrl'] ?? "",
-                                                                              fit: BoxFit.cover,
-                                                                            imageBuilder: (context,
-                                                                                imageProvider) =>
+                                                                          margin:
+                                                                              EdgeInsets.only(right: 15),
+                                                                          width:
+                                                                              height * 0.075,
+                                                                          height:
+                                                                              height * 0.075,
+                                                                          child:
+                                                                              CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                performingArtists[item]['imgUrl'] ?? "",
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            imageBuilder: (context, imageProvider) =>
                                                                                 Container(
-                                                                                  decoration: BoxDecoration(
-                                                                                    shape: BoxShape.circle,
-                                                                                    image: DecorationImage(
-                                                                                        image:
-                                                                                        imageProvider,
-                                                                                        fit: BoxFit.cover,
-                                                                                        colorFilter:
-                                                                                        ColorFilter.mode(
-                                                                                            Colors.red,
-                                                                                            BlendMode
-                                                                                                .colorBurn)),
-                                                                                  ),
-                                                                                ),
-                                                                            placeholder: (context,
-                                                                                url) =>
+                                                                              decoration: BoxDecoration(
+                                                                                shape: BoxShape.circle,
+                                                                                image: DecorationImage(image: imageProvider, fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                                                                              ),
+                                                                            ),
+                                                                            placeholder: (context, url) =>
                                                                                 CircularProgressIndicator(),
-                                                                            errorWidget: (context, url,
-                                                                                error) =>
-                                                                                Image.asset(
-                                                                                    'assets/images/profile.png'),
+                                                                            errorWidget: (context, url, error) =>
+                                                                                Image.asset('assets/images/profile.png'),
                                                                           ),
                                                                         ),
                                                                         Column(
@@ -800,9 +796,9 @@ class EventDetailsState extends State<EventDetails> {
                                                 InkWell(
                                                   onTap: () {
                                                     if (data['organizers'] !=
-                                                        null &&
+                                                            null &&
                                                         data['organizers']
-                                                            .length >
+                                                                .length >
                                                             0)
                                                       Methods
                                                           .sendEmailToOrganizer(
@@ -1129,12 +1125,33 @@ class EventDetailsState extends State<EventDetails> {
                                     .then((complete) {
                                   setState(() {
                                     if (complete) {
+                                      var festEvent = FestEvents(
+                                          data['_id'],
+                                          data['startTime'],
+                                          DateFormat('yyyy').format(DateTime.tryParse(data['startTime'])),
+                                          DateFormat('MMM').format(DateTime.tryParse(data['startTime'])),
+                                          DateFormat('dd').format(DateTime.tryParse(data['startTime'])),
+                                          DateFormat('EEEE').format(DateTime.tryParse(data['startTime'])),
+                                          DateFormat('hh.mm a')
+                                              .format(DateTime.tryParse(data['startTime'])),
+                                          data['location']['name'],
+                                          data['location']['address'],
+                                          Methods.getLowestPrice(data['tickets'], false));
+
                                       Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MultipleDatesOptions(data)),
-                                      );
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => SelectTicket(
+                                                  data["_id"],
+                                                  data["title"],
+                                                  "${(data['organizers'] != null && data['organizers'].length > 0) ? data['organizers'][0]['brandName'] : "Brand name not available!"}",
+                                                  festEvent)));
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) =>
+                                      //           MultipleDatesOptions(data)),
+                                      // );
                                     } else {
                                       Methods.showCompleteDialog(
                                           context, height, width, true);
