@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -228,6 +229,29 @@ class Methods {
   static shareEmail(email, url) async {
     var _url = "mailto:$email?subject=ShareEvent&body=Hey,%20check%20out%20the%20event%20in%20the%20following%20link%20%20$url";
     if (!await launchUrl(Uri.parse(_url))) throw 'Could not launch $_url';
+  }
+
+  static sendEmailToOrganizer(email, url, name) async {
+    String encodeQueryParameters(Map<String, String> params) {
+      return params.entries
+          .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .join('&');
+    }
+
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: '$email',
+      query: encodeQueryParameters(<String, String>{
+        'subject': 'Event Enquiry',
+        'body': "Hey $name,"
+      }),
+    );
+
+    launchUrl(emailLaunchUri).catchError((error) {
+      debugPrint("Unable to launch!");
+    });
+
+    // var _url = "mailto:$email?subject=ShareEvent&body=Hey,%20check%20out%20the%20event%20in%20the%20following%20link%20%20$url";
   }
 
   static shareTwitter(url) async {
