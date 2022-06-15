@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ibloov/Activity/ForgetPasswordSuccess.dart';
@@ -13,6 +14,7 @@ import 'Methods.dart';
 
 class ApiCalls{
 
+  // static String urlMain = 'https://api.ibloov.com/';
   static String urlMain = 'https://ibloov-auth-staging-868mc.ondigitalocean.app/ibloov-auth2/';
 
   static String urlSignup = urlMain + 'auth/signup';
@@ -394,7 +396,10 @@ class ApiCalls{
         return false;
       }
 
-    } on Exception catch(e) {
+    } on SocketException {
+      Methods.showError('Please check your internet connection');
+    }
+    on Exception catch(e) {
       refreshToken(context);
       Methods.showError('$e');
       return false;

@@ -282,12 +282,12 @@ class HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       //     //createEventAnimation, TicketQRCode('6154fdcf27bd0deac9e44032', false)),
                       //     createEventAnimation,
                       //     CreateEvents()),
-                      //createEventAnimation, FAQ()),
-                      /*_getCircle("live_event.png", width * 0.35,
-                        liveEventAnimation, CreateEvents()),*/
+                      // createEventAnimation, FAQ()),
+                      // _getCircle("live_event.png", width * 0.35,
+                      //   liveEventAnimation, CreateEvents()),
                       _getCircle(
                           "explore_event.png",
-                          width * 0.5,  //0/32
+                          width * 0.32,
                           exploreEventAnimation,
                           ExploreEvents(
                               "Reg", currentPosition, currentAddress)),
