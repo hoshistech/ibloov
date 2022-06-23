@@ -3,14 +3,14 @@ import 'package:ibloov/model/event_model.dart';
 class ExploreEventResponse {
   int statusCode;
   String message;
-  Data data;
+  ExploreEventData data;
 
   ExploreEventResponse({this.statusCode, this.message, this.data});
 
   ExploreEventResponse.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new ExploreEventData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -24,7 +24,7 @@ class ExploreEventResponse {
   }
 }
 
-class Data {
+class ExploreEventData {
   List<Event> happeningToday;
   List<Event> happeningThisWeek;
   List<Event> happeningNearMe;
@@ -32,7 +32,7 @@ class Data {
   List<Event> featuredEvents;
   List<Event> filtered;
 
-  Data(
+  ExploreEventData(
       {this.happeningToday,
       this.happeningThisWeek,
       this.happeningNearMe,
@@ -40,7 +40,7 @@ class Data {
       this.featuredEvents,
       this.filtered});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  ExploreEventData.fromJson(Map<String, dynamic> json) {
     if (json['happeningToday'] != null) {
       happeningToday = <Event>[];
       json['happeningToday'].forEach((v) {

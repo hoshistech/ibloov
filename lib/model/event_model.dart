@@ -1,13 +1,16 @@
+import 'dart:convert';
+
 import 'package:ibloov/model/guest.dart';
 import 'package:ibloov/model/location.dart';
 import 'package:ibloov/model/organizers.dart';
+import 'package:ibloov/model/performing_artists.dart';
 import 'package:ibloov/model/ticket.dart';
 
 class Event {
   String sId;
   String terms;
   List<Organizers> organizers;
-  List<String> performingArtists;
+  List<PerformingArtist> performingArtists;
   List<dynamic> viewers;
   String qrcode;
   String link;
@@ -17,12 +20,12 @@ class Event {
   bool plusOne;
   String status;
   bool availability;
-  Null deletedAt;
+  String deletedAt;
   List<String> conditions;
   bool displayEndTime;
   bool displayStartTime;
-  Null isCancelledDate;
-  Null registrationClosedDate;
+  bool isCancelledDate;
+  String registrationClosedDate;
   bool isPublished;
   List<String> hashtags;
   Category category;
@@ -42,6 +45,7 @@ class Event {
   String accountName;
   String accountNumber;
   String bank;
+  String banner;
   String visibility;
   String customMessage;
   List<Tickets> tickets;
@@ -87,6 +91,7 @@ class Event {
         this.accountName,
         this.accountNumber,
         this.bank,
+        this.banner,
         this.visibility,
         this.customMessage,
         this.tickets,
@@ -99,14 +104,23 @@ class Event {
     if (json['organizers'] != null) {
       organizers = <Organizers>[];
       json['organizers'].forEach((v) {
-        organizers.add(new Organizers.fromJson(v));
+        if(v is Map<String, dynamic>)
+          organizers.add(Organizers.fromJson(v));
       });
     }
-    performingArtists = json['performingArtists'].cast<String>();
+
+    if (json['performingArtists'] != null) {
+      performingArtists = <PerformingArtist>[];
+      json['performingArtists'].forEach((v) {
+        if(v is Map<String, dynamic>)
+          performingArtists.add(PerformingArtist.fromJson(v));
+      });
+    }
+
     if (json['viewers'] != null) {
-      viewers = <String>[];
+      viewers = [];
       json['viewers'].forEach((v) {
-        conditions.add(v);
+          conditions.add(v);
       });
     }
     qrcode = json['qrcode'];
@@ -139,14 +153,15 @@ class Event {
     if (json['guests'] != null) {
       guests = <Guests>[];
       json['guests'].forEach((v) {
-        guests.add(new Guests.fromJson(v));
+        if(v is Map<String, dynamic>)
+          guests.add(Guests.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
     location = json['location'] != null
-        ? new Location.fromJson(json['location'])
+        ? Location.fromJson(json['location'])
         : null;
     endTime = json['endTime'];
     startTime = json['startTime'];
@@ -156,12 +171,14 @@ class Event {
     accountName = json['accountName'];
     accountNumber = json['accountNumber'];
     bank = json['bank'];
+    banner = json['banner'];
     visibility = json['visibility'];
     customMessage = json['customMessage'];
     if (json['tickets'] != null) {
       tickets = <Tickets>[];
       json['tickets'].forEach((v) {
-        tickets.add(new Tickets.fromJson(v));
+        if(v is Map<String, dynamic>)
+          tickets.add(Tickets.fromJson(v));
       });
     }
     userLiked = json['userLiked'];
@@ -169,7 +186,7 @@ class Event {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['terms'] = this.terms;
     if (this.organizers != null) {
@@ -220,6 +237,7 @@ class Event {
     data['accountName'] = this.accountName;
     data['accountNumber'] = this.accountNumber;
     data['bank'] = this.bank;
+    data['banner'] = this.banner;
     data['visibility'] = this.visibility;
     data['customMessage'] = this.customMessage;
     if (this.tickets != null) {
