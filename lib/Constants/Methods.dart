@@ -27,16 +27,21 @@ import 'ApiCalls.dart';
 import 'ColorList.dart';
 
 class Methods {
-
   static const kPLACES_API_KEY = "AIzaSyBVBEgcPYSJ-C7jNasP1xCXlhw-pJN-pJw";
-  static const passwordAlert = "Password must contain:\n- 6 characters\n- at least one number\n- at least one uppercase letter\n- at least one special character from =.!&@#%";
-  static const Pattern patternEmail = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  static const passwordAlert =
+      "Password must contain:\n- 6 characters\n- at least one number\n- at least one uppercase letter\n- at least one special character from =.!&@#%";
+  static const Pattern patternEmail =
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   static var unescape = HtmlUnescape();
   static var data;
   static int locationIndex = 0, conditionIndex = 0, dateIndex = 0;
   static RangeValues rangeValues = const RangeValues(0, 0);
   static Position currentPosition;
-  static String currentAddress = 'Fetching location...', conditionString, startDateString, endDateString, priceString = '';
+  static String currentAddress = 'Fetching location...',
+      conditionString,
+      startDateString,
+      endDateString,
+      priceString = '';
 
   static void showError(msg) {
     Fluttertoast.showToast(
@@ -77,7 +82,6 @@ class Methods {
       if (!serviceEnabled) {
         Future.error('Location services are disabled.');
       }
-
     }
 
     permission = await Geolocator.checkPermission();
@@ -105,7 +109,8 @@ class Methods {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
   }
 
   static void showComingSoon() {
@@ -125,7 +130,7 @@ class Methods {
     }).join(' ');
   }
 
-  static showLoaderDialog(BuildContext context){
+  static showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -139,8 +144,8 @@ class Methods {
     );
     showDialog(
       barrierDismissible: false,
-      context:context,
-      builder:(BuildContext context){
+      context: context,
+      builder: (BuildContext context) {
         return alert;
       },
     );
@@ -173,13 +178,15 @@ class Methods {
 
   static authGoogle(context, type) async {
     try {
-      final GoogleSignInAccount googleSignInAccount = await GoogleSignIn().signIn();
+      final GoogleSignInAccount googleSignInAccount =
+          await GoogleSignIn().signIn();
 
       if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
         ApiCalls.authGoogle(googleSignInAuthentication.idToken, context, type);
       }
-    } catch(e) {
+    } catch (e) {
       debugPrint("Google signAuth Error: ${e.toString()}");
     }
   }
@@ -198,53 +205,49 @@ class Methods {
 
       // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
       // after they have been validated with Apple (see `Integration` section for more information on how to do this)
-    } catch(e) {
+    } catch (e) {
       debugPrint("Apple signAuth Error: ${e.toString()}");
     }
   }
 
   static getRating(rating) {
     int rate = 0;
-    for(int i=0; i<rating.length; i++)
-      rate += rating[i];
+    for (int i = 0; i < rating.length; i++) rate += rating[i];
     return rate;
   }
 
   static openSearch(context, searchController) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => SearchResult(searchController)
-      ),
+      MaterialPageRoute(builder: (context) => SearchResult(searchController)),
     );
   }
 
   static shareEvent(url) async {
     await Share.share(
         'Hey, check out the event in the following link \n\n $url',
-        subject: 'Share Event'
-    );
+        subject: 'Share Event');
   }
 
   static shareEmail(email, url) async {
-    var _url = "mailto:$email?subject=ShareEvent&body=Hey,%20check%20out%20the%20event%20in%20the%20following%20link%20%20$url";
+    var _url =
+        "mailto:$email?subject=ShareEvent&body=Hey,%20check%20out%20the%20event%20in%20the%20following%20link%20%20$url";
     if (!await launchUrl(Uri.parse(_url))) throw 'Could not launch $_url';
   }
 
   static sendEmailToOrganizer(email, url, name) async {
     String encodeQueryParameters(Map<String, String> params) {
       return params.entries
-          .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .map((e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
           .join('&');
     }
 
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: '$email',
-      query: encodeQueryParameters(<String, String>{
-        'subject': 'Event Enquiry',
-        'body': "Hey $name,"
-      }),
+      query: encodeQueryParameters(
+          <String, String>{'subject': 'Event Enquiry', 'body': "Hey $name,"}),
     );
 
     launchUrl(emailLaunchUri).catchError((error) {
@@ -256,26 +259,53 @@ class Methods {
 
   static shareTwitter(url) async {
     SocialShare.shareTwitter(
-        "Hey, check out the event in the following link \n\n $url"
-    );
+        "Hey, check out the event in the following link \n\n $url");
   }
 
   static getImage(url, String placeholder) {
-    if(url == null || url == '')
+    if (url == null || url == '')
       return AssetImage('assets/images/$placeholder.png');
     else
       return NetworkImage(url);
   }
 
-  static getSmallEventCardImage(url) {
-    if(url == null || url == '')
-      return AssetImage('assets/images/event_small.png');
-    else
-      return NetworkImage(url);
+  static Widget getSmallEventCardImage(url, {width, height}) {
+    return Container(
+      width: width,
+      height: height,
+      color: ColorList.colorPrimary.withOpacity(0.6),
+      child: CachedNetworkImage(
+        imageUrl: url ?? "",
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            color: ColorList.colorPrimary.withOpacity(0.6),
+            image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                    ColorList.colorPrimary.withOpacity(0.6),
+                    BlendMode.dstOut)),
+          ),
+        ),
+        placeholder: (context, url) => Center(
+            child: SizedBox(
+                height: 60, width: 60, child: CircularProgressIndicator())),
+        errorWidget: (context, url, error) => Image.asset(
+          'assets/images/event_small.png',
+          fit: BoxFit.cover,
+          color: ColorList.colorPrimary.withOpacity(0.6),
+          colorBlendMode: BlendMode.dstATop,
+        ),
+      ),
+    );
+    // if(url == null || url == '')
+    //   return AssetImage('assets/images/event_small.png');
+    // else
+    //   return NetworkImage(url);
   }
 
   static getLargeEventCardImage(url) {
-    if(url == null || url == '')
+    if (url == null || url == '')
       return AssetImage('assets/images/event_large.png');
     else
       return NetworkImage(url);
@@ -284,8 +314,7 @@ class Methods {
   static openEventDetails(BuildContext context, String id) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EventDetails(id)
-      ),
+      MaterialPageRoute(builder: (context) => EventDetails(id)),
     );
   }
 
@@ -294,8 +323,7 @@ class Methods {
         context,
         MaterialPageRoute(
           builder: (context) => CreateEvents(),
-        )
-    );
+        ));
   }
 
   static openArtistDetails(BuildContext context, String id) {
@@ -303,21 +331,22 @@ class Methods {
         context,
         MaterialPageRoute(
           builder: (context) => CreateEvents(),
-        )
-    );
+        ));
   }
 
   static Future<List> getSuggestion(String input, String _sessionToken) async {
+    List<dynamic> _placeList = [];
 
-    List<dynamic>_placeList = [];
-
-    String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    Uri request = Uri.parse('$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken');
+    String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    Uri request = Uri.parse(
+        '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken');
 
     var response = await http.get(request);
     if (response.statusCode == 200) {
       _placeList = json.decode(response.body)['predictions'];
-      print('$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken');
+      print(
+          '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken');
     } else {
       showError('Failed to load predictions!');
     }
@@ -326,16 +355,18 @@ class Methods {
   }
 
   static Future<Position> getPlaceDetails(String input) async {
-
     Position _selectedPosition;
 
     String baseURL = 'https://maps.googleapis.com/maps/api/place/details/json';
-    Uri request = Uri.parse('$baseURL?input=bar&placeid=$input&key=$kPLACES_API_KEY');
+    Uri request =
+        Uri.parse('$baseURL?input=bar&placeid=$input&key=$kPLACES_API_KEY');
 
     var response = await http.get(request);
     if (response.statusCode == 200) {
-      var lat = json.decode(response.body)['result']['geometry']['location']['lat'];
-      var lng = json.decode(response.body)['result']['geometry']['location']['lng'];
+      var lat =
+          json.decode(response.body)['result']['geometry']['location']['lat'];
+      var lng =
+          json.decode(response.body)['result']['geometry']['location']['lng'];
       _selectedPosition = new Position(latitude: lat, longitude: lng);
       print('$baseURL?input=bar&placeid=$input&key=$kPLACES_API_KEY');
     } else {
@@ -350,17 +381,17 @@ class Methods {
     int lowest = 0;
     String currency = '';
 
-    if(data != null){
-      if(data.length > 0) {
-        if(data[0]['price'] != null)
+    if (data != null) {
+      if (data.length > 0) {
+        if (data[0]['price'] != null)
           lowest = data[0]['price'];
         else
           lowest = 0;
-        currency = data[0]['currency']['htmlCode'];
+        currency = data[0]['currency'] != null ? data[0]['currency']['htmlCode'] : "";
       }
 
-      for(int i=0; i<data.length; i++){
-        if(data[i]['price'] != null && lowest > data[i]['price']) {
+      for (int i = 0; i < data.length; i++) {
+        if (data[i]['price'] != null && lowest > data[i]['price']) {
           lowest = data[i]['price'];
           currency = data[i]['currency']['htmlCode'];
         }
@@ -374,20 +405,22 @@ class Methods {
     int highest = 0;
     String currency;
 
-    if(data.length > 0) {
-      if(data[0]['price'] != null)
+    if (data.length > 0) {
+      if (data[0]['price'] != null)
         highest = data[0]['price'];
       else
         highest = 0;
       currency = data[0]['currency']['htmlCode'];
     }
-    for(int i=0; i<data.length; i++){
-      if(data[i]['price'] != null && (highest < data[i]['price'])) {
+    for (int i = 0; i < data.length; i++) {
+      if (data[i]['price'] != null && (highest < data[i]['price'])) {
         highest = data[i]['price'];
         currency = data[i]['currency']['htmlCode'];
       }
     }
-    return data.length > 1 ? "  -  ${unescape.convert(currency)}${formattedAmount(highest * multiplier)}" : "";
+    return data.length > 1
+        ? "  -  ${unescape.convert(currency)}${formattedAmount(highest * multiplier)}"
+        : "";
   }
 
   static getCurrentUserData(context) async {
@@ -403,7 +436,7 @@ class Methods {
   static formattedAmount(amount) {
     final value = new NumberFormat("#,##0", "en_US");
     debugPrint("amount to format: $amount");
-    if(amount == null) {
+    if (amount == null) {
       return "0";
     }
     return value.format(amount);
@@ -412,7 +445,7 @@ class Methods {
   static Future<void> logoutUser(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
-    if(pref.getBool('isLoggedIn')){
+    if (pref.getBool('isLoggedIn')) {
       GoogleSignIn().disconnect();
     }
 
@@ -424,7 +457,7 @@ class Methods {
     );
   }
 
-  static getComingSoon(height, width){
+  static getComingSoon(height, width) {
     return Container(
         height: height,
         alignment: Alignment.center,
@@ -434,8 +467,7 @@ class Methods {
             Container(
                 width: 120,
                 height: 120,
-                child: Image.asset('assets/images/coming_soon.png')
-            ),
+                child: Image.asset('assets/images/coming_soon.png')),
             Container(
                 padding: EdgeInsets.only(top: 20),
                 child: Center(
@@ -458,10 +490,10 @@ class Methods {
                       letterSpacing: width * 0.04,
                     ),
                   ),
-                )
-            ),
+                )),
             Container(
-                padding: EdgeInsets.only(top: 20, left: width * 0.15, right: width * 0.15),
+                padding: EdgeInsets.only(
+                    top: 20, left: width * 0.15, right: width * 0.15),
                 child: Center(
                   child: Text(
                     'We are launching this section very soon. Please come back later.',
@@ -471,17 +503,14 @@ class Methods {
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: ColorList.colorPrimary.withOpacity(0.6),
-                        decoration: TextDecoration.none
-                    ),
+                        decoration: TextDecoration.none),
                   ),
-                )
-            )
+                ))
           ],
-        )
-    );
+        ));
   }
 
-  static openSearchFilter(context, height, width, focusNode){
+  static openSearchFilter(context, height, width, focusNode) {
     FocusScope.of(context).requestFocus(focusNode);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     showModalBottomSheet(
@@ -490,8 +519,7 @@ class Methods {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(50.0))),
         context: context,
-        builder: (context) => FilterFrame(context, height, width)
-    );
+        builder: (context) => FilterFrame(context, height, width));
     //FilterFrame(context, height, width).slideSheet();
   }
 
@@ -499,8 +527,10 @@ class Methods {
     SharedPreferences preference = await SharedPreferences.getInstance();
     bool completeProfile = true;
 
-    completeProfile = !((preference?.getString('dob') == null || preference?.getString('dob')?.length == 0)
-        && (!preference.getString('phoneNumber').contains('+') || preference.getString('phoneNumber') == 'N/A'));
+    completeProfile = !((preference?.getString('dob') == null ||
+            preference?.getString('dob')?.length == 0) &&
+        (!preference.getString('phoneNumber').contains('+') ||
+            preference.getString('phoneNumber') == 'N/A'));
 
     return completeProfile;
   }
@@ -510,7 +540,8 @@ class Methods {
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           backgroundColor: ColorList.colorPopUpBG,
           elevation: 20,
           child: Container(
@@ -524,16 +555,15 @@ class Methods {
                       Image(
                         image: buyTicket
                             ? AssetImage("assets/images/complete_profile.png")
-                            : AssetImage("assets/images/complete_profile_signup.png"),
+                            : AssetImage(
+                                "assets/images/complete_profile_signup.png"),
                         width: width * (buyTicket ? 0.1 : 0.125),
                       ),
                       SizedBox(
                         height: height * 0.025,
                       ),
                       Text(
-                        buyTicket
-                            ? "Complete Profile"
-                            : "Awesome!",
+                        buyTicket ? "Complete Profile" : "Awesome!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'SF_Pro_700',
@@ -585,8 +615,7 @@ class Methods {
                           fontWeight: FontWeight.bold,
                           color: ColorList.colorSearchListMore,
                         ),
-                      )
-                  ),
+                      )),
                 ),
               ],
             ),

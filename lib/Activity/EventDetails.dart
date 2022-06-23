@@ -1347,21 +1347,25 @@ class EventDetailsState extends State<EventDetails> {
                                 //       color: ColorList.colorMenuItem
                                 //   ),
                                 // ),
-                                Container(
-                                    width: width * 0.6,
-                                    height: width * 0.7,
-                                    child: Container(
-                                      height: width * 0.5,
-                                      color: ColorList.colorPrimary
-                                          .withOpacity(0.7),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: Methods.getSmallEventCardImage(
-                                            more_data[item]['banner'] ?? ""),
-                                      ),
-                                    )),
+                                // Container(
+                                //     width: width * 0.6,
+                                //     height: width * 0.7,
+                                //     child: Container(
+                                //       height: width * 0.5,
+                                //       color: ColorList.colorPrimary
+                                //           .withOpacity(0.7),
+                                //     ),
+                                //     decoration: BoxDecoration(
+                                //       image: DecorationImage(
+                                //         fit: BoxFit.cover,
+                                //         image: Methods.getSmallEventCardImage(
+                                //             more_data[item]['banner'] ?? "", width: width * 0.6,
+                                //             height: width * 0.7),
+                                //       ),
+                                //     )),
+                                Methods.getSmallEventCardImage(
+                                    more_data[item]['banner'] ?? "", width: width * 0.6,
+                                    height: width * 0.7),
                                 Container(
                                     width: width * 0.6,
                                     height: width * 0.7,
@@ -1549,7 +1553,7 @@ class EventDetailsState extends State<EventDetails> {
                                                     padding: EdgeInsets.only(
                                                         left: 5.0),
                                                     child: Text(
-                                                      '${(more_data[item]['location']['name'] != null) ? '${more_data[item]['location']['name']}, ' : ''}${more_data[item]['location']['city']}',
+                                                      '${(more_data[item]['location'] != null) ? '${more_data[item]['location']['name']}, ' : ''}${(more_data[item]['location'] != null) ? more_data[item]['location']['city'] : ''}',
                                                       //textAlign: TextAlign.center,
                                                       overflow:
                                                           TextOverflow.ellipsis,
@@ -1652,33 +1656,7 @@ class EventDetailsState extends State<EventDetails> {
                               Radius.circular(10.0),
                             ),
                           ),
-                        ) /*CachedNetworkImage(
-                                              imageUrl: image[item],
-                                              placeholder: (context, url) => Center(
-                                                child: Container(
-                                                  child: CircularProgressIndicator(
-                                                    valueColor:
-                                                    AlwaysStoppedAnimation<Color>(
-                                                      ColorList.colorMenuItemChecked,
-                                                    ),
-                                                    strokeWidth: 2,
-                                                  ),
-                                                  height: 35,
-                                                  width: 35,
-                                                ),
-                                              ),
-                                              imageBuilder: (context, imageProvider) =>
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.fitWidth,
-                                                      ),
-                                                    ),
-                                                  ),
-                                              errorWidget: (context, url, error) =>
-                                                  Icon(Icons.error),
-                                            ),*/
+                        )
                         ),
                   )),
             ),

@@ -261,18 +261,24 @@ class SearchResultState extends State<SearchResult> {
                               padding: EdgeInsets.all(5.0),
                               child: Row(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    width: height * 0.11,
-                                    height: height * 0.08,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      //shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: Methods.getSmallEventCardImage(result0[index]['banner']),
-                                          fit: BoxFit.fill
-                                      ),
-                                    ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(right: 10),
+                                  //   width: height * 0.11,
+                                  //   height: height * 0.08,
+                                  //   decoration: BoxDecoration(
+                                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                  //     //shape: BoxShape.circle,
+                                  //     image: DecorationImage(
+                                  //         image: Methods.getSmallEventCardImage(result0[index]['banner']),
+                                  //         fit: BoxFit.fill
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Methods.getSmallEventCardImage(
+                                        result0[index]['banner'] ?? "", width: height * 0.11,
+                                      height: height * 0.08,),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -638,18 +644,24 @@ class SearchResultState extends State<SearchResult> {
                               padding: EdgeInsets.all(5.0),
                               child: Row(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    width: height * 0.11,
-                                    height: height * 0.08,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      //shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: Methods.getSmallEventCardImage(result3[index]['banner']),
-                                          fit: BoxFit.fill
-                                      ),
-                                    ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(right: 10),
+                                  //   width: height * 0.11,
+                                  //   height: height * 0.08,
+                                  //   decoration: BoxDecoration(
+                                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                  //     //shape: BoxShape.circle,
+                                  //     image: DecorationImage(
+                                  //         image: Methods.getSmallEventCardImage(result3[index]['banner']),
+                                  //         fit: BoxFit.fill
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Methods.getSmallEventCardImage(
+                                        result3[index]['banner'] ?? "", width: height * 0.11,
+                                      height: height * 0.08),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,

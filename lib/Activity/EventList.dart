@@ -282,29 +282,20 @@ class EventListState extends State<EventList> {
                                       child: ClipRRect(
                                         child: Stack(
                                           children: [
-                                            Container(
-                                              child: Center(
-                                                child: CircularProgressIndicator(
-                                                  color: ColorList.colorSplashBG,
-                                                  strokeWidth: 3.0,
-                                                )
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: ColorList.colorMenuItem
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Container(
-                                                  height: width * 0.5,
-                                                  color: ColorList.colorPrimary.withOpacity(0.5),
-                                                ),
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: Methods.getSmallEventCardImage(widget.data[_selectedArray][item]['banner']),
-                                                ),
-                                              )
-                                            ),
+                                            // Container(
+                                            //   child: Container(
+                                            //       height: width * 0.5,
+                                            //       color: ColorList.colorPrimary.withOpacity(0.5),
+                                            //     ),
+                                            //   decoration: BoxDecoration(
+                                            //     image: DecorationImage(
+                                            //         fit: BoxFit.cover,
+                                            //         image: Methods.getSmallEventCardImage(widget.data[_selectedArray][item]['banner']),
+                                            //     ),
+                                            //   )
+                                            // ),
+                                            Methods.getSmallEventCardImage(
+                                                widget.data[_selectedArray][item]['banner'] ?? "", height: width * 0.5),
                                             Container(
                                               child: Column(
                                                 children: [

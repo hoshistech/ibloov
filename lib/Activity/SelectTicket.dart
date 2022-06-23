@@ -50,7 +50,7 @@ class _SelectTicketState extends State<SelectTicket> {
           if (value != null) {
             data = json.decode(value)['data'];
             for (int i = 0; i < data.length; i++) {
-              ticket.add([data[i]['_id'], data[i]['name'], 0]);
+              ticket.add([data[i]['_id'], data[i]['name'], 0, data[i]['type']]);
             }
           } else {
             Navigator.pop(context);
@@ -258,8 +258,12 @@ class _SelectTicketState extends State<SelectTicket> {
                                             onPrimary: Colors.grey),
                                         onPressed: () {
                                           setState(() {
-                                            ticket[item][2]++;
-                                            totalTickets++;
+                                            if((ticket[item][3]?.toString()?.toLowerCase() == "free") && ticket[item][2] == 1) {
+                                              Methods.showToast("You can't purchase more than one free ticket");
+                                            } else {
+                                              ticket[item][2]++;
+                                              totalTickets++;
+                                            }
                                           });
                                         },
                                         child: Text("+",

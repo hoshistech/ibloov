@@ -73,21 +73,7 @@ class ExploreEventsState extends State<ExploreEvents> {
     _center = LatLng(widget.currentPosition.latitude, widget.currentPosition.longitude);
   }
 
-  _getCurrentLocation() {
-    /*geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        currentPosition = position;
-        _center = LatLng(currentPosition.latitude, currentPosition.longitude);
-      });
-
-      _getAddressFromLatLng();
-
-    }).catchError((e) {
-      print(e);
-    });*/
-
+  _getExploreEvents() {
     if(stat && isLoading){
 
       setState(() {
@@ -99,6 +85,7 @@ class ExploreEventsState extends State<ExploreEvents> {
         setState(() {
           if(value != null){
             eventData = json.decode(value);
+            debugPrint("featuredEvents: ${eventData['data'][listHeader.elementAt(0)['name']]}");
             isLoading = false;
           } else {
             Navigator.pop(context);
@@ -127,29 +114,13 @@ class ExploreEventsState extends State<ExploreEvents> {
     }
   }
 
-  _getAddressFromLatLng() async {
-    try {
-      List<Placemark> p = await placemarkFromCoordinates(
-          widget.currentPosition.latitude, widget.currentPosition.longitude);
-
-      Placemark place = p[0];
-
-      setState(() {
-        widget.currentAddress = "${place.locality}, ${place.country}";
-      });
-
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
 
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
 
-    _getCurrentLocation();
+    _getExploreEvents();
 
     return isLoading
         ? Container(
@@ -168,7 +139,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                   children: [
                     WillPopScope(
                       child: Container(
-                          padding: EdgeInsets.only(top: 145.0),
+                          padding: EdgeInsets.only(top: 160.0),
                           height: height,
                           child: Stack(
                             children: [
@@ -179,7 +150,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                     : getMap(),
                               ),
                               SingleChildScrollView(
-                                padding: EdgeInsets.only(top: 65.0),
+                                padding: EdgeInsets.only(top: 65.0, bottom: 100),
                                 child: (!isMap)
                                     ? getList()
                                     : Container(),
@@ -225,7 +196,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                       },
                     ),
                     Container(
-                      height: 145,
+                      height: 160,
                       decoration: BoxDecoration(
                         color: ColorList.colorAccent,
                         boxShadow: [
@@ -239,6 +210,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                       ),
                       child: Column(
                         children: [
+                          const SizedBox(height: 15),
                           Row(
                             children: [
                               InkWell(
@@ -347,7 +319,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                     () {
                   isLoading = true;
                   stat = true;
-                  _getCurrentLocation();
+                  _getExploreEvents();
                 },
               );
             }
@@ -385,7 +357,7 @@ class ExploreEventsState extends State<ExploreEvents> {
   getMap() {
     getIcons();
 
-    addMarkers();
+    // addMarkers();
 
     Set<Circle> circles = Set.from(
         [
@@ -431,47 +403,47 @@ class ExploreEventsState extends State<ExploreEvents> {
       ),
     );
   }
-
-  void addMarkers() {
-
-    var listEvent = new List();
-    var idEvents = new List();
-
-    for(int i=0; i<eventData['data'].length; i++){
-      var sublistEvent = eventData['data'][listHeader.elementAt(i)['name']];
-      for(int j=0; j<sublistEvent.length; j++){
-        if(!idEvents.contains(sublistEvent[j]['_id'])){
-          listEvent.add(sublistEvent[j]);
-          idEvents.add(sublistEvent[j]['_id']);
-        }
-      }
-    }
-    var dataArray;
-
-    if(catIndex != "0")
-      dataArray = listEvent
-          .where((item) => item['category']['_id'] == catIndex).toList();
-    else
-      dataArray = listEvent;
-
-    countEvent = dataArray.length;
-
-    getMessege();
-
-    for(int i=0; i<dataArray.length; i++){
-      _markers.add(
-          Marker(
-              markerId: MarkerId('${dataArray[i]['_id']}'),
-              position: LatLng(dataArray[i]['location']['coordinates'][1], dataArray[i]['location']['coordinates'][0]),
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose),
-              onTap: () {
-                Methods.openEventDetails(context, dataArray[i]['_id']);
-              },
-              consumeTapEvents: true
-          )
-      );
-    }
-  }
+  //
+  // void addMarkers() {
+  //
+  //   var listEvent = [];
+  //   var idEvents = [];
+  //
+  //   for(int i=0; i<eventData['data'].length; i++){
+  //     var sublistEvent = eventData['data'][listHeader.elementAt(i)['name']];
+  //     for(int j=0; j<sublistEvent.length; j++){
+  //       if(!idEvents.contains(sublistEvent[j]['_id'])){
+  //         listEvent.add(sublistEvent[j]);
+  //         idEvents.add(sublistEvent[j]['_id']);
+  //       }
+  //     }
+  //   }
+  //   var dataArray;
+  //
+  //   if(catIndex != "0")
+  //     dataArray = listEvent
+  //         .where((item) => item['category']['_id'] == catIndex).toList();
+  //   else
+  //     dataArray = listEvent;
+  //
+  //   countEvent = dataArray.length;
+  //
+  //   getMessege();
+  //
+  //   // for(int i=0; i<dataArray.length; i++){
+  //   //   _markers.add(
+  //   //       Marker(
+  //   //           markerId: MarkerId('${dataArray[i]['_id']}'),
+  //   //           position: LatLng(dataArray[i]['location']['coordinates'][1], dataArray[i]['location']['coordinates'][0]),
+  //   //           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose),
+  //   //           onTap: () {
+  //   //             Methods.openEventDetails(context, dataArray[i]['_id']);
+  //   //           },
+  //   //           consumeTapEvents: true
+  //   //       )
+  //   //   );
+  //   // }
+  // }
 
   getList() {
     return SingleChildScrollView(
@@ -480,7 +452,7 @@ class ExploreEventsState extends State<ExploreEvents> {
           getSlides(),
           for(int i=1; i<5; i++)
             getEvents(i),
-          getMessege(),
+          getMessage(),
           Container(
             height: 25.0,
           )
@@ -509,7 +481,7 @@ class ExploreEventsState extends State<ExploreEvents> {
 
       for(int item=0; item<dataArray.length; item++){
         saved.add(false);
-        Container data = new Container(
+        Container data = Container(
           child: Card(
               elevation: 0.0,
               color: Colors.transparent,
@@ -526,36 +498,21 @@ class ExploreEventsState extends State<ExploreEvents> {
                       child: ClipRRect(
                         child: Stack(
                           children: [
-                            ///TODO: figure out why this guy is constantly loading and killing resources
                             // Container(
-                            //   width: width * 0.8,
-                            //   height: width * 0.6,
-                            //   child: Center(
-                            //       child: CircularProgressIndicator(
-                            //         color: ColorList.colorSplashBG,
-                            //         strokeWidth: 3.0,
-                            //       )
-                            //   ),
-                            //   decoration: BoxDecoration(
-                            //       /*border: Border.all(color: ColorList.colorSplashBG, width: 2.0),
-                            //       borderRadius: BorderRadius.all(Radius.circular(10.0),),*/
-                            //       color: ColorList.colorMenuItem
-                            //   ),
+                            //     width: width * 0.8,
+                            //     height: width * 0.6,
+                            //     child: Container(
+                            //       height: width * 0.8,
+                            //       color: ColorList.colorPrimary.withOpacity(0.5),
+                            //     ),
+                            //     decoration: BoxDecoration(
+                            //       image: DecorationImage(
+                            //         fit: BoxFit.cover,
+                            //         image: Methods.getSmallEventCardImage(dataArray[item]['banner']),
+                            //       ),
+                            //     )
                             // ),
-                            Container(
-                                width: width * 0.8,
-                                height: width * 0.6,
-                                child: Container(
-                                  height: width * 0.8,
-                                  color: ColorList.colorPrimary.withOpacity(0.5),
-                                ),
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: Methods.getSmallEventCardImage(dataArray[item]['banner']),
-                                  ),
-                                )
-                            ),
+                            Methods.getSmallEventCardImage(dataArray[item]['banner'], width: width * 0.8, height: width * 0.6),
                             Container(
                                 height: width * 0.6,
                                 width: width * 0.8,
@@ -853,6 +810,8 @@ class ExploreEventsState extends State<ExploreEvents> {
     if(dataArray.length > 0){
 
       countEvent += dataArray.length;
+      debugPrint("CountEvent: $countEvent");
+      debugPrint("Array length: ${dataArray.length} : headerName: ${listHeader.elementAt(index)['name']} : headerText: ${listHeader.elementAt(index)['text']}");
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -909,7 +868,7 @@ class ExploreEventsState extends State<ExploreEvents> {
               physics: ClampingScrollPhysics(),
               // shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: (dataArray.length >= 3) ? 3 : dataArray.length,
+              itemCount: (dataArray.length >= 5) ? 5 : dataArray.length,
               itemBuilder: (BuildContext context, int item) =>
                   Card(
                       elevation: 0.0,
@@ -927,35 +886,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                               child: ClipRRect(
                                 child: Stack(
                                   children: [
-                                    // Container(
-                                    //   width: width * 0.6,
-                                    //   height: width * 0.5,
-                                    //   child: Center(
-                                    //     child: CircularProgressIndicator(
-                                    //       color: ColorList.colorSplashBG,
-                                    //       strokeWidth: 3.0,
-                                    //     )
-                                    //   ),
-                                    //   decoration: BoxDecoration(
-                                    //     /*border: Border.all(color: ColorList.colorSplashBG, width: 2.0),
-                                    //     borderRadius: BorderRadius.all(Radius.circular(10.0),),*/
-                                    //     color: ColorList.colorMenuItem
-                                    //   ),
-                                    // ),
-                                    Container(
-                                        width: width * 0.6,
-                                        height: width * 0.8,
-                                        child: Container(
-                                          height: width * 0.5,
-                                          color: ColorList.colorPrimary.withOpacity(0.6),
-                                        ),
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: Methods.getSmallEventCardImage(dataArray[item]['banner']),
-                                        ),
-                                      )
-                                    ),
+                                    Methods.getSmallEventCardImage(dataArray[item]['banner'], width: width * 0.6, height: width * 0.8),
                                     Container(
                                         width: width * 0.6,
                                         height: width * 0.8,
@@ -1063,7 +994,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                           Padding(
                                                             padding: EdgeInsets.only(left: 5.0),
                                                             child: Text(
-                                                              dataArray[item]['category']['name'],
+                                                              "${dataArray[item]['category'] != null ? dataArray[item]['category']['name'] : ""}",
                                                               textAlign: TextAlign.center,
                                                               style: TextStyle(
                                                                 fontFamily: 'SF_Pro_400',
@@ -1212,7 +1143,7 @@ class ExploreEventsState extends State<ExploreEvents> {
     }*/
   }
 
-  getMessege() {
+  getMessage() {
     if(countEvent == 0) {
       isMsgShown = true;
       //Methods.showToast('No event found in this category!\nTry any other category...');
