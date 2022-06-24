@@ -356,7 +356,7 @@ class FilterFrameState extends State<FilterFrame>{
                               setMapData();
                               Navigator.pop(context);
                               setState(() {
-                                Methods.data = reset ? null : data;
+                                Methods.data == reset ? null : data;
                               });
                             },
                             child: Text(

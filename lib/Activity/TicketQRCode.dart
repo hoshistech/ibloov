@@ -91,15 +91,9 @@ class _TicketQRCodeState extends State<TicketQRCode> {
                       child: Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.only(top: height * 0.04, left: height * 0.03),
-                        child: Text(
-                          "My Tickets",
-                          style: TextStyle(
-                            fontFamily: 'SF_Pro_700',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: ColorList.colorPrimary,
-                          ),
-                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_back, color: ColorList.colorBack),
+                        )
                       ),
                     ),
                     Spacer(),
@@ -130,6 +124,7 @@ class _TicketQRCodeState extends State<TicketQRCode> {
                 height: (!widget.purchase) ? height * 0.75 : height * 0.9,
                 color: ColorList.colorAccent,
                 alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(left: 15),
                 margin: EdgeInsets.symmetric(vertical: height * 0.03),
                 child: SingleChildScrollView(
                   child: Column(

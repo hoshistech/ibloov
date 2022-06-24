@@ -153,6 +153,8 @@ class Methods {
   }
 
   static void saveUserData(SharedPreferences pref, responseData) {
+    debugPrint("profileDetails: $responseData");
+
     pref.setBool('isLoggedIn', true);
     pref.setString('_id', responseData['_id']);
     pref.setBool('isPhoneVerified', responseData['isVerified']);
@@ -420,24 +422,42 @@ class Methods {
     return "${unescape.convert(currency)}${formattedAmount(lowest * multiplier)}";
   }
 
-  static getHighestPrice(data, {int multiplier = 1}) {
+  static getHighestPrice(tickets, {int multiplier = 1}) {
     int highest = 0;
     String currency;
 
-    if (data.length > 0) {
-      if (data[0]['price'] != null)
-        highest = data[0]['price'];
-      else
-        highest = 0;
-      currency = data[0]['currency']['htmlCode'];
-    }
-    for (int i = 0; i < data.length; i++) {
-      if (data[i]['price'] != null && (highest < data[i]['price'])) {
-        highest = data[i]['price'];
-        currency = data[i]['currency']['htmlCode'];
+    if (tickets is List<Tickets>) {
+      if (tickets.length > 0) {
+        if (tickets[0].price != null)
+          highest = tickets[0].price;
+        else
+          highest = 0;
+        currency = tickets[0]?.currency?.htmlCode ?? "";
+      }
+
+      for (int i = 0; i < tickets.length; i++) {
+        if (tickets[i]?.price != null && highest < tickets[i]?.price) {
+          highest = tickets[i].price;
+          currency = tickets[i]?.currency?.htmlCode ?? "";
+        }
+      }
+    } else {
+      if (tickets.length > 0) {
+        if (tickets[0]['price'] != null)
+          highest = tickets[0]['price'];
+        else
+          highest = 0;
+        currency = tickets[0]['currency']['htmlCode'];
+      }
+      for (int i = 0; i < tickets.length; i++) {
+        if (tickets[i]['price'] != null && (highest < tickets[i]['price'])) {
+          highest = tickets[i]['price'];
+          currency = tickets[i]['currency']['htmlCode'];
+        }
       }
     }
-    return data.length > 1
+
+    return tickets.length > 1
         ? "  -  ${unescape.convert(currency)}${formattedAmount(highest * multiplier)}"
         : "";
   }

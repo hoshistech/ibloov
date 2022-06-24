@@ -969,6 +969,8 @@ class ApiCalls{
       var request = http.Request('GET', Uri.parse('$urlSearchEvent$page&perPage=10&query=$query'));
 
       request.headers.addAll(headers);
+      debugPrint("headers: ${request.headers}");
+      debugPrint("url: ${request.url}");
 
       http.StreamedResponse response = await request.send();
       final jsonString = await response.stream.bytesToString();

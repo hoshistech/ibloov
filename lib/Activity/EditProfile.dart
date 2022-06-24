@@ -23,7 +23,7 @@ class EditProfileState extends State<EditProfile>{
   var preference;
   var width;
   bool selected = false, status = false, editUserName = false, editPhone = false;
-  String stringProfile, stringName, stringUsername, stringEmail, country = '+234', stringCode = 'NG', stringPhone, stringBio, stringBackground;
+  String stringProfile, stringName, stringUsername, stringEmail, country = '+234', stringCode = 'NG', stringPhone, stringBio, stringBackground, stringGender;
   DateTime stringDOB;
   XFile profileImage, bgImage;
   List data = [];
@@ -51,6 +51,7 @@ class EditProfileState extends State<EditProfile>{
         stringEmail = preference?.getString('email');
         stringPhone = preference?.getString('phoneNumber');
         stringBackground = preference?.getString('backgroundImage');
+        stringGender = preference?.getString('gender');
         try {
           stringDOB = DateTime.parse(preference?.getString('dob'));
         } catch (e) {
@@ -460,6 +461,51 @@ class EditProfileState extends State<EditProfile>{
                                     openDOBSelector(context);
                                   },
                                 )
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15),
+                        Divider(
+                          thickness: 1,
+                          color: ColorList.colorGenderBackground,
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              child: Text(
+                                'Gender',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'SF_Pro_700',
+                                  decoration: TextDecoration.none,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorList.colorGrayHint,
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              child: Text(
+                                stringGender,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  fontFamily: 'SF_Pro_700',
+                                  decoration: TextDecoration.none,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorList.colorPrimary,
+                                ),
+                              ),
                             ),
                           ],
                         ),

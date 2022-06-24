@@ -824,14 +824,16 @@ class SearchResultState extends State<SearchResult> {
             setState((){
               isLoading0 = false;
               if(value != null){
+                result0.clear();  //TODO: revisit this later @Val
                 if(page0 == 1) {
-                  result0.clear();
+                  // result0.clear();
                   totalCount0 = json.decode(value)['data']['pagination']['total'];
                   totalCount0 = (totalCount0/10 + 1).toInt();
                 }
 
                 for(int i=0; i<json.decode(value)['data']['data'].length; i++){
                   result0.add(json.decode(value)['data']['data'][i]);
+                  // debugPrint("addedEvent: ${result0[i]}");
                 }
                 page0++;
                 result0 = filterResult(result0);
