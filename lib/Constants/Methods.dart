@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ibloov/Activity/CreateEvents.dart';
 import 'package:ibloov/Utils/FilterFrame.dart';
+import 'package:ibloov/model/ticket.dart';
 import 'package:location/location.dart' as location;
 import 'package:share/share.dart';
 import 'package:geolocator/geolocator.dart';
@@ -283,8 +284,7 @@ class Methods {
                 image: imageProvider,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    ColorList.colorPrimary.withOpacity(0.6),
-                    BlendMode.dstOut)),
+                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.dstOut)),
           ),
         ),
         placeholder: (context, url) => Center(
@@ -377,23 +377,42 @@ class Methods {
     return _selectedPosition;
   }
 
-  static getLowestPrice(data, free, {int multiplier = 1}) {
+  static getLowestPrice(tickets, free, {int multiplier = 1}) {
     int lowest = 0;
     String currency = '';
 
-    if (data != null) {
-      if (data.length > 0) {
-        if (data[0]['price'] != null)
-          lowest = data[0]['price'];
-        else
-          lowest = 0;
-        currency = data[0]['currency'] != null ? data[0]['currency']['htmlCode'] : "";
-      }
+    if (tickets != null) {
+      if (tickets is List<Tickets>) {
+        if (tickets.length > 0) {
+          if (tickets[0].price != null)
+            lowest = tickets[0].price;
+          else
+            lowest = 0;
+          currency = tickets[0]?.currency?.htmlCode ?? "";
+        }
 
-      for (int i = 0; i < data.length; i++) {
-        if (data[i]['price'] != null && lowest > data[i]['price']) {
-          lowest = data[i]['price'];
-          currency = data[i]['currency']['htmlCode'];
+        for (int i = 0; i < tickets.length; i++) {
+          if (tickets[i]?.price != null && lowest > tickets[i]?.price) {
+            lowest = tickets[i].price;
+            currency = tickets[i]?.currency?.htmlCode ?? "";
+          }
+        }
+      } else {
+        if (tickets.length > 0) {
+          if (tickets[0]['price'] != null)
+            lowest = tickets[0]['price'];
+          else
+            lowest = 0;
+          currency = tickets[0]['currency'] != null
+              ? tickets[0]['currency']['htmlCode']
+              : "";
+        }
+
+        for (int i = 0; i < tickets.length; i++) {
+          if (tickets[i]['price'] != null && lowest > tickets[i]['price']) {
+            lowest = tickets[i]['price'];
+            currency = tickets[i]['currency']['htmlCode'];
+          }
         }
       }
     }

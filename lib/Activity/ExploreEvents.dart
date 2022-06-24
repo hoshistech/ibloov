@@ -455,8 +455,8 @@ class ExploreEventsState extends State<ExploreEvents> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          getSlides(),
-          for (int i = 1; i < 5; i++) getEvents(i),
+          getFeaturedEventsSlides(),
+          for (int i = 1; i < 5; i++) getEventsWidgets(i),
           getMessage(),
           Container(
             height: 25.0,
@@ -466,7 +466,7 @@ class ExploreEventsState extends State<ExploreEvents> {
     );
   }
 
-  getSlides() {
+  getFeaturedEventsSlides() {
     List<Event> events;
 
     if (catIndex != "0") {
@@ -721,7 +721,8 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                     if (!value)
                                                       setState(() {
                                                         events[item].userLiked =
-                                                            !events[item].userLiked;
+                                                            !events[item]
+                                                                .userLiked;
                                                       });
                                                   });
                                                 },
@@ -730,7 +731,8 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                       ? Icons.favorite
                                                       : Icons.favorite_outline,
                                                   size: 20,
-                                                  color: (events[item].userLiked)
+                                                  color: (events[item]
+                                                          .userLiked)
                                                       ? ColorList.colorRed
                                                       : ColorList.colorAccent,
                                                 ),
@@ -820,21 +822,39 @@ class ExploreEventsState extends State<ExploreEvents> {
     }
   }
 
-  getEvents(int index) {
-    var dataArray;
+  List<Event> getEvents(int index) {
+    switch (index) {
+      case 1:
+        return exploreEventData.trendingEvents;
+      case 2:
+        return exploreEventData.happeningNearMe;
+      case 3:
+        return exploreEventData.happeningToday;
+      case 4:
+        return exploreEventData.happeningThisWeek;
+      default:
+        return <Event>[];
+    }
+  }
 
-    if (catIndex != "0")
-      dataArray = eventData['data'][listHeader.elementAt(index)['name']]
-          .where((item) => item['category']['_id'] == catIndex)
+  getEventsWidgets(int index) {
+    List<Event> events;
+
+    if (catIndex != "0") {
+      // events = eventData['data'][listHeader.elementAt(index)['name']]
+      //     .where((item) => item['category']['_id'] == catIndex)
+      //     .toList();
+      events = getEvents(index)
+          .where((item) => item.category.sId == catIndex)
           .toList();
-    else
-      dataArray = eventData['data'][listHeader.elementAt(index)['name']];
+    } else {
+      // events = eventData['data'][listHeader.elementAt(index)['name']];
+      events = getEvents(index);
+    }
 
-    if (dataArray.length > 0) {
-      countEvent += dataArray.length;
-      debugPrint("CountEvent: $countEvent");
-      debugPrint(
-          "Array length: ${dataArray.length} : headerName: ${listHeader.elementAt(index)['name']} : headerText: ${listHeader.elementAt(index)['text']}");
+    if (events.length > 0) {
+      countEvent += events.length;
+
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -891,13 +911,13 @@ class ExploreEventsState extends State<ExploreEvents> {
               physics: ClampingScrollPhysics(),
               // shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: (dataArray.length >= 5) ? 5 : dataArray.length,
+              itemCount: (events.length >= 5) ? 5 : events.length,
               itemBuilder: (BuildContext context, int item) => Card(
                   elevation: 0.0,
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      Methods.openEventDetails(context, dataArray[item]['_id']);
+                      Methods.openEventDetails(context, events[item]?.sId);
                     },
                     child: Container(
                         padding: EdgeInsets.only(left: 10.0),
@@ -911,7 +931,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                             child: Stack(
                               children: [
                                 Methods.getSmallEventCardImage(
-                                    dataArray[item]['banner'],
+                                    events[item]?.banner,
                                     width: width * 0.6,
                                     height: width * 0.8),
                                 Container(
@@ -944,16 +964,14 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                             child: Column(
                                                               children: [
                                                                 Text(
-                                                                  (dataArray[item]
-                                                                              [
-                                                                              'startTime'] ==
+                                                                  (events[item]
+                                                                              ?.startTime ==
                                                                           null)
                                                                       ? '01'
                                                                       : DateFormat(
                                                                               'dd')
-                                                                          .format(DateTime.tryParse(dataArray[item]
-                                                                              [
-                                                                              'startTime'])),
+                                                                          .format(
+                                                                              DateTime.tryParse(events[item]?.startTime)),
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -969,7 +987,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w700,
-                                                                    color: (dataArray[item]['startTime'] ==
+                                                                    color: (events[item]?.startTime ==
                                                                             null)
                                                                         ? ColorList
                                                                             .colorAccent
@@ -978,16 +996,14 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                                   ),
                                                                 ),
                                                                 Text(
-                                                                  (dataArray[item]
-                                                                              [
-                                                                              'startTime'] ==
+                                                                  (events[item]
+                                                                              ?.startTime ==
                                                                           null)
                                                                       ? 'JAN'
                                                                       : DateFormat(
                                                                               'MMM')
-                                                                          .format(DateTime.tryParse(dataArray[item]
-                                                                              [
-                                                                              'startTime']))
+                                                                          .format(
+                                                                              DateTime.tryParse(events[item]?.startTime))
                                                                           .toUpperCase(),
                                                                   textAlign:
                                                                       TextAlign
@@ -1004,7 +1020,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .normal,
-                                                                    color: (dataArray[item]['startTime'] ==
+                                                                    color: (events[item]?.startTime ==
                                                                             null)
                                                                         ? ColorList
                                                                             .colorAccent
@@ -1022,28 +1038,6 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                                     5.0),
                                                           )),
                                                       Spacer(),
-                                                      /*Card(
-                                                              color: ColorList.colorPrimary,
-                                                              elevation: 0.0,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(25.0),
-                                                              ),
-                                                              child: Padding(
-                                                                child: Text(
-                                                                  //DateFormat('dd').format(DateTime.tryParse(dataArray[item]['startTime'])),
-                                                                  (dataArray[item]['noOfRegistrations'] > 99) ? '99+' : '${dataArray[item]['noOfRegistrations']}',
-                                                                  textAlign: TextAlign.center,
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'SF_Pro_700',
-                                                                    decoration: TextDecoration.none,
-                                                                    fontSize: 18.0,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    color: ColorList.colorAccent,
-                                                                  ),
-                                                                ),
-                                                                padding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
-                                                              )
-                                                          ),*/
                                                     ],
                                                   ),
                                                   SizedBox(
@@ -1072,7 +1066,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                             EdgeInsets.only(
                                                                 left: 5.0),
                                                         child: Text(
-                                                          "${dataArray[item]['category'] != null ? dataArray[item]['category']['name'] : ""}",
+                                                          "${events[item]?.category?.name ?? ""}",
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -1099,7 +1093,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                     padding: EdgeInsets.only(
                                                         left: 5.0, right: 5.0),
                                                     child: Text(
-                                                      dataArray[item]['title'],
+                                                      events[item]?.title,
                                                       textAlign:
                                                           TextAlign.start,
                                                       overflow:
@@ -1124,7 +1118,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                     padding: EdgeInsets.only(
                                                         left: 5.0),
                                                     child: Text(
-                                                      '${dataArray[item]['location'] != null ? '${(dataArray[item]['location']['name'] != null) ? '${dataArray[item]['location']['name']}, ' : ''}${dataArray[item]['location']['city']}' : ''}',
+                                                      '${events[item]?.location?.name ?? ""}, ${events[item]?.location?.city}}',
                                                       textAlign:
                                                           TextAlign.start,
                                                       overflow:
@@ -1158,10 +1152,11 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                               EdgeInsets.only(
                                                                   left: 5.0),
                                                           child: Text(
-                                                            Methods.getLowestPrice(
-                                                                dataArray[item]
-                                                                    ['tickets'],
-                                                                true),
+                                                            Methods
+                                                                .getLowestPrice(
+                                                                    events[item]
+                                                                        ?.tickets,
+                                                                    true),
                                                             style: TextStyle(
                                                               fontFamily:
                                                                   'SF_Pro_700',
@@ -1181,8 +1176,8 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                         InkWell(
                                                           onTap: () {
                                                             Methods.shareEvent(
-                                                                dataArray[item]
-                                                                    ['link']);
+                                                                events[item]
+                                                                    ?.link);
                                                           },
                                                           child: Icon(
                                                             Icons
@@ -1196,38 +1191,34 @@ class ExploreEventsState extends State<ExploreEvents> {
                                                         InkWell(
                                                           onTap: () {
                                                             setState(() {
-                                                              dataArray[item][
-                                                                      'userLiked'] =
-                                                                  !dataArray[
-                                                                          item][
-                                                                      'userLiked'];
+                                                              events[item]
+                                                                      ?.userLiked =
+                                                                  !events[item]
+                                                                      .userLiked;
                                                             });
 
                                                             ApiCalls.toggleLike(
-                                                                    dataArray[
-                                                                            item]
-                                                                        ['_id'])
+                                                                    events[item]
+                                                                        ?.sId)
                                                                 .then((value) {
                                                               if (!value)
                                                                 setState(() {
-                                                                  dataArray[
-                                                                          item][
-                                                                      'userLiked'] = !dataArray[
-                                                                          item][
-                                                                      'userLiked'];
+                                                                  events[item]
+                                                                      ?.userLiked = !events[
+                                                                          item]
+                                                                      .userLiked;
                                                                 });
                                                             });
                                                           },
                                                           child: Icon(
-                                                            (dataArray[item][
-                                                                    'userLiked'])
+                                                            (events[item]
+                                                                    .userLiked)
                                                                 ? Icons.favorite
                                                                 : Icons
                                                                     .favorite_outline,
                                                             size: 20,
-                                                            color: (dataArray[
-                                                                        item][
-                                                                    'userLiked'])
+                                                            color: (events[item]
+                                                                    .userLiked)
                                                                 ? ColorList
                                                                     .colorRed
                                                                 : ColorList
@@ -1257,7 +1248,7 @@ class ExploreEventsState extends State<ExploreEvents> {
         ],
       );
     } else {
-      return Container();
+      return const SizedBox();
     }
   }
 
