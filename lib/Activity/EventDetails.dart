@@ -19,8 +19,6 @@ import 'EditProfile.dart';
 import 'MultipleDatesOptions.dart';
 import 'ReportEvent.dart';
 
-var height, width;
-
 class EventDetails extends StatefulWidget {
   String id;
 
@@ -34,6 +32,7 @@ class EventDetailsState extends State<EventDetails> {
   bool isLoading = true, saved = false;
   bool descTextShowFlag = false;
   var data, more_data, performingArtists;
+  var height, width;
 
   double posx = 100.0;
   double posy = 100.0;
@@ -90,14 +89,16 @@ class EventDetailsState extends State<EventDetails> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
+    final padding = MediaQuery.of(context).padding;
+    debugPrint("Banner: ${data != null ? data['banner'] : "empty"}");
 
-    return isLoading
+    return isLoading && data == null
         ? Container(
             height: height,
-            color: ColorList.colorAccent,
+            color: ColorList.colorSplashBG,
           )
         : Scaffold(
-            backgroundColor: ColorList.colorPrimary,
+            backgroundColor: Colors.transparent,
             body: Stack(
               children: [
                 WillPopScope(
@@ -105,935 +106,961 @@ class EventDetailsState extends State<EventDetails> {
                     color: ColorList.colorSeeAll,
                     child: SingleChildScrollView(
                         physics: BouncingScrollPhysics(),
-                        child: Column(
+                        child: Stack(
                           children: [
-                            // Container(
-                            //   height: MediaQuery.of(context).padding.top + 10,
-                            //   color: ColorList.colorGray,
-                            // ),
-                            Container(
-                                width: double.infinity,
-                                height: height * 0.55,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: isLoading
-                                        ? ''
-                                        : Methods.getLargeEventCardImage(
-                                            data['banner']),
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      width: double.infinity,
-                                      height: height * 0.55,
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                            ColorList.colorPrimary
-                                                .withOpacity(0.5),
-                                            ColorList.colorPrimary
-                                                .withOpacity(0.98)
-                                          ])),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          height * 0.02,
-                                          MediaQuery.of(context).padding.top +
-                                              10,
-                                          height * 0.02,
-                                          0),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                InkWell(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Padding(
-                                                      child: Icon(
-                                                          Icons.arrow_back,
-                                                          color: ColorList
-                                                              .colorAccent,
-                                                          size: 30),
-                                                      padding:
-                                                          EdgeInsets.all(0.0),
-                                                    )),
-                                                Spacer(),
-                                                InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    onTap: () {
-                                                      setState(() {
-                                                        data['userLiked'] =
-                                                            !data['userLiked'];
-                                                      });
-
-                                                      ApiCalls.toggleLike(
-                                                              data['_id'])
-                                                          .then((value) {
-                                                        if (!value)
-                                                          setState(() {
-                                                            data['userLiked'] =
-                                                                !data[
-                                                                    'userLiked'];
-                                                          });
-                                                      });
-                                                    },
-                                                    child: Icon(
-                                                      (data['userLiked'])
-                                                          ? Icons.favorite
-                                                          : Icons
-                                                              .favorite_outline,
-                                                      size: 30,
-                                                      color: (data['userLiked'])
-                                                          ? ColorList.colorRed
-                                                          : ColorList
-                                                              .colorAccent,
-                                                    ))
-                                              ],
-                                            ),
-                                            padding: EdgeInsets.fromLTRB(
-                                                5.0,
-                                                height * 0.02,
-                                                5.0,
-                                                height * 0.01),
-                                          ),
-                                          Spacer(),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        data['category']
-                                                            ['name'],
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'SF_Pro_400',
-                                                            color: ColorList
-                                                                .colorAccent,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            fontSize: 14),
-                                                      ),
-                                                      Container(
-                                                        width: width * 0.8,
-                                                        child: Text(
-                                                          data['title'],
-                                                          overflow: TextOverflow
-                                                              .visible,
-                                                          softWrap: true,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'SF_Pro_900',
+                            Positioned(
+                              height: (data != null && data['banner'] != null && !data['banner'].toString().contains("default_banner")) ? height * 0.55 : height - 100,
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: Methods.getLargeeEventCardImage(data != null ? data['banner'] : "", width: width,
+                                  height: height * 0.55),
+                            ),
+                            Column(
+                              children: [
+                                Container(
+                                    width: double.infinity,
+                                    height: height * 0.55,
+                                    // margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                                    // decoration: BoxDecoration(
+                                    //   image: DecorationImage(
+                                    //     fit: BoxFit.cover,
+                                    //     image: isLoading
+                                    //         ? ''
+                                    //         : Methods.getLargeEventCardImage(
+                                    //             data['banner']),
+                                    //   ),
+                                    // ),
+                                    child: Stack(
+                                      children: [
+                                        // Container(
+                                        //   width: double.infinity,
+                                        //   height: height * 0.55,
+                                        //   padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20),
+                                        //   decoration: BoxDecoration(
+                                        //     image: DecorationImage(
+                                        //       fit: BoxFit.cover,
+                                        //       image: isLoading
+                                        //           ? ''
+                                        //           : Methods.getLargeEventCardImage(
+                                        //           data['banner']),
+                                        //     ),
+                                        //   ),
+                                        //   child: ,
+                                        // ),
+                                        // Methods.getLargeeEventCardImage(data['banner'], width: double.infinity,
+                                        //   height: height * 0.55),
+                                        // Container(
+                                        //   width: double.infinity,
+                                        //   height: height * 0.55,
+                                        //   decoration: BoxDecoration(
+                                        //       gradient: LinearGradient(
+                                        //           begin: Alignment.topCenter,
+                                        //           end: Alignment.bottomCenter,
+                                        //           colors: [
+                                        //         ColorList.colorPrimary
+                                        //             .withOpacity(0.5),
+                                        //         ColorList.colorPrimary
+                                        //             .withOpacity(0.6)
+                                        //       ])),
+                                        // ),
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(
+                                              height * 0.02,
+                                              MediaQuery.of(context).padding.top +
+                                                  10,
+                                              height * 0.02,
+                                              0),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                child: Row(
+                                                  children: [
+                                                    InkWell(
+                                                        onTap: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: Padding(
+                                                          child: Icon(
+                                                              Icons.arrow_back,
                                                               color: ColorList
                                                                   .colorAccent,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w900,
-                                                              fontSize: 35),
+                                                              size: 30),
+                                                          padding:
+                                                              EdgeInsets.all(0.0),
+                                                        )),
+                                                    Spacer(),
+                                                    InkWell(
+                                                        splashColor:
+                                                            Colors.transparent,
+                                                        hoverColor:
+                                                            Colors.transparent,
+                                                        highlightColor:
+                                                            Colors.transparent,
+                                                        focusColor:
+                                                            Colors.transparent,
+                                                        onTap: () {
+                                                          setState(() {
+                                                            data['userLiked'] =
+                                                                !data['userLiked'];
+                                                          });
+
+                                                          ApiCalls.toggleLike(
+                                                                  data['_id'])
+                                                              .then((value) {
+                                                            if (!value)
+                                                              setState(() {
+                                                                data['userLiked'] =
+                                                                    !data[
+                                                                        'userLiked'];
+                                                              });
+                                                          });
+                                                        },
+                                                        child: Icon(
+                                                          (data['userLiked'])
+                                                              ? Icons.favorite
+                                                              : Icons
+                                                                  .favorite_outline,
+                                                          size: 30,
+                                                          color: (data['userLiked'])
+                                                              ? ColorList.colorRed
+                                                              : ColorList
+                                                                  .colorAccent,
+                                                        ))
+                                                  ],
+                                                ),
+                                                padding: EdgeInsets.fromLTRB(
+                                                    5.0,
+                                                    height * 0.02,
+                                                    5.0,
+                                                    height * 0.01),
+                                              ),
+                                              Spacer(),
+                                              Align(
+                                                alignment: Alignment.bottomCenter,
+                                                child: Container(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            data['category']
+                                                                ['name'],
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'SF_Pro_400',
+                                                                color: ColorList
+                                                                    .colorAccent,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                                fontSize: 14),
+                                                          ),
+                                                          Container(
+                                                            width: width * 0.8,
+                                                            child: Text(
+                                                              data['title'],
+                                                              overflow: TextOverflow
+                                                                  .visible,
+                                                              softWrap: true,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'SF_Pro_900',
+                                                                  color: ColorList
+                                                                      .colorAccent,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                  fontSize: 35),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Spacer(),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showPopup();
+                                                        },
+                                                        child: Image.asset(
+                                                          "assets/images/more_vert.png",
+                                                          height: 25,
+                                                          color:
+                                                              ColorList.colorAccent,
                                                         ),
+                                                        onTapDown: (TapDownDetails
+                                                            details) {
+                                                          RenderBox box = context
+                                                              .findRenderObject();
+                                                          Offset localOffset = box
+                                                              .globalToLocal(details
+                                                                  .globalPosition);
+                                                          setState(() {
+                                                            posx = localOffset.dx;
+                                                            posy = localOffset.dy;
+                                                          });
+                                                        },
                                                       ),
                                                     ],
                                                   ),
-                                                  Spacer(),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      showPopup();
-                                                    },
-                                                    child: Image.asset(
-                                                      "assets/images/more_vert.png",
-                                                      height: 25,
-                                                      color:
-                                                          ColorList.colorAccent,
-                                                    ),
-                                                    onTapDown: (TapDownDetails
-                                                        details) {
-                                                      RenderBox box = context
-                                                          .findRenderObject();
-                                                      Offset localOffset = box
-                                                          .globalToLocal(details
-                                                              .globalPosition);
-                                                      setState(() {
-                                                        posx = localOffset.dx;
-                                                        posy = localOffset.dy;
-                                                      });
-                                                    },
-                                                  ),
-                                                ],
+                                                  padding: EdgeInsets.all(5.0),
+                                                ),
                                               ),
-                                              padding: EdgeInsets.all(5.0),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                Container(
+                                  color: ColorList.colorPrimary.withOpacity(0.6),
+                                  padding: EdgeInsets.fromLTRB(height * 0.02,
+                                      height * 0.02, height * 0.02, 0),
+                                  width: width,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                height * 0.01, 0, height * 0.02, 0),
+                                            child: Image.asset(
+                                              "assets/images/event_date.png",
+                                              height: 20,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                            Container(
-                              color: ColorList.colorPrimary,
-                              padding: EdgeInsets.fromLTRB(height * 0.02,
-                                  height * 0.02, height * 0.02, 0),
-                              width: width,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            height * 0.01, 0, height * 0.02, 0),
-                                        child: Image.asset(
-                                          "assets/images/event_date.png",
-                                          height: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        DateFormat('EEEE, dd MMM yyyy').format(
-                                            DateTime.tryParse(
-                                                data['startTime'])),
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_700',
-                                            fontSize: 13.0,
-                                            color: ColorList.colorDetails,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: Icon(
-                                          Icons.arrow_drop_down_circle,
-                                          size: 4,
-                                          color: ColorList.colorDetails,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          "${DateFormat('hh.mm a').format(DateTime.tryParse(data['startTime']))} - ${DateFormat('hh.mm a').format(DateTime.tryParse(data['endTime']))}",
-                                          style: TextStyle(
-                                              fontFamily: 'SF_Pro_700',
-                                              fontSize: 13.0,
+                                          Text(
+                                            DateFormat('EEEE, dd MMM yyyy').format(
+                                                DateTime.tryParse(
+                                                    data['startTime'])),
+                                            style: TextStyle(
+                                                fontFamily: 'SF_Pro_700',
+                                                fontSize: 13.0,
+                                                color: ColorList.colorDetails,
+                                                fontWeight: FontWeight.bold,
+                                                decoration: TextDecoration.none),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Icon(
+                                              Icons.arrow_drop_down_circle,
+                                              size: 4,
                                               color: ColorList.colorDetails,
-                                              fontWeight: FontWeight.bold,
-                                              decoration: TextDecoration.none),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            height * 0.012,
-                                            0,
-                                            height * 0.022,
-                                            0),
-                                        child: Image.asset(
-                                          "assets/images/event_location.png",
-                                          height: 20,
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                              width: width - (height * 0.1),
-                                              child: Text(
-                                                address,
-                                                style: TextStyle(
-                                                    fontFamily: 'SF_Pro_700',
-                                                    fontSize: 15.0,
-                                                    color:
-                                                        ColorList.colorDetails,
-                                                    fontWeight: FontWeight.w700,
-                                                    decoration:
-                                                        TextDecoration.none),
-                                              )),
-                                          SizedBox(height: 3),
-                                          SizedBox(
-                                            width: width - (height * 0.1),
+                                            ),
+                                          ),
+                                          Flexible(
                                             child: Text(
-                                              location,
-                                              overflow: TextOverflow.ellipsis,
+                                              "${DateFormat('hh.mm a').format(DateTime.tryParse(data['startTime']))} - ${DateFormat('hh.mm a').format(DateTime.tryParse(data['endTime']))}",
                                               style: TextStyle(
-                                                  fontFamily: 'SF_Pro_400',
-                                                  fontSize: 10.0,
+                                                  fontFamily: 'SF_Pro_700',
+                                                  fontSize: 13.0,
                                                   color: ColorList.colorDetails,
                                                   fontWeight: FontWeight.bold,
-                                                  decoration:
-                                                      TextDecoration.none),
+                                                  decoration: TextDecoration.none),
                                             ),
                                           ),
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            height * 0.01,
-                                            0,
-                                            height * 0.015,
-                                            0),
-                                        child: Image.asset(
-                                          "assets/images/event_ticket.png",
-                                          height: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Starting from ${Methods.getLowestPrice(data['tickets'], false)}",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_700',
-                                            fontSize: 15.0,
-                                            color: ColorList.colorDetails,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            height * 0.01,
-                                            0,
-                                            height * 0.015,
-                                            0),
-                                        child: Image.asset(
-                                          "assets/images/event_details.png",
-                                          height: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        (data['organizers'] != null &&
-                                                data['organizers'].length > 0)
-                                            ? data['organizers'][0]['brandName']
-                                            : "Brand name not available!",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_700',
-                                            fontSize: 15.0,
-                                            color: ColorList.colorDetails,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            height * 0.01,
-                                            0,
-                                            height * 0.015,
-                                            0),
-                                        child: Image.asset(
-                                          "assets/images/event_details.png",
-                                          height: 20,
-                                        ),
                                       ),
                                       SizedBox(
-                                          width: width - (height * 0.1),
-                                          child: Text(
-                                            getHashtags(),
-                                            overflow: TextOverflow.ellipsis,
+                                        height: height * 0.02,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                height * 0.012,
+                                                0,
+                                                height * 0.022,
+                                                0),
+                                            child: Image.asset(
+                                              "assets/images/event_location.png",
+                                              height: 20,
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                  width: width - (height * 0.1),
+                                                  child: Text(
+                                                    address,
+                                                    style: TextStyle(
+                                                        fontFamily: 'SF_Pro_700',
+                                                        fontSize: 15.0,
+                                                        color:
+                                                            ColorList.colorDetails,
+                                                        fontWeight: FontWeight.w700,
+                                                        decoration:
+                                                            TextDecoration.none),
+                                                  )),
+                                              SizedBox(height: 3),
+                                              SizedBox(
+                                                width: width - (height * 0.1),
+                                                child: Text(
+                                                  location,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_400',
+                                                      fontSize: 10.0,
+                                                      color: ColorList.colorDetails,
+                                                      fontWeight: FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.02,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                height * 0.01,
+                                                0,
+                                                height * 0.015,
+                                                0),
+                                            child: Image.asset(
+                                              "assets/images/event_ticket.png",
+                                              height: 20,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Starting from ${Methods.getLowestPrice(data['tickets'], false)}",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 fontFamily: 'SF_Pro_700',
                                                 fontSize: 15.0,
                                                 color: ColorList.colorDetails,
                                                 fontWeight: FontWeight.bold,
-                                                decoration:
-                                                    TextDecoration.none),
-                                          )),
+                                                decoration: TextDecoration.none),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.02,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                height * 0.01,
+                                                0,
+                                                height * 0.015,
+                                                0),
+                                            child: Image.asset(
+                                              "assets/images/event_details.png",
+                                              height: 20,
+                                            ),
+                                          ),
+                                          Text(
+                                            (data['organizers'] != null &&
+                                                    data['organizers'].length > 0)
+                                                ? data['organizers'][0]['brandName']
+                                                : "Brand name not available!",
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                fontFamily: 'SF_Pro_700',
+                                                fontSize: 15.0,
+                                                color: ColorList.colorDetails,
+                                                fontWeight: FontWeight.bold,
+                                                decoration: TextDecoration.none),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.02,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                height * 0.01,
+                                                0,
+                                                height * 0.015,
+                                                0),
+                                            child: Image.asset(
+                                              "assets/images/event_details.png",
+                                              height: 20,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                              width: width - (height * 0.1),
+                                              child: Text(
+                                                getHashtags(),
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                    fontFamily: 'SF_Pro_700',
+                                                    fontSize: 15.0,
+                                                    color: ColorList.colorDetails,
+                                                    fontWeight: FontWeight.bold,
+                                                    decoration:
+                                                        TextDecoration.none),
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.05,
+                                      ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: height * 0.05,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: width,
-                              padding: EdgeInsets.all(height * 0.035),
-                              decoration: const BoxDecoration(
-                                color: ColorList.colorAccent,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30.0),
-                                  topRight: Radius.circular(30.0),
                                 ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Details",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontFamily: 'SF_Pro_900',
-                                        fontSize: 18.0,
-                                        color: ColorList.colorPrimary,
-                                        fontWeight: FontWeight.w900,
-                                        decoration: TextDecoration.none,
-                                        letterSpacing: 0.35),
+                                Container(
+                                  width: width,
+                                  padding: EdgeInsets.all(height * 0.035),
+                                  decoration: const BoxDecoration(
+                                    color: ColorList.colorAccent,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30.0),
+                                      topRight: Radius.circular(30.0),
+                                    ),
                                   ),
-                                  SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        data['description'],
-                                        maxLines: descTextShowFlag ? 15 : 2,
+                                        "Details",
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                            fontFamily: 'SF_Pro_400',
-                                            fontSize: 13.0,
-                                            color: ColorList.colorPrimary
-                                                .withOpacity(0.7),
-                                            fontWeight: FontWeight.normal,
-                                            decoration: TextDecoration.none),
+                                            fontFamily: 'SF_Pro_900',
+                                            fontSize: 18.0,
+                                            color: ColorList.colorPrimary,
+                                            fontWeight: FontWeight.w900,
+                                            decoration: TextDecoration.none,
+                                            letterSpacing: 0.35),
                                       ),
-                                      if (data['description'].length > 100)
-                                        InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                descTextShowFlag =
-                                                    !descTextShowFlag;
-                                              });
-                                            },
-                                            child: Padding(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  descTextShowFlag
-                                                      ? Text(
-                                                          "Read Less",
+                                      SizedBox(
+                                        height: height * 0.02,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            data['description'],
+                                            maxLines: descTextShowFlag ? 15 : 2,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                fontFamily: 'SF_Pro_400',
+                                                fontSize: 13.0,
+                                                color: ColorList.colorPrimary
+                                                    .withOpacity(0.7),
+                                                fontWeight: FontWeight.normal,
+                                                decoration: TextDecoration.none),
+                                          ),
+                                          if (data['description'].length > 100)
+                                            InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    descTextShowFlag =
+                                                        !descTextShowFlag;
+                                                  });
+                                                },
+                                                child: Padding(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      descTextShowFlag
+                                                          ? Text(
+                                                              "Read Less",
+                                                              style: TextStyle(
+                                                                color: ColorList
+                                                                    .colorSeeAll,
+                                                                fontFamily:
+                                                                    'SF_Pro_900',
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            )
+                                                          : Text("Read More",
+                                                              style: TextStyle(
+                                                                color: ColorList
+                                                                    .colorSeeAll,
+                                                                fontFamily:
+                                                                    'SF_Pro_900',
+                                                                fontSize: 14.0,
+                                                              ))
+                                                    ],
+                                                  ),
+                                                  padding: EdgeInsets.only(
+                                                      top: height * 0.01),
+                                                )),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.025,
+                                      ),
+                                      Container(
+                                        //padding: EdgeInsets.only(top: 15.0),
+                                        child:
+                                            (performingArtists == null ||
+                                                    performingArtists.length == 0)
+                                                ? Container()
+                                                : Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        width: width,
+                                                        child: Text(
+                                                          "Performing Artists",
+                                                          textAlign:
+                                                              TextAlign.start,
                                                           style: TextStyle(
-                                                            color: ColorList
-                                                                .colorSeeAll,
-                                                            fontFamily:
-                                                                'SF_Pro_900',
-                                                            fontSize: 14.0,
-                                                          ),
-                                                        )
-                                                      : Text("Read More",
-                                                          style: TextStyle(
-                                                            color: ColorList
-                                                                .colorSeeAll,
-                                                            fontFamily:
-                                                                'SF_Pro_900',
-                                                            fontSize: 14.0,
-                                                          ))
-                                                ],
-                                              ),
-                                              padding: EdgeInsets.only(
-                                                  top: height * 0.01),
-                                            )),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.025,
-                                  ),
-                                  Container(
-                                    //padding: EdgeInsets.only(top: 15.0),
-                                    child:
-                                        (performingArtists == null ||
-                                                performingArtists.length == 0)
-                                            ? Container()
-                                            : Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
+                                                              fontFamily:
+                                                                  'SF_Pro_900',
+                                                              fontSize: 18.0,
+                                                              color: ColorList
+                                                                  .colorPrimary,
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .none),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height * 0.02,
+                                                      ),
+                                                      Container(
+                                                        height: height * 0.085,
+                                                        child: ListView.builder(
+                                                            shrinkWrap: true,
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            itemCount:
+                                                                performingArtists
+                                                                    .length,
+                                                            itemBuilder:
+                                                                (BuildContext
+                                                                            context,
+                                                                        int item) =>
+                                                                    Column(
+                                                                      children: [
+                                                                        Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              margin:
+                                                                                  EdgeInsets.only(right: 15),
+                                                                              width:
+                                                                                  height * 0.075,
+                                                                              height:
+                                                                                  height * 0.075,
+                                                                              child:
+                                                                                  CachedNetworkImage(
+                                                                                imageUrl:
+                                                                                    performingArtists[item]['imgUrl'] ?? "",
+                                                                                fit:
+                                                                                    BoxFit.cover,
+                                                                                imageBuilder: (context, imageProvider) =>
+                                                                                    Container(
+                                                                                  decoration: BoxDecoration(
+                                                                                    shape: BoxShape.circle,
+                                                                                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                                                                                  ),
+                                                                                ),
+                                                                                placeholder: (context, url) =>
+                                                                                    CircularProgressIndicator(),
+                                                                                errorWidget: (context, url, error) =>
+                                                                                    Image.asset('assets/images/profile.png'),
+                                                                              ),
+                                                                            ),
+                                                                            Column(
+                                                                              crossAxisAlignment:
+                                                                                  CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Text(
+                                                                                  performingArtists[item]['name'],
+                                                                                  textAlign: TextAlign.start,
+                                                                                  style: TextStyle(fontFamily: 'SF_Pro_900', fontSize: 13.0, color: ColorList.colorPrimary, fontWeight: FontWeight.bold, decoration: TextDecoration.none),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width:
+                                                                                  width * 0.075,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              height *
+                                                                                  0.01,
+                                                                        ),
+                                                                      ],
+                                                                    )),
+                                                      )
+                                                    ],
+                                                  ),
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.03,
+                                      ),
+                                      (data['organizers'] != null &&
+                                              data['organizers'].length > 0)
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
                                                     width: width,
                                                     child: Text(
-                                                      "Performing Artists",
-                                                      textAlign:
-                                                          TextAlign.start,
+                                                      "Organizers",
+                                                      textAlign: TextAlign.start,
                                                       style: TextStyle(
-                                                          fontFamily:
-                                                              'SF_Pro_900',
+                                                          fontFamily: 'SF_Pro_900',
                                                           fontSize: 18.0,
                                                           color: ColorList
                                                               .colorPrimary,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           decoration:
-                                                              TextDecoration
-                                                                  .none),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: height * 0.02,
-                                                  ),
-                                                  Container(
-                                                    height: height * 0.085,
-                                                    child: ListView.builder(
-                                                        shrinkWrap: true,
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        itemCount:
-                                                            performingArtists
-                                                                .length,
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                        context,
-                                                                    int item) =>
-                                                                Column(
-                                                                  children: [
-                                                                    Row(
-                                                                      children: [
-                                                                        Container(
-                                                                          margin:
-                                                                              EdgeInsets.only(right: 15),
-                                                                          width:
-                                                                              height * 0.075,
-                                                                          height:
-                                                                              height * 0.075,
-                                                                          child:
-                                                                              CachedNetworkImage(
-                                                                            imageUrl:
-                                                                                performingArtists[item]['imgUrl'] ?? "",
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                            imageBuilder: (context, imageProvider) =>
-                                                                                Container(
-                                                                              decoration: BoxDecoration(
-                                                                                shape: BoxShape.circle,
-                                                                                image: DecorationImage(image: imageProvider, fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
-                                                                              ),
-                                                                            ),
-                                                                            placeholder: (context, url) =>
-                                                                                CircularProgressIndicator(),
-                                                                            errorWidget: (context, url, error) =>
-                                                                                Image.asset('assets/images/profile.png'),
-                                                                          ),
-                                                                        ),
-                                                                        Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Text(
-                                                                              performingArtists[item]['name'],
-                                                                              textAlign: TextAlign.start,
-                                                                              style: TextStyle(fontFamily: 'SF_Pro_900', fontSize: 13.0, color: ColorList.colorPrimary, fontWeight: FontWeight.bold, decoration: TextDecoration.none),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              width * 0.075,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          height *
-                                                                              0.01,
-                                                                    ),
-                                                                  ],
-                                                                )),
-                                                  )
-                                                ],
-                                              ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.03,
-                                  ),
-                                  (data['organizers'] != null &&
-                                          data['organizers'].length > 0)
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                                width: width,
-                                                child: Text(
-                                                  "Organizers",
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                      fontFamily: 'SF_Pro_900',
-                                                      fontSize: 18.0,
-                                                      color: ColorList
-                                                          .colorPrimary,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      decoration:
-                                                          TextDecoration.none,
-                                                      letterSpacing: 0.35),
-                                                )),
-                                            SizedBox(
-                                              height: height * 0.025,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  margin: EdgeInsets.only(
-                                                      right: 15),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        (data['organizers'] !=
-                                                                    null &&
-                                                                data['organizers']
-                                                                        .length >
-                                                                    0)
-                                                            ? data['organizers']
-                                                                [0]['imageUrl']
-                                                            : null,
-                                                    imageBuilder: (context,
-                                                            imageProvider) =>
-                                                        Container(
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                            image:
-                                                                imageProvider,
-                                                            fit: BoxFit.cover,
-                                                            colorFilter:
-                                                                ColorFilter.mode(
-                                                                    Colors.red,
-                                                                    BlendMode
-                                                                        .colorBurn)),
+                                                              TextDecoration.none,
+                                                          letterSpacing: 0.35),
+                                                    )),
+                                                SizedBox(
+                                                  height: height * 0.025,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 50,
+                                                      height: 50,
+                                                      margin: EdgeInsets.only(
+                                                          right: 15),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            (data['organizers'] !=
+                                                                        null &&
+                                                                    data['organizers']
+                                                                            .length >
+                                                                        0)
+                                                                ? data['organizers']
+                                                                    [0]['imageUrl']
+                                                                : null,
+                                                        imageBuilder: (context,
+                                                                imageProvider) =>
+                                                            Container(
+                                                          decoration: BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            image: DecorationImage(
+                                                                image:
+                                                                    imageProvider,
+                                                                fit: BoxFit.cover,
+                                                                colorFilter:
+                                                                    ColorFilter.mode(
+                                                                        Colors.red,
+                                                                        BlendMode
+                                                                            .colorBurn)),
+                                                          ),
+                                                        ),
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            CircularProgressIndicator(),
+                                                        errorWidget: (context, url,
+                                                                error) =>
+                                                            Image.asset(
+                                                                'assets/images/profile.png'),
                                                       ),
                                                     ),
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        CircularProgressIndicator(),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        Image.asset(
-                                                            'assets/images/profile.png'),
-                                                  ),
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      (data['organizers'] !=
-                                                                  null &&
-                                                              data['organizers']
-                                                                      .length >
-                                                                  0)
-                                                          ? data['organizers']
-                                                              [0]['brandName']
-                                                          : "Brand name not available!",
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'SF_Pro_900',
-                                                          fontSize: 13.0,
-                                                          color: ColorList
-                                                              .colorPrimary,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .none),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          (data['organizers'] !=
+                                                                      null &&
+                                                                  data['organizers']
+                                                                          .length >
+                                                                      0)
+                                                              ? data['organizers']
+                                                                  [0]['brandName']
+                                                              : "Brand name not available!",
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'SF_Pro_900',
+                                                              fontSize: 13.0,
+                                                              color: ColorList
+                                                                  .colorPrimary,
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .none),
+                                                        ),
+                                                      ],
                                                     ),
+                                                    Container(
+                                                      width: height * 0.02,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        if (data['organizers'] !=
+                                                                null &&
+                                                            data['organizers']
+                                                                    .length >
+                                                                0)
+                                                          Methods
+                                                              .sendEmailToOrganizer(
+                                                                  data['organizers']
+                                                                      [0]['email'],
+                                                                  data['link'],
+                                                                  data['organizers']
+                                                                          [0][
+                                                                      'brandName']);
+                                                      },
+                                                      child: Image.asset(
+                                                        'assets/images/sms.png',
+                                                        color:
+                                                            ColorList.colorSeeAll,
+                                                        height: 31,
+                                                      ),
+                                                    )
                                                   ],
                                                 ),
-                                                Container(
-                                                  width: height * 0.02,
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    if (data['organizers'] !=
-                                                            null &&
-                                                        data['organizers']
-                                                                .length >
-                                                            0)
-                                                      Methods
-                                                          .sendEmailToOrganizer(
-                                                              data['organizers']
-                                                                  [0]['email'],
-                                                              data['link'],
-                                                              data['organizers']
-                                                                      [0][
-                                                                  'brandName']);
-                                                  },
-                                                  child: Image.asset(
-                                                    'assets/images/sms.png',
-                                                    color:
-                                                        ColorList.colorSeeAll,
-                                                    height: 31,
-                                                  ),
-                                                )
+                                                // Padding(
+                                                //   padding: EdgeInsets.only(left: height * 0.07),
+                                                //   child: Row(
+                                                //     children: [
+                                                //       Container(
+                                                //         child: Card(
+                                                //           color: Colors.transparent,
+                                                //           elevation: 0.0,
+                                                //           child: ClipRect(
+                                                //             child: Container(
+                                                //               //width: width * 0.3,
+                                                //               height: 42.0,
+                                                //               decoration: new BoxDecoration(
+                                                //                 color: Colors.white,
+                                                //                 border: new Border.all(color: ColorList.colorSplashBG, width: 1.0),
+                                                //                 borderRadius: new BorderRadius.circular(10.0),
+                                                //               ),
+                                                //               child: InkWell(
+                                                //                 onTap: (){
+                                                //                   Methods.showComingSoon();
+                                                //                   //Methods.showToast("Following the Organiser...");
+                                                //                 },
+                                                //                 child: Padding(
+                                                //                   padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+                                                //                   child: Row(
+                                                //                     children: [
+                                                //                       Text(
+                                                //                         'Follow',
+                                                //                         textAlign: TextAlign.center,
+                                                //                         style: TextStyle(
+                                                //                           fontFamily: 'SF_Pro_600',
+                                                //                           decoration: TextDecoration.none,
+                                                //                           fontSize: 15.0,
+                                                //                           fontWeight: FontWeight.w600,
+                                                //                           color: ColorList.colorSplashBG,
+                                                //                         ),
+                                                //                       ),
+                                                //                     ],
+                                                //                   ),
+                                                //                 ),
+                                                //               ),
+                                                //             ),
+                                                //           ),
+                                                //         ),
+                                                //
+                                                //       ),
+                                                //       Container(
+                                                //         width: height * 0.02,
+                                                //       ),
+                                                //       InkWell(
+                                                //         onTap: (){
+                                                //           Methods.showComingSoon();
+                                                //           //Methods.showToast("Messaging the Organiser...");
+                                                //         },
+                                                //         child: Image.asset(
+                                                //           'assets/images/sms.png',
+                                                //           color: ColorList.colorSeeAll,
+                                                //           height: 31,
+                                                //         ),
+                                                //       )
+                                                //     ],
+                                                //   ),
+                                                // ),
                                               ],
-                                            ),
-                                            // Padding(
-                                            //   padding: EdgeInsets.only(left: height * 0.07),
-                                            //   child: Row(
-                                            //     children: [
-                                            //       Container(
-                                            //         child: Card(
-                                            //           color: Colors.transparent,
-                                            //           elevation: 0.0,
-                                            //           child: ClipRect(
-                                            //             child: Container(
-                                            //               //width: width * 0.3,
-                                            //               height: 42.0,
-                                            //               decoration: new BoxDecoration(
-                                            //                 color: Colors.white,
-                                            //                 border: new Border.all(color: ColorList.colorSplashBG, width: 1.0),
-                                            //                 borderRadius: new BorderRadius.circular(10.0),
-                                            //               ),
-                                            //               child: InkWell(
-                                            //                 onTap: (){
-                                            //                   Methods.showComingSoon();
-                                            //                   //Methods.showToast("Following the Organiser...");
-                                            //                 },
-                                            //                 child: Padding(
-                                            //                   padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-                                            //                   child: Row(
-                                            //                     children: [
-                                            //                       Text(
-                                            //                         'Follow',
-                                            //                         textAlign: TextAlign.center,
-                                            //                         style: TextStyle(
-                                            //                           fontFamily: 'SF_Pro_600',
-                                            //                           decoration: TextDecoration.none,
-                                            //                           fontSize: 15.0,
-                                            //                           fontWeight: FontWeight.w600,
-                                            //                           color: ColorList.colorSplashBG,
-                                            //                         ),
-                                            //                       ),
-                                            //                     ],
-                                            //                   ),
-                                            //                 ),
-                                            //               ),
-                                            //             ),
-                                            //           ),
-                                            //         ),
-                                            //
-                                            //       ),
-                                            //       Container(
-                                            //         width: height * 0.02,
-                                            //       ),
-                                            //       InkWell(
-                                            //         onTap: (){
-                                            //           Methods.showComingSoon();
-                                            //           //Methods.showToast("Messaging the Organiser...");
-                                            //         },
-                                            //         child: Image.asset(
-                                            //           'assets/images/sms.png',
-                                            //           color: ColorList.colorSeeAll,
-                                            //           height: 31,
-                                            //         ),
-                                            //       )
-                                            //     ],
-                                            //   ),
-                                            // ),
-                                          ],
-                                        )
-                                      : Container(),
-                                  SizedBox(
-                                    height: height * 0.07,
-                                  ),
-                                  Text(
-                                    "Share Events",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontFamily: 'SF_Pro_900',
-                                        fontSize: 18.0,
-                                        color: ColorList.colorPrimary,
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 0.35,
-                                        decoration: TextDecoration.none),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  Row(
-                                    children: [
-                                      // Container(
-                                      //   width: 50.0,
-                                      //   height: 50.0,
-                                      //   decoration: new BoxDecoration(
-                                      //     color: Colors.white,
-                                      //     borderRadius: new BorderRadius.circular(10.0),
-                                      //     boxShadow: [
-                                      //       BoxShadow(
-                                      //         color: ColorList.colorPrimary.withOpacity(0.1),
-                                      //         blurRadius: 12,
-                                      //         offset: Offset(0,4)
-                                      //       )
-                                      //     ]
-                                      //   ),
-                                      //   child: InkWell(
-                                      //     onTap: () async  {
-                                      //       final pref = await SharedPreferences.getInstance();
-                                      //       var email = pref.getString('email');
-                                      //
-                                      //       Methods.shareEmail(email, data['link']);
-                                      //     },
-                                      //     child: Image.asset(
-                                      //       'assets/images/mail_share.png',
-                                      //       width: 15.0,
-                                      //       height: 15.0,
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   width: width * 0.04,
-                                      // ),
-                                      // Container(
-                                      //   width: 50.0,
-                                      //   height: 50.0,
-                                      //   decoration: new BoxDecoration(
-                                      //     color: Colors.white,
-                                      //       borderRadius: new BorderRadius.circular(10.0),
-                                      //       boxShadow: [
-                                      //         BoxShadow(
-                                      //             color: ColorList.colorPrimary.withOpacity(0.1),
-                                      //             blurRadius: 12,
-                                      //             offset: Offset(0,4)
-                                      //         )
-                                      //       ]
-                                      //   ),
-                                      //   child: InkWell(
-                                      //     onTap: (){
-                                      //       Methods.shareEvent(data['link']);
-                                      //     },
-                                      //     child: Image.asset(
-                                      //       'assets/images/fb_share.png',
-                                      //       width: 15.0,
-                                      //       height: 15.0,
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   width: width * 0.04,
-                                      // ),
-                                      Container(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        decoration: new BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                new BorderRadius.circular(10.0),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: ColorList.colorPrimary
-                                                      .withOpacity(0.1),
-                                                  blurRadius: 12,
-                                                  offset: Offset(0, 4))
-                                            ]),
-                                        child: InkWell(
-                                          onTap: () {
-                                            // Methods.shareTwitter(data['link']);
-                                            Methods.shareEvent(data['link']);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Image.asset(
-                                              'assets/images/ic_share.png',
-                                              width: 15.0,
-                                              height: 15.0,
-                                            ),
-                                          ),
-                                        ),
+                                            )
+                                          : Container(),
+                                      SizedBox(
+                                        height: height * 0.07,
+                                      ),
+                                      Text(
+                                        "Share Events",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontFamily: 'SF_Pro_900',
+                                            fontSize: 18.0,
+                                            color: ColorList.colorPrimary,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 0.35,
+                                            decoration: TextDecoration.none),
                                       ),
                                       SizedBox(
-                                        width: width * 0.04,
+                                        height: height * 0.02,
                                       ),
-                                      Container(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        decoration: new BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                new BorderRadius.circular(10.0),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: ColorList.colorPrimary
-                                                      .withOpacity(0.1),
-                                                  blurRadius: 12,
-                                                  offset: Offset(0, 4))
-                                            ]),
-                                        child: InkWell(
-                                          onTap: () {
-                                            Clipboard.setData(ClipboardData(
-                                                text: data['link']));
-                                            Methods.showToast(
-                                                "Link copied to clipboard");
-                                          },
-                                          child: Image.asset(
-                                            'assets/images/link_share.png',
-                                            width: 15.0,
-                                            height: 15.0,
+                                      Row(
+                                        children: [
+                                          // Container(
+                                          //   width: 50.0,
+                                          //   height: 50.0,
+                                          //   decoration: new BoxDecoration(
+                                          //     color: Colors.white,
+                                          //     borderRadius: new BorderRadius.circular(10.0),
+                                          //     boxShadow: [
+                                          //       BoxShadow(
+                                          //         color: ColorList.colorPrimary.withOpacity(0.1),
+                                          //         blurRadius: 12,
+                                          //         offset: Offset(0,4)
+                                          //       )
+                                          //     ]
+                                          //   ),
+                                          //   child: InkWell(
+                                          //     onTap: () async  {
+                                          //       final pref = await SharedPreferences.getInstance();
+                                          //       var email = pref.getString('email');
+                                          //
+                                          //       Methods.shareEmail(email, data['link']);
+                                          //     },
+                                          //     child: Image.asset(
+                                          //       'assets/images/mail_share.png',
+                                          //       width: 15.0,
+                                          //       height: 15.0,
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                          // SizedBox(
+                                          //   width: width * 0.04,
+                                          // ),
+                                          // Container(
+                                          //   width: 50.0,
+                                          //   height: 50.0,
+                                          //   decoration: new BoxDecoration(
+                                          //     color: Colors.white,
+                                          //       borderRadius: new BorderRadius.circular(10.0),
+                                          //       boxShadow: [
+                                          //         BoxShadow(
+                                          //             color: ColorList.colorPrimary.withOpacity(0.1),
+                                          //             blurRadius: 12,
+                                          //             offset: Offset(0,4)
+                                          //         )
+                                          //       ]
+                                          //   ),
+                                          //   child: InkWell(
+                                          //     onTap: (){
+                                          //       Methods.shareEvent(data['link']);
+                                          //     },
+                                          //     child: Image.asset(
+                                          //       'assets/images/fb_share.png',
+                                          //       width: 15.0,
+                                          //       height: 15.0,
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                          // SizedBox(
+                                          //   width: width * 0.04,
+                                          // ),
+                                          Container(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            decoration: new BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    new BorderRadius.circular(10.0),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: ColorList.colorPrimary
+                                                          .withOpacity(0.1),
+                                                      blurRadius: 12,
+                                                      offset: Offset(0, 4))
+                                                ]),
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Methods.shareTwitter(data['link']);
+                                                Methods.shareEvent(data['link']);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(12.0),
+                                                child: Image.asset(
+                                                  'assets/images/ic_share.png',
+                                                  width: 15.0,
+                                                  height: 15.0,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          SizedBox(
+                                            width: width * 0.04,
+                                          ),
+                                          Container(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            decoration: new BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    new BorderRadius.circular(10.0),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: ColorList.colorPrimary
+                                                          .withOpacity(0.1),
+                                                      blurRadius: 12,
+                                                      offset: Offset(0, 4))
+                                                ]),
+                                            child: InkWell(
+                                              onTap: () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text: data['link']));
+                                                Methods.showToast(
+                                                    "Link copied to clipboard");
+                                              },
+                                              child: Image.asset(
+                                                'assets/images/link_share.png',
+                                                width: 15.0,
+                                                height: 15.0,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.08,
+                                      ),
+                                      getSimilar(),
+                                      SizedBox(
+                                        height: height * 0.08,
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: height * 0.08,
-                                  ),
-                                  getSimilar(),
-                                  SizedBox(
-                                    height: height * 0.08,
-                                  ),
-                                ],
-                              ),
-                            )
+                                )
+                              ],
+                            ),
                           ],
                         )),
                     onRefresh: () {

@@ -273,20 +273,24 @@ class Methods {
   }
 
   static Widget getSmallEventCardImage(url, {width, height}) {
+    String img = url;
+    if(url != null && url.contains("default_banner")) img = null;
+
     return Container(
       width: width,
       height: height,
       color: ColorList.colorPrimary.withOpacity(0.6),
       child: CachedNetworkImage(
-        imageUrl: url ?? "",
+        imageUrl: img ?? "",
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
-            color: ColorList.colorPrimary.withOpacity(0.6),
+            // color: ColorList.colorPrimary.withOpacity(0.6),
             image: DecorationImage(
                 image: imageProvider,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.dstOut)),
+                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.darken)
+            ),
           ),
         ),
         placeholder: (context, url) => Center(
@@ -295,8 +299,8 @@ class Methods {
         errorWidget: (context, url, error) => Image.asset(
           'assets/images/event_small.png',
           fit: BoxFit.cover,
-          color: ColorList.colorPrimary.withOpacity(0.6),
-          colorBlendMode: BlendMode.dstATop,
+          color: ColorList.colorPrimary.withOpacity(0.1),
+          colorBlendMode: BlendMode.darken,
         ),
       ),
     );
@@ -304,6 +308,40 @@ class Methods {
     //   return AssetImage('assets/images/event_small.png');
     // else
     //   return NetworkImage(url);
+  }
+
+  static Widget getLargeeEventCardImage(String url, {width, height}) {
+    String img = url;
+    if(url != null && url.contains("default_banner")) img = null;
+
+    return Container(
+      width: width,
+      height: height,
+      color: ColorList.colorPrimary.withOpacity(0.6),
+      child: CachedNetworkImage(
+        imageUrl: img ?? "",
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            color: ColorList.colorPrimary.withOpacity(0.6),
+            image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.fill,
+                colorFilter: ColorFilter.mode(
+                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.dstOut)
+            ),
+          ),
+        ),
+        placeholder: (context, url) => Center(
+            child: SizedBox(
+                height: 60, width: 60, child: CircularProgressIndicator())),
+        errorWidget: (context, url, error) => Image.asset(
+          'assets/images/event_large.png',
+          fit: BoxFit.cover,
+          color: ColorList.colorPrimary.withOpacity(0.6),
+          colorBlendMode: BlendMode.darken,
+        ),
+      ),
+    );
   }
 
   static getLargeEventCardImage(url) {
@@ -447,18 +485,20 @@ class Methods {
           highest = tickets[0]['price'];
         else
           highest = 0;
-        currency = tickets[0]['currency']['htmlCode'];
+        if(tickets[0]['currency'] != null)
+          currency = tickets[0]['currency']['htmlCode'];
       }
       for (int i = 0; i < tickets.length; i++) {
         if (tickets[i]['price'] != null && (highest < tickets[i]['price'])) {
           highest = tickets[i]['price'];
-          currency = tickets[i]['currency']['htmlCode'];
+          if(tickets[i]['currency'] != null)
+            currency = tickets[i]['currency']['htmlCode'];
         }
       }
     }
 
     return tickets.length > 1
-        ? "  -  ${unescape.convert(currency)}${formattedAmount(highest * multiplier)}"
+        ? "  -  ${unescape.convert(currency ?? "")}${formattedAmount(highest * multiplier)}"
         : "";
   }
 

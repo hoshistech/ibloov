@@ -28,6 +28,7 @@ class ColorList {
   static const colorSearchListPlace = const Color(0xFF9F9F9F);
   static const colorSearchListMore = const Color(0xFF4272ED);
   static const colorTicketBG = const Color(0x1A4272ED);
+  static const colorBlueOnBlack = const Color(0xFF4272ED);
   static const colorNavButton = const Color(0xFFB0B0B0);
   static const colorNavBG = const Color(0x593064EE);
   static const colorTileExpanded = const Color(0xFFECF1FD);

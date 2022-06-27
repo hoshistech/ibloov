@@ -454,6 +454,7 @@ class ExploreEventsState extends State<ExploreEvents> {
   getList() {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           getFeaturedEventsSlides(),
           for (int i = 1; i < 5; i++) getEventsWidgets(i),
@@ -501,7 +502,7 @@ class ExploreEventsState extends State<ExploreEvents> {
                 child: Container(
                     padding: EdgeInsets.only(left: 10.0),
                     margin: EdgeInsets.zero,
-                    color: ColorList.colorAccent,
+                    // color: ColorList.colorSplashBG,
                     child: Container(
                       padding: (item == events.length - 1)
                           ? EdgeInsets.only(right: 10.0)
@@ -755,7 +756,9 @@ class ExploreEventsState extends State<ExploreEvents> {
         slides.add(data);
       }
 
-      final slider = Column(
+      final slider = Container(
+        alignment: Alignment.topLeft,
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -778,7 +781,8 @@ class ExploreEventsState extends State<ExploreEvents> {
                     ),
                   ),
                   Spacer(),
-                  InkWell(
+                  if(events.length > 2)
+                    InkWell(
                     child: Padding(
                       padding: EdgeInsets.only(right: 15.0),
                       child: Text(
@@ -807,14 +811,16 @@ class ExploreEventsState extends State<ExploreEvents> {
           CarouselSlider(
             options: CarouselOptions(
                 autoPlay: slides.length > 2 ? true : false,
-                //enlargeCenterPage: true,
+                // enlargeCenterPage: true,
+                // aspectRatio: 2.0,
+                disableCenter: true,
                 viewportFraction: 0.8,
                 enableInfiniteScroll: false,
                 autoPlayAnimationDuration: Duration(seconds: 5)),
             items: slides,
           )
         ],
-      );
+      ));
 
       return slider;
     } else {
@@ -1273,46 +1279,51 @@ class ExploreEventsState extends State<ExploreEvents> {
   getMessage() {
     if (countEvent == 0) {
       isMsgShown = true;
-      //Methods.showToast('No event found in this category!\nTry any other category...');
       return Container(
-          height: height * 0.6,
           alignment: Alignment.center,
           child: ListView(
             shrinkWrap: true,
             children: [
               Container(
-                  width: 120,
-                  height: 120,
-                  child: Image.asset('assets/images/no_result.png')),
-              Container(
-                  padding: EdgeInsets.only(top: 25),
+                  padding: EdgeInsets.only(top: 30),
                   child: Center(
                     child: Text(
                       'No events found',
                       style: TextStyle(
                           fontFamily: 'SF_Pro_900',
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: ColorList.colorSearchList,
-                          decoration: TextDecoration.none),
+                          fontWeight: FontWeight.w700,
+                          color: ColorList.colorPrimary,
+                          decoration: TextDecoration.none
+                      ),
                     ),
-                  )),
+                  )
+              ),
+              const SizedBox(height: 25),
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.width * 0.5,
+                  child: Image.asset('assets/images/img_astronaut.png')
+              ),
               Container(
                   padding: EdgeInsets.only(top: 15),
                   child: Center(
                     child: Text(
-                      'No event found in this category!\nTry any other category...',
+                      'No event found in this category!\nTry any other category.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: 'SF_Pro_900',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: ColorList.colorSearchListPlace,
-                          decoration: TextDecoration.none),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: ColorList.colorPrimary,
+                          decoration: TextDecoration.none
+                      ),
                     ),
-                  ))
+                  )
+              ),
             ],
-          ));
+          )
+      );
     } else {
       return Container();
     }

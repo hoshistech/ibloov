@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:ibloov/model/guest.dart';
 import 'package:ibloov/model/location.dart';
 import 'package:ibloov/model/organizers.dart';
