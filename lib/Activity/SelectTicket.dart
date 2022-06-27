@@ -238,15 +238,6 @@ class _SelectTicketState extends State<SelectTicket> {
                                               ),
                                             ],
                                           ),
-                                          if (widget.eventData["plusOne"] ??
-                                              false)
-                                            Text(
-                                              "plus one allowed",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12,
-                                                  color: Colors.grey[400]),
-                                            ),
                                         ],
                                       ),
                                     ),
