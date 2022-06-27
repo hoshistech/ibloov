@@ -27,6 +27,7 @@ class EditProfileState extends State<EditProfile>{
   DateTime stringDOB;
   XFile profileImage, bgImage;
   List data = [];
+  int gender = 0;
 
   final ImagePicker imagePicker = ImagePicker();
 
@@ -494,16 +495,21 @@ class EditProfileState extends State<EditProfile>{
                               ),
                             ),
                             Spacer(),
-                            Container(
-                              child: Text(
-                                stringGender,
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  fontFamily: 'SF_Pro_700',
-                                  decoration: TextDecoration.none,
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorList.colorPrimary,
+                            GestureDetector(
+                              onTap: () {
+                                showGenderModal(context);
+                              },
+                              child: Container(
+                                child: Text(
+                                  stringGender,
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    fontFamily: 'SF_Pro_700',
+                                    decoration: TextDecoration.none,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorList.colorPrimary,
+                                  ),
                                 ),
                               ),
                             ),
@@ -877,6 +883,100 @@ class EditProfileState extends State<EditProfile>{
     );
   }
 
+  Future<void> showGenderModal(BuildContext context) async {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: ColorList.colorAccent,
+        builder: (context) {
+      return Wrap(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                gender = 0;
+                stringGender = 'Male';
+              });
+              Navigator.pop(context);
+            },
+            child: ListTile(
+              leading: Image.asset(
+                'assets/images/male_logo.png',
+                width: 25.0,
+                height: 25.0,
+              ),
+              title: Text(
+                'Male',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontFamily: 'SF_Pro_600',
+                  decoration: TextDecoration.none,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color:  gender == 0 ? ColorList.colorBlue : ColorList.colorGrayText,
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                gender = 1;
+                stringGender = 'Female';
+              });
+              Navigator.pop(context);
+            },
+            child: ListTile(
+              leading: Image.asset(
+                'assets/images/female_logo.png',
+                width: 25.0,
+                height: 25.0,
+              ),
+              title: Text(
+                'Female',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontFamily: 'SF_Pro_600',
+                  decoration: TextDecoration.none,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
+                  color: gender == 1 ? ColorList.colorBlue : ColorList.colorGrayText,
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                gender = 2;
+                stringGender = 'Other gender';
+              });
+              Navigator.pop(context);
+            },
+            child: ListTile(
+              leading: Image.asset(
+                'assets/images/female_logo.png',
+                width: 25.0,
+                height: 25.0,
+              ),
+              title: Text(
+                'Others',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontFamily: 'SF_Pro_600',
+                  decoration: TextDecoration.none,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
+                  color: gender == 2 ? ColorList.colorBlue : ColorList.colorGrayText,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+    );
+  }
+
   void openDOBSelector(BuildContext context) {
     FocusScope.of(context).requestFocus(new FocusNode());
     DatePicker.showDatePicker(
@@ -931,7 +1031,8 @@ class EditProfileState extends State<EditProfile>{
       'dob': stringDOB.toString(),
       'imageUrl': stringProfile,
       'backgroundImage': stringBackground,
-      'bio': bioController.text
+      'bio': bioController.text,
+      'gender': stringGender,
     };
 
     ApiCalls.updateProfile(context, data)
