@@ -36,6 +36,9 @@ class ColorList {
   static const colorMenuItem = const Color(0xFFB0B0B0);
   static const colorHeader = const Color(0xff202020);
   static const colorBottomSheetBG = const Color(0xFF737373);
+  static const colorBlueHeading = const Color(0xFF00237B);
+  static const textColor = const Color(0xFF010101);
+  static const textFaint = const Color(0xFF848484);
 
   static void searchFilterMenu(BuildContext context, double height, double width){
     int locationIndex = 0;

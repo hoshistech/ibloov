@@ -32,7 +32,7 @@ class SplashState extends State<Splash> {
   getToken(BuildContext context) {
     isLoggedIn
         ? ApiCalls.refreshToken(context).then((value) {
-            if (value) navigationToNextPage();
+            if (value ?? false) navigationToNextPage();
           })
         : navigationToNextPage();
   }

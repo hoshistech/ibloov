@@ -1172,7 +1172,7 @@ class EventDetailsState extends State<EventDetails> {
                                                   data["_id"],
                                                   data["title"],
                                                   "${(data['organizers'] != null && data['organizers'].length > 0) ? data['organizers'][0]['brandName'] : "Brand name not available!"}",
-                                                  festEvent)));
+                                                  festEvent, eventData: data)));
                                       // Navigator.push(
                                       //   context,
                                       //   MaterialPageRoute(

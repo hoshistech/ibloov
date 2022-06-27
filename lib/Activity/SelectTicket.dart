@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:ibloov/Activity/event_terms.dart';
 import 'package:ibloov/Constants/ApiCalls.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
@@ -16,8 +17,10 @@ import 'ExtraTicketRegistration.dart';
 class SelectTicket extends StatefulWidget {
   final String festId, festName, organiser;
   final FestEvents event;
+  final Map<String, dynamic> eventData;
 
-  const SelectTicket(this.festId, this.festName, this.organiser, this.event);
+  const SelectTicket(this.festId, this.festName, this.organiser, this.event,
+      {this.eventData});
 
   @override
   _SelectTicketState createState() => _SelectTicketState();
@@ -44,6 +47,13 @@ class _SelectTicketState extends State<SelectTicket> {
     festName = widget.festName;
     organiser = widget.organiser;
     event = widget.event;
+    if (!(widget.eventData["terms"] != null &&
+        widget.eventData["terms"].toString().isNotEmpty)) {
+      accept = true;
+    }
+
+    accept = widget.eventData["terms"] == null ||
+        widget.eventData["terms"].toString().isEmpty;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ApiCalls.fetchEventTickets(context, festId).then((value) {
@@ -85,7 +95,8 @@ class _SelectTicketState extends State<SelectTicket> {
           children: [
             Positioned.fill(
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 75),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).padding.bottom + 75),
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -130,39 +141,42 @@ class _SelectTicketState extends State<SelectTicket> {
                         padding: const EdgeInsets.only(left: 20.0, top: 10),
                         child: Container(
                             child: Text(
-                              festName,
-                              style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
-                            )),
+                          festName,
+                          style: TextStyle(
+                              fontSize: 45, fontWeight: FontWeight.bold),
+                        )),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0, top: 10),
                         child: Container(
                             child: Text(
-                              event.day.toString() +
-                                  ", " +
-                                  event.date +
-                                  " " +
-                                  event.month +
-                                  " " +
-                                  event.year +
-                                  "\t\t" +
-                                  event.time,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[500]),
-                            )),
+                          event.day.toString() +
+                              ", " +
+                              event.date +
+                              " " +
+                              event.month +
+                              " " +
+                              event.year +
+                              "\t\t" +
+                              event.time,
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[500]),
+                        )),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0, top: 20),
                         child: Container(
                             child: Text(
-                              "Tickets",
-                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                            )),
+                          "Tickets",
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        )),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20.0, bottom: height * 0.11),
+                        padding:
+                            EdgeInsets.only(left: 20.0, bottom: height * 0.11),
                         child: ListView.builder(
                             // physics: BouncingScrollPhysics(),
                             shrinkWrap: true,
@@ -170,8 +184,8 @@ class _SelectTicketState extends State<SelectTicket> {
                             itemBuilder: (BuildContext context, int item) {
                               if (data.length == 0) {
                                 return Center(
-                                    child:
-                                    Text("No available tickets for this event."));
+                                    child: Text(
+                                        "No available tickets for this event."));
                               } else {
                                 return Row(
                                   children: [
@@ -186,8 +200,8 @@ class _SelectTicketState extends State<SelectTicket> {
                                           shape: BoxShape.circle,
                                           color: colors[item % 3]),
                                       child: Image(
-                                          image:
-                                          AssetImage("assets/images/ticket.png"),
+                                          image: AssetImage(
+                                              "assets/images/ticket.png"),
                                           color: colorsBlend[item % 3],
                                           colorBlendMode: BlendMode.srcIn,
                                           fit: BoxFit.cover),
@@ -195,8 +209,10 @@ class _SelectTicketState extends State<SelectTicket> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             data[item]['name'],
@@ -206,7 +222,7 @@ class _SelectTicketState extends State<SelectTicket> {
                                           ),
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Text(
                                                 '${data[item]['currency'] != null ? unescape.convert(data[item]['currency']['htmlCode']) : ""}${Methods.formattedAmount(data[item]['price'])}',
@@ -229,7 +245,8 @@ class _SelectTicketState extends State<SelectTicket> {
                                     Padding(
                                       padding: EdgeInsets.only(left: 0),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           ElevatedButton(
                                               style: ElevatedButton.styleFrom(
@@ -263,8 +280,13 @@ class _SelectTicketState extends State<SelectTicket> {
                                                   onPrimary: Colors.grey),
                                               onPressed: () {
                                                 setState(() {
-                                                  if((ticket[item][3]?.toString()?.toLowerCase() == "free") && ticket[item][2] == 1) {
-                                                    Methods.showToast("You can't purchase more than one free ticket");
+                                                  if ((ticket[item][3]
+                                                              ?.toString()
+                                                              ?.toLowerCase() ==
+                                                          "free") &&
+                                                      ticket[item][2] == 1) {
+                                                    Methods.showToast(
+                                                        "You can't purchase more than one free ticket");
                                                   } else {
                                                     ticket[item][2]++;
                                                     totalTickets++;
@@ -272,8 +294,8 @@ class _SelectTicketState extends State<SelectTicket> {
                                                 });
                                               },
                                               child: Text("+",
-                                                  style:
-                                                  TextStyle(color: Colors.black)))
+                                                  style: TextStyle(
+                                                      color: Colors.black)))
                                         ],
                                       ),
                                     ),
@@ -291,79 +313,83 @@ class _SelectTicketState extends State<SelectTicket> {
               bottom: MediaQuery.of(context).padding.bottom + 75,
               left: 0,
               right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                        setState(() {
-                          if(!accept)
-                            accept = true;
-                          else
-                            accept = false;
-                        });
-                      },
-                      child: Image.asset(
-                        !accept ? 'assets/images/accept_agreement_select.png' : 'assets/images/accept_agreement.png',
-                        width: width * 0.075,
-                        height: width * 0.075,
-                      ),
-                    ),
-                    Container(
-                      width: width * 0.03,
-                    ),
-                    Flexible(
-                      child: RichText(
-                        text: TextSpan(
-                            text: 'I agree to abide by all the ',
-                            style: TextStyle(
-                              fontFamily: 'SF_Pro_400',
-                              decoration: TextDecoration.none,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500,
-                              color: ColorList.colorGray,
+              child: (widget.eventData["terms"] != null &&
+                      widget.eventData["terms"].toString().isNotEmpty)
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (!accept)
+                                  accept = true;
+                                else
+                                  accept = false;
+                              });
+                            },
+                            child: Image.asset(
+                              !accept
+                                  ? 'assets/images/accept_agreement_select.png'
+                                  : 'assets/images/accept_agreement.png',
+                              width: width * 0.075,
+                              height: width * 0.075,
                             ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'Terms and Conditions',
+                          ),
+                          Container(
+                            width: width * 0.03,
+                          ),
+                          Flexible(
+                            child: RichText(
+                              text: TextSpan(
+                                  text: 'I agree to abide by all the ',
                                   style: TextStyle(
                                     fontFamily: 'SF_Pro_400',
                                     decoration: TextDecoration.none,
-                                    decorationColor: ColorList.colorBlueOnBlack,
                                     fontSize: 14.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorList.colorSplashBG,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorList.colorGray,
                                   ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //       builder: (context) => TermsWebView(),
-                                      //     )
-                                      // );
-                                    }
-                              ),
-                              TextSpan(
-                                text: ' of the event and by the organizers ',
-                                style: TextStyle(
-                                  fontFamily: 'SF_Pro_400',
-                                  decoration: TextDecoration.none,
-                                  decorationColor: ColorList.colorGrayText,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w400,
-                                  color: ColorList.colorGray,
-                                ),
-                              ),
-                            ]
-                        ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'Terms and Conditions',
+                                        style: TextStyle(
+                                          fontFamily: 'SF_Pro_400',
+                                          decoration: TextDecoration.none,
+                                          decorationColor:
+                                              ColorList.colorBlueOnBlack,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorList.colorSplashBG,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            showTermsAndConditions(
+                                                context,
+                                                widget.eventData["terms"]
+                                                    .toString());
+                                          }),
+                                    TextSpan(
+                                      text:
+                                          ' of the event and by the organizers ',
+                                      style: TextStyle(
+                                        fontFamily: 'SF_Pro_400',
+                                        decoration: TextDecoration.none,
+                                        decorationColor:
+                                            ColorList.colorGrayText,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorList.colorGray,
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                    )
+                  : SizedBox(),
             ),
           ],
         ),
@@ -430,6 +456,10 @@ class _SelectTicketState extends State<SelectTicket> {
               ),
               MaterialButton(
                 onPressed: () {
+                  if (!accept) {
+                    Methods.showToast("Accept terms and conditions");
+                    return;
+                  }
                   var extraTicketNumber = 0;
                   List _tickets = [];
 
@@ -498,7 +528,11 @@ class _SelectTicketState extends State<SelectTicket> {
     }
   }
 
-  showTermsAndConditions() {
-
+  showTermsAndConditions(BuildContext context, String terms) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return EventTerms(terms ?? "");
+        });
   }
 }
