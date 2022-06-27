@@ -14,8 +14,8 @@ import 'Methods.dart';
 
 class ApiCalls{
 
-  // static String urlMain = 'https://api.ibloov.com/';
-  static String urlMain = 'https://ibloov-auth-staging-868mc.ondigitalocean.app/ibloov-auth2/';
+  static String urlMain = 'https://api.ibloov.com/';
+  // static String urlMain = 'https://ibloov-auth-staging-868mc.ondigitalocean.app/ibloov-auth2/';
 
   static String urlSignup = urlMain + 'auth/signup';
   static String urlVerifyAccount = urlMain + 'auth/verify-account';

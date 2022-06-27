@@ -52,49 +52,49 @@ class Event {
 
   Event(
       {this.sId,
-        this.terms,
-        this.organizers,
-        this.performingArtists,
-        this.viewers,
-        this.qrcode,
-        this.link,
-        this.linkId,
-        this.publishOn,
-        this.invitees,
-        this.plusOne,
-        this.status,
-        this.availability,
-        this.deletedAt,
-        this.conditions,
-        this.displayEndTime,
-        this.displayStartTime,
-        this.isCancelledDate,
-        this.registrationClosedDate,
-        this.isPublished,
-        this.hashtags,
-        this.category,
-        this.description,
-        this.title,
-        this.createdBy,
-        this.guests,
-        this.createdAt,
-        this.updatedAt,
-        this.iV,
-        this.location,
-        this.endTime,
-        this.startTime,
-        this.ageLimit,
-        this.landscapeImage,
-        this.portraitImage,
-        this.accountName,
-        this.accountNumber,
-        this.bank,
-        this.banner,
-        this.visibility,
-        this.customMessage,
-        this.tickets,
-        this.userLiked,
-        this.noOfRegistrations});
+      this.terms,
+      this.organizers,
+      this.performingArtists,
+      this.viewers,
+      this.qrcode,
+      this.link,
+      this.linkId,
+      this.publishOn,
+      this.invitees,
+      this.plusOne,
+      this.status,
+      this.availability,
+      this.deletedAt,
+      this.conditions,
+      this.displayEndTime,
+      this.displayStartTime,
+      this.isCancelledDate,
+      this.registrationClosedDate,
+      this.isPublished,
+      this.hashtags,
+      this.category,
+      this.description,
+      this.title,
+      this.createdBy,
+      this.guests,
+      this.createdAt,
+      this.updatedAt,
+      this.iV,
+      this.location,
+      this.endTime,
+      this.startTime,
+      this.ageLimit,
+      this.landscapeImage,
+      this.portraitImage,
+      this.accountName,
+      this.accountNumber,
+      this.bank,
+      this.banner,
+      this.visibility,
+      this.customMessage,
+      this.tickets,
+      this.userLiked,
+      this.noOfRegistrations});
 
   Event.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -102,15 +102,14 @@ class Event {
     if (json['organizers'] != null) {
       organizers = <Organizers>[];
       json['organizers'].forEach((v) {
-        if(v is Map<String, dynamic>)
-          organizers.add(Organizers.fromJson(v));
+        if (v is Map<String, dynamic>) organizers.add(Organizers.fromJson(v));
       });
     }
 
     if (json['performingArtists'] != null) {
       performingArtists = <PerformingArtist>[];
       json['performingArtists'].forEach((v) {
-        if(v is Map<String, dynamic>)
+        if (v is Map<String, dynamic>)
           performingArtists.add(PerformingArtist.fromJson(v));
       });
     }
@@ -118,7 +117,7 @@ class Event {
     if (json['viewers'] != null) {
       viewers = [];
       json['viewers'].forEach((v) {
-          conditions.add(v);
+        conditions.add(v);
       });
     }
     qrcode = json['qrcode'];
@@ -138,7 +137,7 @@ class Event {
     }
     displayEndTime = json['displayEndTime'];
     displayStartTime = json['displayStartTime'];
-    isCancelledDate = json['isCancelledDate'];
+    // isCancelledDate = json['isCancelledDate'] != "null" ? json["isCancelledDate"] : null;
     registrationClosedDate = json['registrationClosedDate'];
     isPublished = json['isPublished'];
     hashtags = json['hashtags'].cast<String>();
@@ -151,16 +150,14 @@ class Event {
     if (json['guests'] != null) {
       guests = <Guests>[];
       json['guests'].forEach((v) {
-        if(v is Map<String, dynamic>)
-          guests.add(Guests.fromJson(v));
+        if (v is Map<String, dynamic>) guests.add(Guests.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
-    location = json['location'] != null
-        ? Location.fromJson(json['location'])
-        : null;
+    location =
+        json['location'] != null ? Location.fromJson(json['location']) : null;
     endTime = json['endTime'];
     startTime = json['startTime'];
     ageLimit = json['ageLimit'];
@@ -175,8 +172,7 @@ class Event {
     if (json['tickets'] != null) {
       tickets = <Tickets>[];
       json['tickets'].forEach((v) {
-        if(v is Map<String, dynamic>)
-          tickets.add(Tickets.fromJson(v));
+        if (v is Map<String, dynamic>) tickets.add(Tickets.fromJson(v));
       });
     }
     userLiked = json['userLiked'];
@@ -257,11 +253,11 @@ class Category {
 
   Category(
       {this.sId,
-        this.name,
-        this.createdAt,
-        this.updatedAt,
-        this.iV,
-        this.imageUrl});
+      this.name,
+      this.createdAt,
+      this.updatedAt,
+      this.iV,
+      this.imageUrl});
 
   Category.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];

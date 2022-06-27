@@ -237,7 +237,16 @@ class _SelectTicketState extends State<SelectTicket> {
                                                     color: Colors.grey[400]),
                                               ),
                                             ],
-                                          )
+                                          ),
+                                          if (widget.eventData["plusOne"] ??
+                                              false)
+                                            Text(
+                                              "plus one allowed",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                  color: Colors.grey[400]),
+                                            ),
                                         ],
                                       ),
                                     ),
@@ -284,9 +293,33 @@ class _SelectTicketState extends State<SelectTicket> {
                                                               ?.toString()
                                                               ?.toLowerCase() ==
                                                           "free") &&
-                                                      ticket[item][2] == 1) {
-                                                    Methods.showToast(
-                                                        "You can't purchase more than one free ticket");
+                                                      ticket[item][2] < 2) {
+                                                    if (((widget.eventData[
+                                                                    "plusOne"] ??
+                                                                false) &&
+                                                            ticket[item][2] <
+                                                                2) ||
+                                                        ticket[item][2] < 1) {
+                                                      ticket[item][2]++;
+                                                      totalTickets++;
+                                                    } else
+                                                      Methods.showToast(
+                                                          "You have reached your limit for this ticket");
+                                                  } else if ((widget.eventData[
+                                                              "visibility"] ==
+                                                          "PRIVATE") &&
+                                                      ticket[item][2] < 2) {
+                                                    if (((widget.eventData[
+                                                                    "plusOne"] ??
+                                                                false) &&
+                                                            ticket[item][2] <
+                                                                2) ||
+                                                        ticket[item][2] < 1) {
+                                                      ticket[item][2]++;
+                                                      totalTickets++;
+                                                    } else
+                                                      Methods.showToast(
+                                                          "You have reached your limit for this ticket");
                                                   } else {
                                                     ticket[item][2]++;
                                                     totalTickets++;

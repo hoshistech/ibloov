@@ -92,7 +92,7 @@ class EventDetailsState extends State<EventDetails> {
     final padding = MediaQuery.of(context).padding;
     debugPrint("Banner: ${data != null ? data['banner'] : "empty"}");
 
-    return isLoading && data == null
+    return isLoading || data == null
         ? Container(
             height: height,
             color: ColorList.colorSplashBG,
@@ -1161,8 +1161,8 @@ class EventDetailsState extends State<EventDetails> {
                                           DateFormat('EEEE').format(DateTime.tryParse(data['startTime'])),
                                           DateFormat('hh.mm a')
                                               .format(DateTime.tryParse(data['startTime'])),
-                                          data['location']['name'],
-                                          data['location']['address'],
+                                          data['location'] != null ? data['location']['name'] : "",
+                                          data['location'] != null ? data['location']['address'] : "",
                                           Methods.getLowestPrice(data['tickets'], false));
 
                                       Navigator.push(
