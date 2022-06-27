@@ -878,7 +878,8 @@ class ExploreEventsState extends State<ExploreEvents> {
                     ),
                   ),
                   Spacer(),
-                  InkWell(
+                  if(events.length > 3)
+                    InkWell(
                     child: Padding(
                       padding: EdgeInsets.only(right: 15.0),
                       child: Text(
