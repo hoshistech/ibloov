@@ -513,10 +513,13 @@ class Methods {
   }
 
   static formattedAmount(amount) {
-    final value = new NumberFormat("#,##0", "en_US");
+    final value = new NumberFormat.currency(
+      decimalDigits: 2,
+      name: ""
+    );
     debugPrint("amount to format: $amount");
     if (amount == null) {
-      return "0";
+      return "0.00";
     }
     return value.format(amount);
   }

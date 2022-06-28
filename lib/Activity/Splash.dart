@@ -49,12 +49,9 @@ class SplashState extends State<Splash> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-    var _duration = Duration(seconds: 3);
-
     Future.delayed(Duration(seconds: 3), () {
       getToken(context);
     });
-    // return new Timer(_duration, getToken(context));
   }
 
   String getVersion() {
