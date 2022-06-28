@@ -260,7 +260,7 @@ class _SelectTicketState extends State<SelectTicket> {
                                                     ticket[item][2]--;
                                                     if (totalTickets != 0)
                                                       totalTickets--;
-                                                    totalAmount = totalAmount - data[item]['price'];
+                                                    totalAmount = totalAmount - (data[item]['price'] ?? 0.0);
                                                   }
                                                 });
                                               },
@@ -294,7 +294,7 @@ class _SelectTicketState extends State<SelectTicket> {
                                                         ticket[item][2] < 1) {
                                                       ticket[item][2]++;
                                                       totalTickets++;
-                                                      totalAmount = totalAmount + data[item]['price'];
+                                                      totalAmount = totalAmount + (data[item]['price'] ?? 0.0);
                                                     } else
                                                       Methods.showToast(
                                                           "You have reached your limit for this ticket");
@@ -310,13 +310,14 @@ class _SelectTicketState extends State<SelectTicket> {
                                                         ticket[item][2] < 1) {
                                                       ticket[item][2]++;
                                                       totalTickets++;
+                                                      totalAmount = totalAmount + (data[item]['price'] ?? 0.0);
                                                     } else
                                                       Methods.showToast(
                                                           "You have reached your limit for this ticket");
                                                   } else {
                                                     ticket[item][2]++;
                                                     totalTickets++;
-                                                    totalAmount = totalAmount + data[item]['price'];
+                                                    totalAmount = totalAmount + (data[item]['price'] ?? 0.0);
                                                   }
                                                 });
                                               },
@@ -463,7 +464,7 @@ class _SelectTicketState extends State<SelectTicket> {
                           fontWeight: FontWeight.bold,
                           fontSize: 12)),
                       Text(
-                        "${data[0]['currency'] != null ? unescape.convert(data[0]['currency']['htmlCode']) : ""}${Methods.formattedAmount(totalAmount)}", //${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}
+                        "${(data?.length ?? 0) > 0 ? data[0]['currency'] != null ? unescape.convert(data[0]['currency']['htmlCode']) : "" : ""}${Methods.formattedAmount(totalAmount)}", //${Methods.getLowestPrice(data, false)}${Methods.getHighestPrice(data)}
                         style: TextStyle(
                             fontFamily: 'SF_Pro_700',
                             color: Colors.grey[700],
