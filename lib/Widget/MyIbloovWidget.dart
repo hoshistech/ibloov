@@ -76,7 +76,7 @@ class MyIbloovWidgetState extends State<MyIbloovWidget>{
       return Container(
         width: double.infinity,
         height: height,
-        color: ColorList.colorHeaderOpaque,
+        color: ColorList.colorPrimary.withOpacity(0.3),
       );
     }
 
