@@ -21,6 +21,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
 
   final emailController = TextEditingController();
   FocusNode emailFocusNode = new FocusNode();
+  RegExp regexEmail = new RegExp(Methods.patternEmail);
 
   @override
   void initState() {
@@ -35,175 +36,183 @@ class ForgotPasswordState extends State<ForgotPassword> {
 
     return Scaffold(
       body: WillPopScope(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                child: InkWell(
-                    splashColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    onTap: (){
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                      );
-                    },
-                    child: Padding(
-                      child: Text(
-                        "Back",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontFamily: 'SF_Pro_700',
-                            fontSize: 17.0,
-                            color: ColorList.colorBack,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none
+        child: GestureDetector(
+          onTap: () => SystemChannels.textInput.invokeMethod('TextInput.hide'),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  child: InkWell(
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      onTap: (){
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      },
+                      child: Padding(
+                        child: Text(
+                          "Back",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontFamily: 'SF_Pro_700',
+                              fontSize: 17.0,
+                              color: ColorList.colorBack,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.none
+                          ),
                         ),
-                      ),
-                      padding: EdgeInsets.only(top: 0.0),
-                    )
+                        padding: EdgeInsets.only(top: 0.0),
+                      )
+                  ),
+                  padding: EdgeInsets.fromLTRB(0.0, height * 0.05, 0.0, height * 0.05),
                 ),
-                padding: EdgeInsets.fromLTRB(0.0, height * 0.05, 0.0, height * 0.05),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Image.asset(
-                    'assets/images/forgot_otp.png',
-                    width: width * 0.05,
-                  ),
-                  Container(
-                    width: 10,
-                  ),
-                  Container(
-                    child: Text(
-                      'Forgot Password?',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontFamily: 'SF_Pro_700',
-                        decoration: TextDecoration.none,
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                        color: ColorList.colorPrimary,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Image.asset(
+                      'assets/images/forgot_otp.png',
+                      width: width * 0.05,
+                    ),
+                    Container(
+                      width: 10,
+                    ),
+                    Container(
+                      child: Text(
+                        'Forgot Password?',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'SF_Pro_700',
+                          decoration: TextDecoration.none,
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold,
+                          color: ColorList.colorPrimary,
+                        ),
                       ),
                     ),
-                  ),
-                  Spacer(),
-                ],
-              ),
-              Container(
-                height: height * 0.03,
-              ),
-              Container(
-                child: Text(
-                  'Enter Email Address',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'SF_Pro_700',
-                    decoration: TextDecoration.none,
-                    fontSize: 17.0,
-                    fontWeight: FontWeight.bold,
-                    color: ColorList.colorPrimary,
+                    Spacer(),
+                  ],
+                ),
+                Container(
+                  height: height * 0.03,
+                ),
+                Container(
+                  child: Text(
+                    'Enter Email Address',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'SF_Pro_700',
+                      decoration: TextDecoration.none,
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                      color: ColorList.colorPrimary,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                height: height * 0.03,
-              ),
-              Container(
-                  child: Text(
-                      sampleText,
-                      style: TextStyle(
-                        fontFamily: 'SF_Pro_400',
-                        decoration: TextDecoration.none,
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.normal,
-                        color: ColorList.colorPrimary,
-                      )
-                  )
-              ),
-              Container(
-                height: height * 0.03,
-              ),
-              Card(
-                elevation: 0.0,
-                child: Container(
-                    width: width,
-                    child: TextFormField(
-                      controller: emailController,
-                      focusNode: emailFocusNode,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.done,
-                      cursorColor: ColorList.colorPrimary,
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                        hintText: 'Email address',
-                        hintStyle: TextStyle(color: ColorList.colorGrayHint),
-                        labelText: 'Email address',
-                        labelStyle: TextStyle(color: ColorList.colorGrayHint),
-                        alignLabelWithHint: true,
-                        prefixIcon: Image.asset('assets/images/email_logo.png', height: 5.0, width: 5.0),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: ColorList.colorGrayBorder, width: 2),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: ColorList.colorGrayBorder, width: 2),
-                        ),
-                      ),
+                Container(
+                  height: height * 0.03,
+                ),
+                Container(
+                    child: Text(
+                        sampleText,
+                        style: TextStyle(
+                          fontFamily: 'SF_Pro_400',
+                          decoration: TextDecoration.none,
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.normal,
+                          color: ColorList.colorPrimary,
+                        )
                     )
                 ),
-              ),
-              Container(
-                height: height * 0.4,
-              ),
-              MaterialButton(
-                minWidth: width * 0.9,
-                height: 50.0,
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(10.0),
+                Container(
+                  height: height * 0.03,
                 ),
-                onPressed: () {
-
-                  setState(() {
-                    email = emailController.text;
-                  });
-
-                  if(email == null || email.isEmpty){
-                    Methods.showToast('Email field is empty!');
-                    SystemChannels.textInput.invokeMethod('TextInput.show');
-                    FocusScope.of(context).requestFocus(emailFocusNode);
-                  } else {
-                    ApiCalls.resetPasswordOTP(email)
-                        .then((token){
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => ForgetPassword(token, email)),
-                          );
-                    });
-                  }
-
-                },
-                color: ColorList.colorSplashBG,
-                child: Text(
-                  'Send Email',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'SF_Pro_700',
-                    decoration: TextDecoration.none,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.normal,
-                    color: ColorList.colorAccent,
+                Card(
+                  elevation: 0.0,
+                  child: Container(
+                      width: width,
+                      child: TextFormField(
+                        controller: emailController,
+                        focusNode: emailFocusNode,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.done,
+                        cursorColor: ColorList.colorPrimary,
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          hintText: 'Email address',
+                          hintStyle: TextStyle(color: ColorList.colorGrayHint),
+                          labelText: 'Email address',
+                          labelStyle: TextStyle(color: ColorList.colorGrayHint),
+                          alignLabelWithHint: true,
+                          prefixIcon: Image.asset('assets/images/email_logo.png', height: 5.0, width: 5.0),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: ColorList.colorGrayBorder, width: 2),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: ColorList.colorGrayBorder, width: 2),
+                          ),
+                        ),
+                      )
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  height: height * 0.4,
+                ),
+                MaterialButton(
+                  minWidth: width * 0.9,
+                  height: 50.0,
+                  shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(10.0),
+                  ),
+                  onPressed: () {
+
+                    setState(() {
+                      email = emailController.text;
+                    });
+
+                    if(email == null || email.isEmpty){
+                      Methods.showToast('Email field is empty!');
+                      SystemChannels.textInput.invokeMethod('TextInput.show');
+                      FocusScope.of(context).requestFocus(emailFocusNode);
+                    } else if(!(email.contains(regexEmail))){
+                      Methods.showToast('Please enter a valid Email!');
+                      SystemChannels.textInput.invokeMethod('TextInput.show');
+                      FocusScope.of(context).requestFocus(emailFocusNode);
+                    } else {
+                      Methods.showLoaderDialog(context);
+
+                      ApiCalls.resetPasswordOTP(email)
+                          .then((token){
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => ForgotPasswordOtpScreen(token, email)),
+                            );
+                      });
+                    }
+                  },
+                  color: ColorList.colorSplashBG,
+                  child: Text(
+                    'Send Email',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'SF_Pro_700',
+                      decoration: TextDecoration.none,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.normal,
+                      color: ColorList.colorAccent,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         onWillPop: () {

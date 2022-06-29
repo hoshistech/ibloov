@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -31,7 +31,6 @@ class SelectLocationState extends State<SelectLocation>{
 
   Position currentPosition;
   String currentAddress = 'Fetching location...';
-  final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
   BitmapDescriptor icon;
   final locationController = TextEditingController();
   Completer<GoogleMapController> mapController = Completer();
@@ -57,9 +56,7 @@ class SelectLocationState extends State<SelectLocation>{
   }
 
   getCurrentLocation() {
-    geoLocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
+    Methods.determinePosition().then((Position position) {
       setState(() {
         currentPosition = position;
       });
@@ -91,8 +88,7 @@ class SelectLocationState extends State<SelectLocation>{
 
   getAddressFromLatLng(latitude, longitude) async {
     try {
-      List<Placemark> p = await geoLocator
-          .placemarkFromCoordinates(latitude, longitude);
+      List<Placemark> p = await placemarkFromCoordinates(latitude, longitude);
 
       Placemark place = p[0];
 

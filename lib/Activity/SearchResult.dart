@@ -98,29 +98,37 @@ class SearchResultState extends State<SearchResult> {
                         hintStyle: TextStyle(color: ColorList.colorGray, fontSize: 14.0),
                         alignLabelWithHint: true,
                         prefixIcon: IconButton(
-                          icon: Icon(
+                          icon: searchController.text.isNotEmpty ? Icon(
                             Icons.close,
                             color: ColorList.colorGray,
-                          ),
-                          color: ColorList.colorPrimary,
-                          onPressed: (){
-                            clearSearch();
-                            clearArrays();
-                          },
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.tune,
+                          ) : Icon(
+                            Icons.arrow_back,
                             color: ColorList.colorGray,
                           ),
                           color: ColorList.colorPrimary,
                           onPressed: (){
-                            setState(() {
-                              search = true;
-                            });
-                            Methods.openSearchFilter(context, height, width, searchFocusNode);
+                            if(searchController.text.isEmpty) {
+                              Navigator.pop(context);
+                              SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            } else {
+                              clearSearch();
+                              clearArrays();
+                            }
                           },
-                        )
+                        ),
+                        // suffixIcon: IconButton(
+                        //   icon: Icon(
+                        //     Icons.tune,
+                        //     color: ColorList.colorGray,
+                        //   ),
+                        //   color: ColorList.colorPrimary,
+                        //   onPressed: (){
+                        //     setState(() {
+                        //       search = true;
+                        //     });
+                        //     Methods.openSearchFilter(context, height, width, searchFocusNode);
+                        //   },
+                        // )
                     ),
                     onChanged: (value){
                       if(value.length > 3)
@@ -253,18 +261,24 @@ class SearchResultState extends State<SearchResult> {
                               padding: EdgeInsets.all(5.0),
                               child: Row(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    width: height * 0.11,
-                                    height: height * 0.08,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      //shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: Methods.getImage(result0[index]['banner'], 'placeholder'),
-                                          fit: BoxFit.fill
-                                      ),
-                                    ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(right: 10),
+                                  //   width: height * 0.11,
+                                  //   height: height * 0.08,
+                                  //   decoration: BoxDecoration(
+                                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                  //     //shape: BoxShape.circle,
+                                  //     image: DecorationImage(
+                                  //         image: Methods.getSmallEventCardImage(result0[index]['banner']),
+                                  //         fit: BoxFit.fill
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Methods.getSmallEventCardImage(
+                                        result0[index]['banner'] ?? "", width: height * 0.11,
+                                      height: height * 0.08,),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -630,18 +644,24 @@ class SearchResultState extends State<SearchResult> {
                               padding: EdgeInsets.all(5.0),
                               child: Row(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    width: height * 0.11,
-                                    height: height * 0.08,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      //shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: Methods.getImage(result3[index]['banner'], 'placeholder'),
-                                          fit: BoxFit.fill
-                                      ),
-                                    ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(right: 10),
+                                  //   width: height * 0.11,
+                                  //   height: height * 0.08,
+                                  //   decoration: BoxDecoration(
+                                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                  //     //shape: BoxShape.circle,
+                                  //     image: DecorationImage(
+                                  //         image: Methods.getSmallEventCardImage(result3[index]['banner']),
+                                  //         fit: BoxFit.fill
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Methods.getSmallEventCardImage(
+                                        result3[index]['banner'] ?? "", width: height * 0.11,
+                                      height: height * 0.08),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -804,14 +824,16 @@ class SearchResultState extends State<SearchResult> {
             setState((){
               isLoading0 = false;
               if(value != null){
+                result0.clear();  //TODO: revisit this later @Val
                 if(page0 == 1) {
-                  result0.clear();
+                  // result0.clear();
                   totalCount0 = json.decode(value)['data']['pagination']['total'];
                   totalCount0 = (totalCount0/10 + 1).toInt();
                 }
 
                 for(int i=0; i<json.decode(value)['data']['data'].length; i++){
                   result0.add(json.decode(value)['data']['data'][i]);
+                  // debugPrint("addedEvent: ${result0[i]}");
                 }
                 page0++;
                 result0 = filterResult(result0);
@@ -897,35 +919,37 @@ class SearchResultState extends State<SearchResult> {
           shrinkWrap: true,
           children: [
             Container(
-                width: 120,
-                height: 120,
-                child: Image.asset('assets/images/no_result.png')
-            ),
-            Container(
                 padding: EdgeInsets.only(top: 25),
                 child: Center(
                   child: Text(
-                    'No results found',
+                    'No events found',
                     style: TextStyle(
                         fontFamily: 'SF_Pro_900',
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorList.colorSearchList,
+                        fontWeight: FontWeight.w700,
+                        color: ColorList.colorPrimary,
                         decoration: TextDecoration.none
                     ),
                   ),
                 )
             ),
+            const SizedBox(height: 25),
+            Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.width * 0.5,
+                child: Image.asset('assets/images/img_astronaut.png')
+            ),
             Container(
                 padding: EdgeInsets.only(top: 15),
                 child: Center(
                   child: Text(
-                    'We can\'t find any item matching your search',
+                    'We can\'t find any event matching your search',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: 'SF_Pro_900',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: ColorList.colorSearchListPlace,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: ColorList.colorPrimary,
                         decoration: TextDecoration.none
                     ),
                   ),
@@ -941,6 +965,7 @@ class SearchResultState extends State<SearchResult> {
                 onPressed: () {
                   FocusScope.of(context).requestFocus(searchFocusNode);
                   SystemChannels.textInput.invokeMethod('TextInput.show');
+                  // getData(true);
                 },
                 color: ColorList.colorSplashBG,
                 child: Text(

@@ -5,6 +5,9 @@ import 'package:ibloov/Activity/DataPrivacy.dart';
 import 'package:ibloov/Activity/FAQ.dart';
 import 'package:ibloov/Activity/ReferFriend.dart';
 import 'package:ibloov/Activity/TermsCondition.dart';
+import 'package:ibloov/Activity/faq_webview.dart';
+import 'package:ibloov/Activity/data_policy_webview.dart';
+import 'package:ibloov/Activity/terms_webview.dart';
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
 
@@ -38,9 +41,9 @@ class SettingsWidgetState extends State<SettingsWidget>{
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      account(),
-                      preferences(),
-                      security(),
+                      // account(),
+                      // preferences(),
+                      // security(),
                       about(),
                     ],
                   ),
@@ -243,7 +246,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DataPrivacy(),
+                    builder: (context) => DataPolicyWebView(),
                   )
               );
             },
@@ -331,7 +334,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
 
   Widget preferences() {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -421,7 +424,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TermsCondition(),
+                    builder: (context) => TermsWebView(),
                   )
               );
             },
@@ -466,7 +469,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FAQ(),
+                    builder: (context) => FAQWebView(),
                   )
               );
             },
@@ -549,7 +552,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
 
   Widget about() {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

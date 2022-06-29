@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ibloov/Activity/ForgetPasswordSuccess.dart';
@@ -6,8 +7,6 @@ import 'package:ibloov/Activity/SelectInterest.dart';
 import 'package:ibloov/Activity/VerificationSuccess.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:ibloov/Activity/EnableLocation.dart';
 import 'package:ibloov/Activity/Home.dart';
 import 'package:ibloov/Activity/VerifyOTP.dart';
 
@@ -15,13 +14,15 @@ import 'Methods.dart';
 
 class ApiCalls{
 
-  static String urlMain = 'https://ibloov-auth-staging.herokuapp.com/';
+  // static String urlMain = 'https://api.ibloov.com/';
+  static String urlMain = 'https://ibloov-auth-staging-868mc.ondigitalocean.app/ibloov-auth2/';
 
   static String urlSignup = urlMain + 'auth/signup';
   static String urlVerifyAccount = urlMain + 'auth/verify-account';
   static String urlResendOTP = urlMain + 'auth/resend-verification';
   static String urlLogin = urlMain + 'auth/login';
   static String urlGoogle = urlMain + 'auth/google';
+  static String urlApple = urlMain + 'auth/apple';
   static String urlResetPasswordOTP = urlMain + 'auth/password/forgot';
   static String urlResetPassword = urlMain + 'auth/password/reset';
   static String urlRefreshToken = urlMain + 'auth/refresh-token/';
@@ -29,13 +30,13 @@ class ApiCalls{
   static String urlUserDetails = urlMain + 'user/';
   static String urlUserFollowerCount = urlMain + 'user/profile/';
   static String urlFeedback = urlMain + 'feedback';
-  static String urlEventList = urlMain + 'event/explore?long=';
+  static String urlEventList = urlMain + 'event/explore?';
   static String urlGetCategories = urlMain + 'category';
   static String urlToggleLike = urlMain + 'event/';
   static String urlEventDetails = urlMain + 'event/';
   static String urlCreateOrder = urlMain + 'order';
   static String urlCreatePayment = urlMain + 'payment';
-  static String urlSupport = urlMain + 'support';
+  static String urlSupport = urlMain + 'help';
   static String urlSearchEvent = urlMain + 'event?pageNumber=';
   static String urlSearchArtist = urlMain + 'artist?pageNumber=';
   static String urlSearchUser = urlMain + 'user/search?pageNumber=';
@@ -57,15 +58,19 @@ class ApiCalls{
       var request = http.Request('POST', Uri.parse(urlLogin));
       request.body = json.encode({
         "email": email,
-        "password": password
+        "password": password,
+        "profileType": "USER",
       });
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+
+      debugPrint("Login Response: $jsonBody");
 
       if (response.statusCode == 200) {
         Navigator.pop(context);
-        var responseLogin = json.decode(await response.stream.bytesToString());
+        var responseLogin = jsonBody;
 
         pref.setString('token', responseLogin['data']['token']);
         pref.setBool('google', false);
@@ -87,9 +92,9 @@ class ApiCalls{
       } else {
         Navigator.pop(context);
         if(response.statusCode == 400){
-          Methods.showError(json.decode(await response.stream.bytesToString())['error']);
+          Methods.showError(jsonBody['error']);
         } else
-          Methods.showError(response.reasonPhrase);
+          Methods.showError("Login Failed");
       }
     } on Exception catch(e) {
       Navigator.pop(context);
@@ -112,26 +117,18 @@ class ApiCalls{
         "gender": gender,
         "username": username,
         "dob": dob,
-        "type": "USER"
+        "type": "USER",
+        "profileType": "USER",
       });
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+      debugPrint("Signup Response: $jsonBody");
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var responseLogin = json.decode(await response.stream.bytesToString());
-
-        //pref.setBool('isLoggedIn', true);
-        //pref.setString('token', responseLogin['data']['token']);
-        /*pref.setString('_id', responseLogin['data']['user']['_id']);
-        pref.setBool('isPhoneVerified', responseLogin['data']['user']['isPhoneVerified']);
-        pref.setString('fullName', responseLogin['data']['user']['fullName']);
-        pref.setString('email', responseLogin['data']['user']['email']);
-        pref.setString('phoneNumber', responseLogin['data']['user']['phoneNumber']);
-        pref.setString('gender', responseLogin['data']['user']['gender']);
-        pref.setString('username', responseLogin['data']['user']['username']);
-        pref.setString('dob', responseLogin['data']['user']['dob']);*/
+        var responseLogin = jsonBody;
 
         //doLogin(email, password, context);
         Navigator.pushReplacement(
@@ -141,10 +138,10 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        if(response.statusCode == 422){
-          Methods.showError('Email has been taken');
+        if(jsonBody != null){
+          Methods.showError(jsonBody["error"]);
         } else
-          Methods.showError(response.reasonPhrase);
+          Methods.showError("Oops! an error occurred");
       }
     } on Exception catch(e) {
       Navigator.pop(context);
@@ -158,7 +155,7 @@ class ApiCalls{
 
     try {
       var request = http.Request('POST', Uri.parse(urlGoogle));
-      request.body = json.encode({"token": token});
+      request.body = json.encode({"token": token, "profileType": "USER"});
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
@@ -167,7 +164,7 @@ class ApiCalls{
         Navigator.pop(context);
         var responseLogin = json.decode(await response.stream.bytesToString());
 
-        print('Social: $responseLogin');
+        debugPrint('Social: $responseLogin');
 
         pref.setString('token', responseLogin['data']['token']);
         pref.setBool('google', true);
@@ -190,11 +187,59 @@ class ApiCalls{
         if(response.statusCode == 400){
           Methods.showError(json.decode(data)['error']);
         } else
-          Methods.showError(response.reasonPhrase);
+          Methods.showError("An error occurred.");
       }
     } on Exception catch(e) {
       Navigator.pop(context);
       print('Login exception: $e');
+      Methods.showError('$e');
+    }
+  }
+
+  static authApple(token, context, type) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    Methods.showLoaderDialog(context);
+
+    try {
+      var request = http.Request('POST', Uri.parse(urlApple));
+      request.body = json.encode({"token": token, "profileType": "USER",});
+      request.headers.addAll(headersJSON);
+
+      debugPrint('AppleSocialRequest: ${request.body}');
+
+      http.StreamedResponse response = await request.send();
+      final jsonResponse = json.decode(await response.stream.bytesToString());
+      debugPrint('AppleSocialResponse: $jsonResponse');
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        Navigator.pop(context);
+        var responseLogin = jsonResponse;
+
+        pref.setString('token', responseLogin['data']['token']);
+        pref.setBool('apple', true);
+        Methods.saveUserData(pref, responseLogin['data']['user']);
+
+        if(responseLogin['message'].toString().toLowerCase().contains('login'))
+          Methods.showToast(responseLogin['message']);
+
+        Navigator.pushReplacement(
+            context,
+            (responseLogin['message'].toString().toLowerCase().contains('login'))
+                ? MaterialPageRoute(builder: (context) => Home())
+                : MaterialPageRoute(builder: (context) => SelectInterest('Reg', null, null, null))
+        );
+
+      } else {
+        Navigator.pop(context);
+        debugPrint('Login error: $jsonResponse');
+        if(response.statusCode == 400){
+          Methods.showError(jsonResponse['error']);
+        } else
+          Methods.showError("An error occurred");
+      }
+    } on Exception catch(e) {
+      Navigator.pop(context);
+      debugPrint('Login exception: $e');
       Methods.showError('$e');
     }
   }
@@ -213,13 +258,14 @@ class ApiCalls{
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = json.decode(await response.stream.bytesToString());
 
       if (response.statusCode == 200) {
         Navigator.pop(context);
         doLogin(email, password, context, false);
       } else {
         Navigator.pop(context);
-        Methods.showError('Verification failed due to ${response.reasonPhrase}');
+        Methods.showError('${jsonBody["error"] ?? "Verification failed"}');
         controllerOTP.clear();
       }
 
@@ -248,7 +294,7 @@ class ApiCalls{
         return responseData['data']['OTPToken'];
       }
       else {
-        Methods.showError('Can\'t get new OTP for ${response.reasonPhrase}');
+        Methods.showError('Can\'t send new OTP');
         return null;
       }
 
@@ -269,15 +315,17 @@ class ApiCalls{
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+      debugPrint("resetPasswordOtp: $jsonBody");
 
       if (response.statusCode == 200) {
-        var responseData = json.decode(await response.stream.bytesToString());
+        var responseData = jsonBody;
         //Methods.showError(responseData['message']);
         //Methods.showError("$responseData");
         return responseData['data'];
       }
       else {
-        Methods.showError('Can\'t get new OTP for ${response.reasonPhrase}');
+        Methods.showError('${jsonBody["error"] ?? "Error sending otp"}');
         return null;
       }
 
@@ -296,11 +344,14 @@ class ApiCalls{
       request.body = json.encode({
         "password": password,
         "code": otp,
-        "codeToken": token
+        "codeToken": token,
+        "profileType": "USER",
       });
       request.headers.addAll(headersJSON);
 
       http.StreamedResponse response = await request.send();
+      final jsonBody = jsonDecode(await response.stream.bytesToString());
+      debugPrint("resetPassword: $jsonBody");
 
       if (response.statusCode == 200) {
         Navigator.pop(context);
@@ -311,7 +362,7 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t set new Password for ${response.reasonPhrase}');
+        Methods.showError('${jsonBody["error"] ?? "Error setting new Password"}');
       }
 
     }  on Exception catch(e) {
@@ -345,7 +396,10 @@ class ApiCalls{
         return false;
       }
 
-    } on Exception catch(e) {
+    } on SocketException {
+      Methods.showError('Please check your internet connection');
+    }
+    on Exception catch(e) {
       refreshToken(context);
       Methods.showError('$e');
       return false;
@@ -366,7 +420,7 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t fetch categories for ${response.reasonPhrase}');
+        Methods.showError('${json.decode(await response.stream.bytesToString())["error"] ?? "Can\'t fetch categories"}');
         return null;
       }
     } on Exception catch(e) {
@@ -397,16 +451,17 @@ class ApiCalls{
       print('Request header: ${request.headers}');
       print('Request body: ${request.body}');
 
+      var jsonBody = await response.stream.bytesToString();
+
       if (response.statusCode == 200) {
-        var data = await response.stream.bytesToString();
-        print('Response: $data');
+        debugPrint('Response: $jsonBody');
         Navigator.pop(context);
-        return data;
+        return jsonBody;
       }
       else {
         Navigator.pop(context);
-        print(await response.stream.bytesToString());
-        Methods.showError(response.reasonPhrase);
+        var jsonResponse = json.decode(jsonBody);
+        Methods.showError(jsonResponse["error"]);
         return null;
       }
 
@@ -442,6 +497,8 @@ class ApiCalls{
       }
       request.headers.addAll(headers);
 
+      debugPrint("Request: ${request.body}");
+
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 201) {
@@ -449,7 +506,7 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t submit ${isRating ? 'Rating' : 'Review'} for ${response.reasonPhrase}');
+        Methods.showError('Can\'t submit ${isRating ? 'Rating' : 'Review'}');
         print('Response: ${await response.stream.bytesToString()}');
         return false;
       }
@@ -466,14 +523,17 @@ class ApiCalls{
     //Methods.showLoaderDialog(context);
 
     try{
-      var request = http.Request('GET', Uri.parse(urlEventList + '$longitude&lat=$latitude'));
+      var request = http.Request('GET', Uri.parse(urlEventList + 'longitude=$longitude&latitude=$latitude'));
 
       http.StreamedResponse response = await request.send();
 
-      print('Request header: $request');
+      debugPrint('Request header: $request');
+      final jsonString = await response.stream.bytesToString();
+
+      debugPrint('exploreEvent: $jsonString');
 
       if (response.statusCode == 200) {
-        var data = await response.stream.bytesToString();
+        var data = jsonString;
 
         print('Events: $data');
 
@@ -481,8 +541,7 @@ class ApiCalls{
 
       }
       else {
-        //Navigator.pop(context);
-        Methods.showError(response.reasonPhrase);
+        Methods.showError("${json.decode(jsonString)["error"]}");
         return null;
       }
 
@@ -502,12 +561,15 @@ class ApiCalls{
       http.StreamedResponse response = await request.send();
 
       print('Request header: $request');
+      final jsonString = await response.stream.bytesToString();
+
+      debugPrint('eventCategories: $jsonString');
 
       if (response.statusCode == 200) {
-        return await response.stream.bytesToString();
+        return jsonString;
       }
       else {
-        Methods.showError(response.reasonPhrase);
+        Methods.showError("${json.decode(jsonString)["error"] ?? "We couldn't fetch categories"}");
         return null;
       }
 
@@ -537,8 +599,11 @@ class ApiCalls{
         return true;
       }
       else {
-        Methods.showError('Can\'t save to Liked Events for ${response.reasonPhrase}');
-        print('Response: ${await response.stream.bytesToString()}');
+        final jsonResponse = json.decode(await response.stream.bytesToString());
+        Methods.showError('${jsonResponse["error"]}');
+
+        debugPrint('Response: $jsonResponse');
+
         return false;
       }
     } on Exception catch(e) {
@@ -579,7 +644,9 @@ class ApiCalls{
         Future.delayed(const Duration(milliseconds: 1000), () {
           Navigator.pop(context);
         });
-        Methods.showError(response.reasonPhrase);
+        var data = json.decode(await response.stream.bytesToString());
+        Methods.showError(data["error"]);
+
         return null;
       }
 
@@ -611,7 +678,8 @@ class ApiCalls{
         return await response.stream.bytesToString();
       }
       else {
-        Methods.showError(response.reasonPhrase);
+        var data = json.decode(await response.stream.bytesToString());
+        Methods.showError(data["error"]);
         return null;
       }
 
@@ -635,7 +703,7 @@ class ApiCalls{
 
       var request = http.Request('GET', Uri.parse('$urlMain$id/ticket'));
 
-      print('Ticket request: ${request}');
+      print('Ticket request: ${request.body}');
 
       request.headers.addAll(headers);
 
@@ -653,7 +721,9 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError(response.reasonPhrase);
+        var data = json.decode(await response.stream.bytesToString());
+        Methods.showError(data["error"]);
+
         return null;
       }
 
@@ -683,25 +753,31 @@ class ApiCalls{
       request.headers.addAll(headers);
       request.body = jsonEncode(data);
 
+      debugPrint("createOrderRequest: ${request.body}");
+
       http.StreamedResponse response = await request.send();
+
+      final jsonResponse = await response.stream.bytesToString();
+
+      debugPrint("createOrderResponse: $jsonResponse");
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var responseData = await response.stream.bytesToString();
-        return responseData;
+        // var responseData = await response.stream.bytesToString();
+        return jsonResponse;
 
       } else {
         Navigator.pop(context);
-        Methods.showError(response.reasonPhrase);
-        print(await response.stream.bytesToString());
-        return null;
+        Methods.showError("${json.decode(jsonResponse)["error"]}");
+        debugPrint("createOrderError: $jsonResponse");
 
+        return null;
       }
 
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -725,22 +801,24 @@ class ApiCalls{
         "orderId": orderId
       });
 
+      debugPrint("FreeOrderRequest: ${request.body}");
+
       http.StreamedResponse response = await request.send();
+      final jsonResponse = await response.stream.bytesToString();
+      debugPrint("FreeOrderResponse: $jsonResponse");
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var responseData = await response.stream.bytesToString();
-        print(responseData);
+        var responseData = jsonResponse;
         return responseData;
 
       } else {
         Navigator.pop(context);
-        Methods.showError(response.reasonPhrase);
-        print(await response.stream.bytesToString());
+        var data = json.decode(jsonResponse);
+        Methods.showError(data["error"]);
+
         return null;
-
       }
-
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');
@@ -776,8 +854,10 @@ class ApiCalls{
 
       } else {
         Navigator.pop(context);
-        Methods.showError(response.reasonPhrase);
-        print(await response.stream.bytesToString());
+        var data = json.decode(await response.stream.bytesToString());
+        Methods.showError(data["error"]);
+
+        debugPrint(data);
         return null;
 
       }
@@ -817,21 +897,23 @@ class ApiCalls{
 
       } else {
         Navigator.pop(context);
-        Methods.showError(response.reasonPhrase);
-        print(await response.stream.bytesToString());
-        return "nulled";
+        var data = json.decode(await response.stream.bytesToString());
+        Methods.showError(data["error"]);
+
+        debugPrint(data);
+        return null;
 
       }
 
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
 
-  static Future<bool> submitHelpRequest(helpSubject, helpDescription, context) async {
+  static Future<bool> submitHelpRequest(helpSubject, helpDescription, context, {fullName, mail, phone}) async {
 
     SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -847,12 +929,18 @@ class ApiCalls{
 
       request.body = json.encode({
         "subject": helpSubject,
-        "description": helpDescription
+        "description": helpDescription,
+        "fullName": fullName,
+        "mail": mail,
+        "phone": phone
       });
 
       request.headers.addAll(headers);
+      debugPrint('Help Request: ${request.body}');
 
       http.StreamedResponse response = await request.send();
+
+      debugPrint('Help Response: ${await response.stream.bytesToString()}');
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
@@ -860,14 +948,13 @@ class ApiCalls{
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t submit the Help Request for ${response.reasonPhrase}');
-        print('Response: ${await response.stream.bytesToString()}');
+        Methods.showError('Error submitting help request');
         return false;
       }
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return false;
     }
   }
@@ -882,20 +969,29 @@ class ApiCalls{
       var request = http.Request('GET', Uri.parse('$urlSearchEvent$page&perPage=10&query=$query'));
 
       request.headers.addAll(headers);
+      debugPrint("headers: ${request.headers}");
+      debugPrint("url: ${request.url}");
 
       http.StreamedResponse response = await request.send();
+      final jsonString = await response.stream.bytesToString();
+
+      debugPrint("search query: $query");
+      debugPrint("Response: $jsonString");
 
       if (response.statusCode == 200) {
-        String data = await response.stream.bytesToString();
+        String data = jsonString;
         return data;
       }
       else {
-        print(response.reasonPhrase);
+        var data = json.decode(jsonString);
+        Methods.showError(data["error"]);
+
+        debugPrint(data);
         return null;
       }
     } on Exception catch(e) {
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -914,18 +1010,17 @@ class ApiCalls{
       print('$urlSearchArtist$page&perPage=10&query=$query');
 
       http.StreamedResponse response = await request.send();
+      String data = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        String data = await response.stream.bytesToString();
         return data;
-      }
-      else {
-        print(response.reasonPhrase);
+      } else {
+        debugPrint(json.decode(data));
         return null;
       }
     } on Exception catch(e) {
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -944,18 +1039,18 @@ class ApiCalls{
       print('$urlSearchUser$page&perPage=10&query=$query');
 
       http.StreamedResponse response = await request.send();
+      String data = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        String data = await response.stream.bytesToString();
         return data;
       }
       else {
-        print(response.reasonPhrase);
+        debugPrint(json.decode(data));
         return null;
       }
     } on Exception catch(e) {
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -972,18 +1067,18 @@ class ApiCalls{
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+      String data = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        String data = await response.stream.bytesToString();
         return data;
       }
       else {
-        print(response.reasonPhrase);
+        debugPrint(data);
         return null;
       }
     } on Exception catch(e) {
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -994,19 +1089,19 @@ class ApiCalls{
 
       http.StreamedResponse response = await request.send();
 
+      String data = await response.stream.bytesToString();
+      debugPrint(data);
+
       if (response.statusCode == 200) {
-        String data = await response.stream.bytesToString();
-        //print(data);
         return data;
       }
       else {
-        print(response.reasonPhrase);
         return null;
       }
 
     } on Exception catch(e){
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -1030,23 +1125,22 @@ class ApiCalls{
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+      var data = await response.stream.bytesToString();
+      debugPrint(data);
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var data = await response.stream.bytesToString();
-        print(data);
         return data;
       }
       else {
         Navigator.pop(context);
-        Methods.showError(response.reasonPhrase);
-        print(response.reasonPhrase);
+        Methods.showError(json.decode(data)["error"]);
         return null;
       }
     } on Exception catch(e){
       Navigator.pop(context);
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -1067,21 +1161,20 @@ class ApiCalls{
       //print('$headers');
 
       http.StreamedResponse response = await request.send();
+      var data = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        var data = await response.stream.bytesToString();
-        //print(data);
         return data;
       }
       else {
-        Methods.showError(response.reasonPhrase);
-        print(await response.stream.bytesToString());
+        Methods.showError(json.decode(data)["error"]);
+        debugPrint(data);
         return null;
       }
 
     } on Exception catch(e) {
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
 
@@ -1108,23 +1201,22 @@ class ApiCalls{
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+      var data = await response.stream.bytesToString();
+      debugPrint(data);
 
       if (response.statusCode == 201) {
         Navigator.pop(context);
-        var data = await response.stream.bytesToString();
-        print(data);
         return data;
       }
       else {
         Navigator.pop(context);
-        Methods.showError('Can\'t report Event for ${response.reasonPhrase}');
-        print('Response: ${await response.stream.bytesToString()}');
+        Methods.showError('${json.decode(data)}');
         return null;
       }
     } on Exception catch(e) {
       Navigator.pop(context);
       Methods.showError('$e');
-      print('Error: $e');
+      debugPrint('Error: $e');
       return null;
     }
   }
@@ -1142,15 +1234,15 @@ class ApiCalls{
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+      var data = await response.stream.bytesToString();
+      debugPrint(data);
 
       if (response.statusCode == 200) {
-        var data = await response.stream.bytesToString();
-        //print('Response: $data');
         return data;
       }
       else {
         print(await response.stream.bytesToString());
-        Methods.showError(response.reasonPhrase);
+        Methods.showError("${json.decode(data)["error"]}");
         return null;
       }
 

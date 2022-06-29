@@ -1,10 +1,11 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:ibloov/Constants/ApiCalls.dart';
+import 'package:ibloov/Activity/data_policy_webview.dart';
+import 'package:ibloov/Activity/terms_webview.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
@@ -340,61 +341,63 @@ class OnboardingState extends State<Onboarding> {
                       Container(
                         height: height * 0.01,
                       ),
-                      Container(
-                        child: Card(
-                          color: Colors.transparent,
-                          elevation: 3.0,
-                          child: ClipRect(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                              child: Container(
-                                width: width * 0.9,
-                                height: 50.0,
-                                decoration: new BoxDecoration(
-                                  color: Colors.white.withOpacity(0.0),
-                                  border: new Border.all(color: Colors.white, width: 2.0),
-                                  borderRadius: new BorderRadius.circular(10.0),
-                                ),
-                                child: InkWell(
-                                  onTap: (){
-                                    Methods.showComingSoon();
-                                    //Methods.showToast("Sign up with Facebook");
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Sign up with Facebook',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: 'SF_Pro_600',
-                                            decoration: TextDecoration.none,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.normal,
-                                            color: ColorList.colorAccent,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Image.asset(
-                                          'assets/images/fb.png',
-                                          width: 25.0,
-                                          height: 25.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      ),
-                      Container(
+                      // Container(
+                      //   child: Card(
+                      //     color: Colors.transparent,
+                      //     elevation: 3.0,
+                      //     child: ClipRect(
+                      //       child: BackdropFilter(
+                      //         filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                      //         child: Container(
+                      //           width: width * 0.9,
+                      //           height: 50.0,
+                      //           decoration: new BoxDecoration(
+                      //             color: Colors.white.withOpacity(0.0),
+                      //             border: new Border.all(color: Colors.white, width: 2.0),
+                      //             borderRadius: new BorderRadius.circular(10.0),
+                      //           ),
+                      //           child: InkWell(
+                      //             onTap: (){
+                      //               Methods.showComingSoon();
+                      //               //Methods.showToast("Sign up with Facebook");
+                      //             },
+                      //             child: Padding(
+                      //               padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+                      //               child: Row(
+                      //                 children: [
+                      //                   Text(
+                      //                     'Sign up with Facebook',
+                      //                     textAlign: TextAlign.left,
+                      //                     style: TextStyle(
+                      //                       fontFamily: 'SF_Pro_600',
+                      //                       decoration: TextDecoration.none,
+                      //                       fontSize: 15.0,
+                      //                       fontWeight: FontWeight.normal,
+                      //                       color: ColorList.colorAccent,
+                      //                     ),
+                      //                   ),
+                      //                   Spacer(),
+                      //                   Image.asset(
+                      //                     'assets/images/fb.png',
+                      //                     width: 25.0,
+                      //                     height: 25.0,
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      //
+                      // ),
+                      if(Platform.isIOS)
+                        Container(
                         height: height * 0.01,
                       ),
-                      Container(
+                      if(Platform.isIOS)
+                        Container(
                         child: Card(
                           color: Colors.transparent,
                           elevation: 3.0,
@@ -411,8 +414,8 @@ class OnboardingState extends State<Onboarding> {
                                 ),
                                 child: InkWell(
                                   onTap: (){
-                                    Methods.showComingSoon();
-                                    //Methods.showToast("Sign up with Apple");
+                                    // Methods.showComingSoon();
+                                    Methods.authApple(context, 'signup');
                                   },
                                   child: Padding(
                                     padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
@@ -495,6 +498,82 @@ class OnboardingState extends State<Onboarding> {
                           ),
                         )
                       ),
+                      // Container(
+                      //   height: height * 0.005,
+                      // ),
+                      // Container(
+                      //   width: width * 0.88,
+                      //   //height: height * 0.05,
+                      //   alignment: Alignment.centerLeft,
+                      //   child: Container(
+                      //     width: width * 0.75,
+                      //     child: RichText(
+                      //       text: TextSpan(
+                      //           text: 'Review our ',
+                      //           style: TextStyle(
+                      //             fontFamily: 'SF_Pro_400',
+                      //             decoration: TextDecoration.none,
+                      //             fontSize: 14.0,
+                      //             fontWeight: FontWeight.bold,
+                      //             color: ColorList.colorGrayText,
+                      //           ),
+                      //           children: <TextSpan>[
+                      //             TextSpan(
+                      //                 text: 'terms and conditions',
+                      //                 style: TextStyle(
+                      //                   fontFamily: 'SF_Pro_400',
+                      //                   decoration: TextDecoration.underline,
+                      //                   decorationColor: ColorList.colorSplashBG,
+                      //                   fontSize: 14.0,
+                      //                   fontWeight: FontWeight.bold,
+                      //                   color: ColorList.colorSplashBG,
+                      //                 ),
+                      //                 recognizer: TapGestureRecognizer()
+                      //                   ..onTap = () {
+                      //                     Navigator.push(
+                      //                         context,
+                      //                         MaterialPageRoute(
+                      //                           builder: (context) => TermsWebView(),
+                      //                         )
+                      //                     );
+                      //                   }
+                      //             ),
+                      //             TextSpan(
+                      //               text: ' and ',
+                      //               style: TextStyle(
+                      //                 fontFamily: 'SF_Pro_400',
+                      //                 decoration: TextDecoration.none,
+                      //                 decorationColor: ColorList.colorGrayText,
+                      //                 fontSize: 14.0,
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: ColorList.colorSplashBG,
+                      //               ),
+                      //             ),
+                      //             TextSpan(
+                      //                 text: 'privacy policy',
+                      //                 style: TextStyle(
+                      //                   fontFamily: 'SF_Pro_400',
+                      //                   decoration: TextDecoration.underline,
+                      //                   decorationColor: ColorList.colorSplashBG,
+                      //                   fontSize: 14.0,
+                      //                   fontWeight: FontWeight.bold,
+                      //                   color: ColorList.colorSplashBG,
+                      //                 ),
+                      //                 recognizer: TapGestureRecognizer()
+                      //                   ..onTap = () {
+                      //                     Navigator.push(
+                      //                         context,
+                      //                         MaterialPageRoute(
+                      //                           builder: (context) => DataPolicyWebView(),
+                      //                         )
+                      //                     );
+                      //                   }
+                      //             ),
+                      //           ]
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         height: height * 0.03,
                       )

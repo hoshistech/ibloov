@@ -15,15 +15,15 @@ import 'CreateNewPassword.dart';
 
 double width, height, ratio;
 
-class ForgetPassword extends StatefulWidget {
+class ForgotPasswordOtpScreen extends StatefulWidget {
   String token, email;
-  ForgetPassword(this.token, this.email);
+  ForgotPasswordOtpScreen(this.token, this.email);
 
   @override
-  ForgetPasswordState createState() => ForgetPasswordState();
+  ForgotPasswordOtpScreenState createState() => ForgotPasswordOtpScreenState();
 }
 
-class ForgetPasswordState extends State<ForgetPassword>{
+class ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen>{
   TextEditingController controllerOTP = TextEditingController(text: "");
   int pinLength = 4;
   bool hasError = false;

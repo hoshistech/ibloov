@@ -15,13 +15,43 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.270206624365-7b11cpgkc7e22m629o0ls9c5jhjv8mse</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Ibloov needs to access your calender to add event.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Ibloov needs to access your camera to enable you capture photo for use in your profile picture or profile background picture on Ibloov.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Ibloov needs access to your location to enable us show you tailored events happening in your area.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Ibloov needs access to your location during usage to enable us show you tailored events happening in your area.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ibloov needs access to your location when app is open to enable us show you tailored events happening in your area.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ibloov needs to access your microphone to be able to record your voice/sound during a video recording for use in the app.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ibloov needs to access your photo gallery to enable you select an image for use in your profile picture or profile background picture on Ibloov.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,11 +71,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open and in the background.</string>
 </dict>
 </plist>

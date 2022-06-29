@@ -14,19 +14,32 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EditProfile extends StatefulWidget{
+class EditProfile extends StatefulWidget {
   @override
   EditProfileState createState() => EditProfileState();
 }
 
-class EditProfileState extends State<EditProfile>{
+class EditProfileState extends State<EditProfile> {
   var preference;
   var width;
-  bool selected = false, status = false, editUserName = false, editPhone = false;
-  String stringProfile, stringName, stringUsername, stringEmail, country = '+234', stringCode = 'NG', stringPhone, stringBio, stringBackground;
+  bool selected = false,
+      status = false,
+      editUserName = false,
+      editPhone = false;
+  String stringProfile,
+      stringName,
+      stringUsername,
+      stringEmail,
+      country = '+234',
+      stringCode = 'NG',
+      stringPhone,
+      stringBio,
+      stringBackground,
+      stringGender;
   DateTime stringDOB;
   XFile profileImage, bgImage;
   List data = [];
+  int gender = 0;
 
   final ImagePicker imagePicker = ImagePicker();
 
@@ -39,8 +52,7 @@ class EditProfileState extends State<EditProfile>{
 
   @override
   void initState() {
-    getProfileData()
-        .then((pref){
+    getProfileData().then((pref) {
       setState(() {
         preference = pref;
         nameController.text = preference?.getString('fullName');
@@ -51,6 +63,7 @@ class EditProfileState extends State<EditProfile>{
         stringEmail = preference?.getString('email');
         stringPhone = preference?.getString('phoneNumber');
         stringBackground = preference?.getString('backgroundImage');
+        stringGender = preference?.getString('gender');
         try {
           stringDOB = DateTime.parse(preference?.getString('dob'));
         } catch (e) {
@@ -58,15 +71,15 @@ class EditProfileState extends State<EditProfile>{
           print(e);
         }
 
-        if(stringUsername.length > 0 && !stringUsername.startsWith('@')) {
+        if (stringUsername.length > 0 && !stringUsername.startsWith('@')) {
           usernameController.text = '@$stringUsername';
-        } else if(stringUsername.startsWith('@')) {
+        } else if (stringUsername.startsWith('@')) {
           usernameController.text = '$stringUsername';
         } else {
           editUserName = true;
         }
 
-        if(!stringPhone.contains('+') || stringPhone == 'N/A')
+        if (!stringPhone.contains('+') || stringPhone == 'N/A')
           editPhone = true;
       });
     });
@@ -81,7 +94,6 @@ class EditProfileState extends State<EditProfile>{
 
   @override
   Widget build(BuildContext context) {
-
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -104,8 +116,7 @@ class EditProfileState extends State<EditProfile>{
                   fontSize: 15,
                   color: ColorList.colorBack,
                   fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none
-              ),
+                  decoration: TextDecoration.none),
             ),
           ),
         ),
@@ -114,7 +125,7 @@ class EditProfileState extends State<EditProfile>{
           child: GestureDetector(
             onTap: () {
               SystemChannels.textInput.invokeMethod('TextInput.hide');
-              if(usernameController.text.length == 1) {
+              if (usernameController.text.length == 1) {
                 usernameController.text = '';
                 FocusScope.of(context).requestFocus(new FocusNode());
               }
@@ -135,7 +146,7 @@ class EditProfileState extends State<EditProfile>{
                     ),
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       showPicker(context, true);
                     },
                     child: Center(
@@ -151,12 +162,13 @@ class EditProfileState extends State<EditProfile>{
                           child: CircleAvatar(
                             backgroundColor: ColorList.colorAccent,
                             radius: 77.0,
-                            backgroundImage: ((stringProfile != null || stringProfile != "")
-                                && !selected)
+                            backgroundImage: ((stringProfile != null ||
+                                        stringProfile != "") &&
+                                    !selected)
                                 ? NetworkImage(stringProfile)
                                 : (!selected)
-                                ? AssetImage('assets/images/profile.png')
-                                : FileImage(File(profileImage.path)),
+                                    ? AssetImage('assets/images/profile.png')
+                                    : FileImage(File(profileImage.path)),
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: CircleAvatar(
@@ -271,19 +283,23 @@ class EditProfileState extends State<EditProfile>{
                                 textInputAction: TextInputAction.done,
                                 cursorColor: ColorList.colorPrimary,
                                 maxLines: 1,
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    if(!usernameController.text.contains('@'))
-                                      usernameController.text = '@${usernameController.text}';
+                                    if (!usernameController.text.contains('@'))
+                                      usernameController.text =
+                                          '@${usernameController.text}';
                                   });
                                 },
-                                onEditingComplete: (){
+                                onEditingComplete: () {
                                   setState(() {
-                                    if(!usernameController.text.contains('@'))
-                                      usernameController.text = '@${usernameController.text}';
+                                    if (!usernameController.text.contains('@'))
+                                      usernameController.text =
+                                          '@${usernameController.text}';
                                   });
-                                  SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                  SystemChannels.textInput
+                                      .invokeMethod('TextInput.hide');
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
                                 },
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
@@ -385,27 +401,26 @@ class EditProfileState extends State<EditProfile>{
                             ),
                             Spacer(),
                             Container(
-                              width: width * 0.6,
-                              child: GestureDetector(
-                                onTap: (){
-                                  if(editPhone)
+                                width: width * 0.6,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // if(editPhone)
                                     showPhoneDialog(context);
-                                },
-                                child: Text(
-                                  stringPhone,
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontFamily: 'SF_Pro_700',
-                                    decoration: TextDecoration.none,
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: editPhone
-                                        ? ColorList.colorGray
-                                        : ColorList.colorPrimary,
+                                  },
+                                  child: Text(
+                                    stringPhone,
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontFamily: 'SF_Pro_700',
+                                      decoration: TextDecoration.none,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: editPhone
+                                          ? ColorList.colorGray
+                                          : ColorList.colorPrimary,
+                                    ),
                                   ),
-                                ),
-                              )
-                            ),
+                                )),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -439,27 +454,77 @@ class EditProfileState extends State<EditProfile>{
                             ),
                             Spacer(),
                             Container(
-                              //color: Colors.black,
+                                //color: Colors.black,
                                 child: InkWell(
-                                  child: Text(
-                                    (stringDOB != null)
-                                        ? DateFormat('dd MMMM yyyy').format(stringDOB)
-                                        : "Not set yet!",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      fontFamily: 'SF_Pro_700',
-                                      decoration: TextDecoration.none,
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: (stringDOB != null)
-                                          ? ColorList.colorPrimary
-                                          : ColorList.colorGray,
-                                    ),
+                              child: Text(
+                                (stringDOB != null)
+                                    ? DateFormat('dd MMMM yyyy')
+                                        .format(stringDOB)
+                                    : "Not set yet!",
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  fontFamily: 'SF_Pro_700',
+                                  decoration: TextDecoration.none,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: (stringDOB != null)
+                                      ? ColorList.colorPrimary
+                                      : ColorList.colorGray,
+                                ),
+                              ),
+                              onTap: () {
+                                openDOBSelector(context);
+                              },
+                            )),
+                          ],
+                        ),
+                        SizedBox(height: 15),
+                        Divider(
+                          thickness: 1,
+                          color: ColorList.colorGenderBackground,
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              child: Text(
+                                'Gender',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'SF_Pro_700',
+                                  decoration: TextDecoration.none,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorList.colorGrayHint,
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                showGenderModal(context);
+                              },
+                              child: Container(
+                                child: Text(
+                                  stringGender,
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    fontFamily: 'SF_Pro_700',
+                                    decoration: TextDecoration.none,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorList.colorPrimary,
                                   ),
-                                  onTap: (){
-                                    openDOBSelector(context);
-                                  },
-                                )
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -559,7 +624,9 @@ class EditProfileState extends State<EditProfile>{
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 5,),
+                              SizedBox(
+                                width: 5,
+                              ),
                               Text(
                                 'Change',
                                 style: TextStyle(
@@ -590,7 +657,8 @@ class EditProfileState extends State<EditProfile>{
                           height: 50.0,
                           decoration: new BoxDecoration(
                             color: ColorList.colorAccent,
-                            border: Border.all(color: ColorList.colorSplashBG, width: 1.0),
+                            border: Border.all(
+                                color: ColorList.colorSplashBG, width: 1.0),
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           child: Center(
@@ -618,11 +686,11 @@ class EditProfileState extends State<EditProfile>{
                           borderRadius: new BorderRadius.circular(10.0),
                         ),
                         elevation: 5.0,
-                        onPressed: (){
+                        onPressed: () {
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          if(profileImage != null){
+                          if (profileImage != null) {
                             uploadProfileImage();
-                          } else if(bgImage != null){
+                          } else if (bgImage != null) {
                             uploadBgImage();
                           } else {
                             updateProfileData();
@@ -650,8 +718,7 @@ class EditProfileState extends State<EditProfile>{
           onWillPop: () async {
             Navigator.pop(context, status);
             return false;
-          }
-      ),
+          }),
     );
   }
 
@@ -682,8 +749,7 @@ class EditProfileState extends State<EditProfile>{
               ),
             ),
           );
-        }
-    );
+        });
   }
 
   selectImage(source, profile) async {
@@ -698,7 +764,7 @@ class EditProfileState extends State<EditProfile>{
       if (pickedFile == null) return;
 
       setState(() {
-        if(profile) {
+        if (profile) {
           selected = true;
           profileImage = pickedFile;
         } else
@@ -710,22 +776,16 @@ class EditProfileState extends State<EditProfile>{
   }
 
   Future<Null> showPhoneDialog(BuildContext context) async {
-
     return showDialog<Null>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) =>
-            CupertinoAlertDialog(
+        builder: (BuildContext context) => CupertinoAlertDialog(
               content: Column(
                 children: [
-                  Text(
-                      "Enter Phone Number",
+                  Text("Enter Phone Number",
                       textScaleFactor: 1.2,
-                      style: TextStyle(fontWeight: FontWeight.bold)
-                  ),
-                  SizedBox(
-                    height: 25
-                  ),
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 25),
                   Material(
                     color: Colors.transparent,
                     child: Stack(
@@ -740,24 +800,34 @@ class EditProfileState extends State<EditProfile>{
                               cursorColor: ColorList.colorPrimary,
                               //maxLength: 10,
                               maxLines: 1,
+                              maxLength: 11,
                               decoration: InputDecoration(
                                 hintText: 'Phone Number',
-                                hintStyle: TextStyle(color: ColorList.colorGrayHint),
+                                hintStyle:
+                                    TextStyle(color: ColorList.colorGrayHint),
                                 labelText: 'Phone Number',
-                                labelStyle: TextStyle(color: ColorList.colorGrayHint),
+                                labelStyle:
+                                    TextStyle(color: ColorList.colorGrayHint),
+                                counter: Offstage(),
                                 alignLabelWithHint: true,
-                                prefixIcon: Image.asset('assets/images/phone_logo.png', height: 5.0, width: 5.0),
+                                prefixIcon: Image.asset(
+                                    'assets/images/phone_logo.png',
+                                    height: 5.0,
+                                    width: 5.0),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                  borderSide: BorderSide(color: ColorList.colorPrimary, width: 1),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                  borderSide: BorderSide(
+                                      color: ColorList.colorPrimary, width: 1),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                  borderSide: BorderSide(color: ColorList.colorPrimary, width: 1),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                  borderSide: BorderSide(
+                                      color: ColorList.colorPrimary, width: 1),
                                 ),
                               ),
-                            )
-                        ),
+                            )),
                         Container(
                           height: 58.0,
                           width: 60.0,
@@ -795,9 +865,7 @@ class EditProfileState extends State<EditProfile>{
                   isDestructiveAction: false,
                   child: Text(
                     "Cancel",
-                    style: TextStyle(
-                        fontSize: 16.0
-                    ),
+                    style: TextStyle(fontSize: 16.0),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -807,19 +875,18 @@ class EditProfileState extends State<EditProfile>{
                   isDefaultAction: false,
                   child: Text(
                     "Done",
-                    style: TextStyle(
-                        color:Colors.green,
-                        fontSize: 16.0
-                    ),
+                    style: TextStyle(color: Colors.green, fontSize: 16.0),
                   ),
                   onPressed: () async {
                     String phoneNo = phoneNoController.text;
-                    if((phoneNo.isNotEmpty || phoneNo != null) && phoneNo.length == 10) {
+                    if ((phoneNo.isNotEmpty || phoneNo != null) &&
+                        phoneNo.length >= 10) {
+                      if (phoneNo.length == 11) phoneNo = phoneNo.substring(1);
                       setState(() {
                         stringPhone = country + " " + phoneNo;
                       });
                       Navigator.pop(context);
-                    } else if(phoneNo.length != 10){
+                    } else if (phoneNo.length < 10) {
                       SystemChannels.textInput.invokeMethod('TextInput.show');
                       FocusScope.of(context).requestFocus(phoneFocusNode);
                       Methods.showError("Please enter a valid phone number!");
@@ -827,49 +894,142 @@ class EditProfileState extends State<EditProfile>{
                   },
                 )
               ],
-            )
+            ));
+  }
+
+  Future<void> showGenderModal(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: ColorList.colorAccent,
+      builder: (context) {
+        return Wrap(
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  gender = 0;
+                  stringGender = 'Male';
+                });
+                Navigator.pop(context);
+              },
+              child: ListTile(
+                leading: Image.asset(
+                  'assets/images/male_logo.png',
+                  width: 25.0,
+                  height: 25.0,
+                ),
+                title: Text(
+                  'Male',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontFamily: 'SF_Pro_600',
+                    decoration: TextDecoration.none,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                    color: gender == 0
+                        ? ColorList.colorBlue
+                        : ColorList.colorGrayText,
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  gender = 1;
+                  stringGender = 'Female';
+                });
+                Navigator.pop(context);
+              },
+              child: ListTile(
+                leading: Image.asset(
+                  'assets/images/female_logo.png',
+                  width: 25.0,
+                  height: 25.0,
+                ),
+                title: Text(
+                  'Female',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontFamily: 'SF_Pro_600',
+                    decoration: TextDecoration.none,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.bold,
+                    color: gender == 1
+                        ? ColorList.colorBlue
+                        : ColorList.colorGrayText,
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  gender = 2;
+                  stringGender = 'Other gender';
+                });
+                Navigator.pop(context);
+              },
+              child: ListTile(
+                leading: Image.asset(
+                  'assets/images/female_logo.png',
+                  width: 25.0,
+                  height: 25.0,
+                ),
+                title: Text(
+                  'Others',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontFamily: 'SF_Pro_600',
+                    decoration: TextDecoration.none,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.bold,
+                    color: gender == 2
+                        ? ColorList.colorBlue
+                        : ColorList.colorGrayText,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
   void openDOBSelector(BuildContext context) {
     FocusScope.of(context).requestFocus(new FocusNode());
-    DatePicker.showDatePicker(
-        context,
+    DatePicker.showDatePicker(context,
         showTitleActions: true,
-        maxTime: DateTime(DateTime.now().year - 18, DateTime.now().month, DateTime.now().day - 1),
-        onConfirm: (date) {
-          setState(() {
-            stringDOB = date;
-          });
-        },
-        currentTime: DateTime.now(),
-        locale: LocaleType.en
-    );
+        maxTime: DateTime(DateTime.now().year - 18, DateTime.now().month,
+            DateTime.now().day - 1), onConfirm: (date) {
+      setState(() {
+        stringDOB = date;
+      });
+    }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
 
   void uploadProfileImage() {
     Methods.showToast('Uploading Profile Image...');
-    ApiCalls.uploadFile(context, 'avatar', profileImage.path)
-        .then((value) {
-          var dataJson = json.decode(value)['data'];
-          if(data != null){
-            preference?.setString('imageUrl', dataJson['url']);
-            stringProfile = dataJson['url'];
-            if(bgImage != null){
-              uploadBgImage();
-            } else {
-              updateProfileData();
-            }
-          }
+    ApiCalls.uploadFile(context, 'avatar', profileImage.path).then((value) {
+      var dataJson = json.decode(value)['data'];
+      if (data != null) {
+        preference?.setString('imageUrl', dataJson['url']);
+        stringProfile = dataJson['url'];
+        if (bgImage != null) {
+          uploadBgImage();
+        } else {
+          updateProfileData();
+        }
+      }
     });
   }
 
   void uploadBgImage() {
     Methods.showToast('Uploading Background Image...');
-    ApiCalls.uploadFile(context, 'background', bgImage.path)
-        .then((value) {
+    ApiCalls.uploadFile(context, 'background', bgImage.path).then((value) {
       var dataJson = json.decode(value)['data'];
-      if(data != null){
+      if (data != null) {
         preference?.setString('backgroundImage', dataJson['url']);
         stringBackground = dataJson['url'];
         updateProfileData();
@@ -885,16 +1045,15 @@ class EditProfileState extends State<EditProfile>{
       'dob': stringDOB.toString(),
       'imageUrl': stringProfile,
       'backgroundImage': stringBackground,
-      'bio': bioController.text
+      'bio': bioController.text,
+      'gender': stringGender,
     };
 
-    ApiCalls.updateProfile(context, data)
-        .then((value){
+    ApiCalls.updateProfile(context, data).then((value) {
       Methods.showToast(json.decode(value)['message']);
-      if(value != null){
+      if (value != null) {
         var responseUpdate = json.decode(value)['data'];
-        getProfileData()
-            .then((pref){
+        getProfileData().then((pref) {
           setState(() {
             Methods.saveUserData(pref, responseUpdate);
           });
@@ -903,5 +1062,4 @@ class EditProfileState extends State<EditProfile>{
       }
     });
   }
-  
 }

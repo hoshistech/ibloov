@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ibloov/Activity/MyTickets.dart';
+import 'package:ibloov/Activity/faq_webview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
@@ -52,14 +54,16 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    body = HomeWidget();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      body = HomeWidget();
 
-    Methods.getProfileCompleteStatus()
-        .then((complete){
-      setState(() {
-        if(!complete){
-          Methods.showCompleteDialog(context, height, width, false);
-        }
+      Methods.getProfileCompleteStatus()
+          .then((complete){
+        setState(() {
+          if(!complete){
+            Methods.showCompleteDialog(context, height, width, false);
+          }
+        });
       });
     });
   }
@@ -72,18 +76,18 @@ class _HomeState extends State<Home> {
     return Scaffold(
         extendBody: true,
         body: WillPopScope(
-          child: body,
+          child: body ?? SizedBox(),
           onWillPop: onWillPop
         ),
         bottomNavigationBar: CurvedNavigationBar(
-          height: 55,
+          height: Platform.isIOS ? 60 : 56,
           animationDuration: Duration(milliseconds: 500),
           buttonBackgroundColor: ColorList.colorSplashBG, //button bg
           backgroundColor: ColorList.colorPrimary.withOpacity(0.1), //nav selected top
           //color: ColorList.colorCorousalIndicatorActive, //nav bg
           items: <Widget>[
             ImageIcon(AssetImage("assets/images/home.png"), size: 20, color: ColorList.colorNavButton),
-            ImageIcon(AssetImage("assets/images/sms.png"), size: 20, color: ColorList.colorNavButton),
+            // ImageIcon(AssetImage("assets/images/sms.png"), size: 20, color: ColorList.colorNavButton),
             ImageIcon(AssetImage("assets/images/search.png"), size: 20, color: ColorList.colorNavButton),
             ImageIcon(AssetImage("assets/images/profile.png"), size: 20, color: ColorList.colorNavButton),
             ImageIcon(AssetImage("assets/images/more_vert.png"), size: 20, color: ColorList.colorNavButton)
@@ -138,7 +142,7 @@ class _HomeState extends State<Home> {
   }
 
   _onTap(int index) async {
-    if (index == 4) {
+    if (index == 3) {
       _selectedSettingsMenuOptions = await showMenu(
         context: context,
         shape: RoundedRectangleBorder(
@@ -185,7 +189,7 @@ class _HomeState extends State<Home> {
         } else if(_selectedSettingsMenuOptions == 3){
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FAQ()
+            MaterialPageRoute(builder: (context) => FAQWebView()
             ),
           );
         } else if(_selectedSettingsMenuOptions == 4){
@@ -431,11 +435,13 @@ class _HomeState extends State<Home> {
     setState(() {
       if(_selectedIndex == 0){
         body = HomeWidget();
-      } else if(_selectedIndex == 1){
-        body = MessagesWidget();
-      } else if(_selectedIndex == 2) {
+      }
+      // else if(_selectedIndex == 1){
+      //   body = MessagesWidget();
+      // }
+      else if(_selectedIndex == 1) {
         body = SearchWidget();
-      } else if(_selectedIndex == 3) {
+      } else if(_selectedIndex == 2) {
         body = MyIbloovWidget();
       }
     });

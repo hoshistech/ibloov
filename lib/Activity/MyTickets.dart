@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ibloov/Activity/Home.dart';
 import 'package:ibloov/Constants/ApiCalls.dart';
 import 'package:ibloov/Constants/ColorList.dart';
 import 'package:ibloov/Constants/Methods.dart';
@@ -12,6 +12,9 @@ import 'package:intl/intl.dart';
 import 'TicketQRCode.dart';
 
 class MyTickets extends StatefulWidget{
+  bool fromPaystackCheckout;
+  MyTickets({this.fromPaystackCheckout = false});
+
   @override
   MyTicketsState createState () => MyTicketsState();
 }
@@ -82,20 +85,19 @@ class MyTicketsState extends State<MyTickets>{
                 flexibleSpace: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).requestFocus(new FocusNode());
-                    Navigator.pop(context);
+                    if(widget.fromPaystackCheckout) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home())
+                      );
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
                   child: Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                      'Back',
-                      style: TextStyle(
-                        fontFamily: 'SF_Pro_400',
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal,
-                        color: ColorList.colorPrimary,
-                      ),
-                    ),
+                    child: Icon(Icons.arrow_back, color: ColorList.colorPrimary, size: 25,)
                   ),
                 ),
               ),
@@ -219,7 +221,7 @@ class MyTicketsState extends State<MyTickets>{
                                 showTicketChild(context, index, width)
                         ),
                       )
-                    : NoResult('You haven\'t purchased any tickets yet!')
+                    : NoResult(status == "ATTENDED" ? "You haven't attended any events yet!" : 'You haven\'t purchased any tickets yet!')
                 ],
               )
             ),
@@ -254,7 +256,8 @@ class MyTicketsState extends State<MyTickets>{
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       //shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: Methods.getImage(data[index]['banner'], 'placeholder'),
+                          image: data[index]['banner'] != null ? NetworkImage(data[index]['banner']) :
+                          AssetImage('assets/images/event_small.png'),
                           fit: BoxFit.fill
                       ),
                     ),

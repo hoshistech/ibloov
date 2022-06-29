@@ -161,7 +161,7 @@ class EventListState extends State<EventList> {
                   Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.fromLTRB(height * 0.025, height * 0.05,
+                        padding: EdgeInsets.fromLTRB(height * 0.025, height * 0.06,
                             height * 0.025, height * 0.025),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -171,7 +171,7 @@ class EventListState extends State<EventList> {
                                 Navigator.pop(context);
                               },
                               child: Text(
-                                "Back",
+                                "Go Back",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                     fontFamily: 'SF_Pro_700',
@@ -231,10 +231,10 @@ class EventListState extends State<EventList> {
                       SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            height * 0.025, 0, height * 0.075, height * 0.025),
-                        child: Flexible(
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              height * 0.025, 0, height * 0.075, height * 0.025),
                           child: Text(
                             listOfValue.elementAt(widget.index)['details'],
                             textAlign: TextAlign.start,
@@ -282,29 +282,20 @@ class EventListState extends State<EventList> {
                                       child: ClipRRect(
                                         child: Stack(
                                           children: [
-                                            Container(
-                                              child: Center(
-                                                child: CircularProgressIndicator(
-                                                  color: ColorList.colorSplashBG,
-                                                  strokeWidth: 3.0,
-                                                )
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: ColorList.colorMenuItem
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Container(
-                                                  height: width * 0.5,
-                                                  color: ColorList.colorPrimary.withOpacity(0.5),
-                                                ),
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: Methods.getImage(widget.data[_selectedArray][item]['banner'], 'placeholder'),
-                                                ),
-                                              )
-                                            ),
+                                            // Container(
+                                            //   child: Container(
+                                            //       height: width * 0.5,
+                                            //       color: ColorList.colorPrimary.withOpacity(0.5),
+                                            //     ),
+                                            //   decoration: BoxDecoration(
+                                            //     image: DecorationImage(
+                                            //         fit: BoxFit.cover,
+                                            //         image: Methods.getSmallEventCardImage(widget.data[_selectedArray][item]['banner']),
+                                            //     ),
+                                            //   )
+                                            // ),
+                                            Methods.getSmallEventCardImage(
+                                                widget.data[_selectedArray][item]['banner'] ?? "", height: width * 0.5),
                                             Container(
                                               child: Column(
                                                 children: [

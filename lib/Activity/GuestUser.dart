@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ibloov/Activity/terms_webview.dart';
 import 'package:intl/intl.dart';
 
 import 'package:ibloov/Constants/ColorList.dart';
@@ -11,14 +13,13 @@ import 'package:ibloov/Constants/Methods.dart';
 import 'package:uuid/uuid.dart';
 
 import 'CreateEvents.dart';
-import 'Onboarding.dart';
 import 'SelectInterest.dart';
 import 'TermsCondition.dart';
 
 var sampleText = "We need some information to customize your event experience.";
 var terms = "By continuing, you agree that you are 13+ years old and you";
 var accept = "accept our";
-var termsofservice = "Terms of Service";
+var termsOfService = "Terms of Service";
 var privacy = "Privacy Policy";
 
 class GuestUser extends StatefulWidget {
@@ -44,12 +45,8 @@ class GuestUserState extends State<GuestUser> {
 
   var height, width, location = '';
 
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
   _getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
+    Methods.determinePosition().then((Position position) {
       setState(() {
         widget._currentPosition = position;
       });
@@ -62,7 +59,7 @@ class GuestUserState extends State<GuestUser> {
 
   _getAddressFromLatLng() async {
     try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+      List<Placemark> p = await placemarkFromCoordinates(
           widget._currentPosition.latitude, widget._currentPosition.longitude);
 
       Placemark place = p[0];
@@ -374,12 +371,12 @@ class GuestUserState extends State<GuestUser> {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => TermsCondition(),
+                                                  builder: (context) => TermsWebView(),
                                                 )
                                             );
                                           },
                                           child: Text(
-                                            termsofservice,
+                                            termsOfService,
                                             style: TextStyle(
                                               fontFamily: 'SF_Pro_400',
                                               decoration: TextDecoration.underline,
