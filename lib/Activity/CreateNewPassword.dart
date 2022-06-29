@@ -8,13 +8,6 @@ import 'package:ibloov/Constants/Methods.dart';
 import 'Login.dart';
 import 'ForgetPasswordSuccess.dart';
 
-var height, width;
-var sampleText =
-    "Your new password must be different from \npreviously used password.";
-bool passwordVisibility;
-
-final passwordController = TextEditingController();
-
 FocusNode passwordFocusNode = new FocusNode();
 
 class CreateNewPassword extends StatefulWidget {
@@ -27,6 +20,11 @@ class CreateNewPassword extends StatefulWidget {
 }
 
 class _CreateNewPasswordState extends State<CreateNewPassword> {
+  final passwordController = TextEditingController();
+  var height, width;
+  var sampleText =
+      "Your new password must be different from \npreviously used password.";
+  bool passwordVisibility;
 
   @override
   void initState() {
