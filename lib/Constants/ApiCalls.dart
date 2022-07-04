@@ -485,11 +485,11 @@ class ApiCalls{
       var request = http.Request('POST', Uri.parse(urlFeedback));
       if(isRating){
         request.body = json.encode({
-          "star": rating
+          "stars": rating
         });
       } else {
         request.body = json.encode({
-          "star": rating,
+          "stars": rating,
           "title": title,
           "review": review,
           "nickname": nickname

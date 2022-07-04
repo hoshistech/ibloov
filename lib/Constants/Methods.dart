@@ -213,7 +213,7 @@ class Methods {
     }
   }
 
-  static getRating(rating) {
+  static int getRating(rating) {
     int rate = 0;
     for (int i = 0; i < rating.length; i++) rate += rating[i];
     return rate;
