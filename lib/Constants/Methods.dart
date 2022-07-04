@@ -96,7 +96,11 @@ class Methods {
         // your App should show an explanatory UI now.
         Methods.showToast("Please, enable location services");
 
-        return Future.error('Location permissions are denied');
+        serviceEnabled = await _location.requestService();
+
+        if (!serviceEnabled) {
+          return Future.error('Location permissions are denied');
+        }
       }
     }
 
@@ -104,8 +108,12 @@ class Methods {
       // Permissions are denied forever, handle appropriately.
       Methods.showToast("Please, enable location services");
 
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      serviceEnabled = await _location.requestService();
+
+      if (!serviceEnabled) {
+        return Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
     }
 
     // When we reach here, permissions are granted and we can
