@@ -619,7 +619,7 @@ class Methods {
 
     completeProfile = !((preference?.getString('dob') == null ||
             preference?.getString('dob')?.length == 0) &&
-        (!preference.getString('phoneNumber').contains('+') ||
+        (!(preference.getString('phoneNumber')?.contains('+') ?? false) ||
             preference.getString('phoneNumber') == 'N/A'));
 
     return completeProfile;
@@ -714,6 +714,90 @@ class Methods {
       },
     );
   }
-}
 
-//https://www.whatsappprofiledpimages.com/wp-content/uploads/2021/08/Profile-Photo-Wallpaper.jpg
+  static showSignInSignUpDialog(context, height, width) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor: ColorList.colorPopUpBG,
+          elevation: 20,
+          child: Container(
+            height: height * 0.35,
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(35),
+                  child: Column(
+                    children: [
+                      Image(
+                        image: AssetImage(
+                            "assets/images/icon_error.png"),
+                        width: width * 0.125,
+                      ),
+                      SizedBox(
+                        height: height * 0.025,
+                      ),
+                      Text(
+                        "You are not signed in",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'SF_Pro_700',
+                          decoration: TextDecoration.none,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: ColorList.colorPrimary,
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.02,
+                      ),
+                      Text(
+                        "Kindly sign in or Sign up to complete your ticket purchase",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'SF_Pro_400',
+                          decoration: TextDecoration.none,
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.normal,
+                          color: ColorList.colorPrimary,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 1,
+                  color: ColorList.colorHeaderOpaque,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login()),
+                    );
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: Text(
+                        "Sign up/Log in",
+                        style: TextStyle(
+                          fontFamily: 'SF_Pro_600',
+                          decoration: TextDecoration.none,
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.bold,
+                          color: ColorList.colorSearchListMore,
+                        ),
+                      )),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

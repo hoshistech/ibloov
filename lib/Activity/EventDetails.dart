@@ -1147,44 +1147,50 @@ class EventDetailsState extends State<EventDetails> {
                                 borderRadius: new BorderRadius.circular(10.0),
                               ),
                               elevation: 3.0,
-                              onPressed: () {
-                                Methods.getProfileCompleteStatus()
-                                    .then((complete) {
-                                  setState(() {
-                                    if (complete) {
-                                      var festEvent = FestEvents(
-                                          data['_id'],
-                                          data['startTime'],
-                                          DateFormat('yyyy').format(DateTime.tryParse(data['startTime'])),
-                                          DateFormat('MMM').format(DateTime.tryParse(data['startTime'])),
-                                          DateFormat('dd').format(DateTime.tryParse(data['startTime'])),
-                                          DateFormat('EEEE').format(DateTime.tryParse(data['startTime'])),
-                                          DateFormat('hh.mm a')
-                                              .format(DateTime.tryParse(data['startTime'])),
-                                          data['location'] != null ? data['location']['name'] : "",
-                                          data['location'] != null ? data['location']['address'] : "",
-                                          Methods.getLowestPrice(data['tickets'], false));
+                              onPressed: () async {
+                                SharedPreferences pref = await SharedPreferences.getInstance();
 
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => SelectTicket(
-                                                  data["_id"],
-                                                  data["title"],
-                                                  "${(data['organizers'] != null && data['organizers'].length > 0) ? data['organizers'][0]['brandName'] : "Brand name not available!"}",
-                                                  festEvent, eventData: data)));
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //       builder: (context) =>
-                                      //           MultipleDatesOptions(data)),
-                                      // );
-                                    } else {
-                                      Methods.showCompleteDialog(
-                                          context, height, width, true);
-                                    }
+                                if(pref.getString('token') != null) {
+                                  Methods.getProfileCompleteStatus()
+                                      .then((complete) {
+                                    setState(() {
+                                      if (complete) {
+                                        var festEvent = FestEvents(
+                                            data['_id'],
+                                            data['startTime'],
+                                            DateFormat('yyyy').format(DateTime.tryParse(data['startTime'])),
+                                            DateFormat('MMM').format(DateTime.tryParse(data['startTime'])),
+                                            DateFormat('dd').format(DateTime.tryParse(data['startTime'])),
+                                            DateFormat('EEEE').format(DateTime.tryParse(data['startTime'])),
+                                            DateFormat('hh.mm a')
+                                                .format(DateTime.tryParse(data['startTime'])),
+                                            data['location'] != null ? data['location']['name'] : "",
+                                            data['location'] != null ? data['location']['address'] : "",
+                                            Methods.getLowestPrice(data['tickets'], false));
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => SelectTicket(
+                                                    data["_id"],
+                                                    data["title"],
+                                                    "${(data['organizers'] != null && data['organizers'].length > 0) ? data['organizers'][0]['brandName'] : "Brand name not available!"}",
+                                                    festEvent, eventData: data)));
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           MultipleDatesOptions(data)),
+                                        // );
+                                      } else {
+                                        Methods.showCompleteDialog(
+                                            context, height, width, true);
+                                      }
+                                    });
                                   });
-                                });
+                                } else {
+                                  Methods.showSignInSignUpDialog(context, height, width);
+                                }
                               },
                               child: Text(
                                 'Buy tickets',
