@@ -413,10 +413,11 @@ class ApiCalls{
       var request = http.Request('GET', Uri.parse(urlGetInterests));
 
       http.StreamedResponse response = await request.send();
+      var responseData = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
         Navigator.pop(context);
-        return await response.stream.bytesToString();
+        return responseData;
       }
       else {
         Navigator.pop(context);
@@ -679,7 +680,7 @@ class ApiCalls{
       }
       else {
         var data = json.decode(await response.stream.bytesToString());
-        Methods.showError(data["error"]);
+        Methods.showError(data);
         return null;
       }
 

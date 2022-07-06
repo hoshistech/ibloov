@@ -37,7 +37,7 @@ class Event {
   Location location;
   String endTime;
   String startTime;
-  String ageLimit;
+  int ageLimit;
   String landscapeImage;
   String portraitImage;
   String accountName;
