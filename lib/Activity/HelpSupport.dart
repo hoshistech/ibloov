@@ -302,8 +302,8 @@ class _HelpSupportState extends State<HelpSupport> {
                                 var email = prefs.getString('email');
                                 var phone = prefs.getString('phoneNumber');
                                 if(phone.contains("+234")) {
-                                  phone = phone.substring(4);
-                                  phone = "0" + phone;
+                                  phone = phone.substring(4).trim();
+                                  phone = "0$phone";
                                 }
 
                                 ApiCalls.submitHelpRequest(
@@ -312,7 +312,7 @@ class _HelpSupportState extends State<HelpSupport> {
                                         context,
                                         fullName: fullName,
                                         mail: email,
-                                        phone: phone)
+                                        phone: phone.trim())
                                     .then((value) {
                                   if (value)
                                     Navigator.pushReplacement(
