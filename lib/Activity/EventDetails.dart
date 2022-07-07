@@ -489,36 +489,39 @@ class EventDetailsState extends State<EventDetails> {
                                       SizedBox(
                                         height: height * 0.02,
                                       ),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                height * 0.01,
-                                                0,
-                                                height * 0.015,
-                                                0),
-                                            child: Image.asset(
-                                              "assets/images/event_details.png",
-                                              height: 20,
+                                      Visibility(
+                                        visible: getHashtags() != null && getHashtags().isNotEmpty,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  height * 0.01,
+                                                  0,
+                                                  height * 0.015,
+                                                  0),
+                                              child: Image.asset(
+                                                "assets/images/event_details.png",
+                                                height: 20,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                              width: width - (height * 0.1),
-                                              child: Text(
-                                                getHashtags(),
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                    fontFamily: 'SF_Pro_700',
-                                                    fontSize: 15.0,
-                                                    color: ColorList.colorDetails,
-                                                    fontWeight: FontWeight.bold,
-                                                    decoration:
-                                                        TextDecoration.none),
-                                              )),
-                                        ],
+                                            SizedBox(
+                                                width: width - (height * 0.1),
+                                                child: Text(
+                                                  getHashtags(),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_700',
+                                                      fontSize: 15.0,
+                                                      color: ColorList.colorDetails,
+                                                      fontWeight: FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                )),
+                                          ],
+                                        ),
                                       ),
                                       SizedBox(
                                         height: height * 0.05,
