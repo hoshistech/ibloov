@@ -165,7 +165,7 @@ class EditProfileState extends State<EditProfile> {
                             backgroundImage: ((stringProfile != null ||
                                         stringProfile != "") &&
                                     !selected)
-                                ? NetworkImage(stringProfile)
+                                ? NetworkImage(stringProfile ?? "")
                                 : (!selected)
                                     ? AssetImage('assets/images/profile.png')
                                     : FileImage(File(profileImage.path)),
@@ -883,7 +883,7 @@ class EditProfileState extends State<EditProfile> {
                         phoneNo.length >= 10) {
                       if (phoneNo.length == 11) phoneNo = phoneNo.substring(1);
                       setState(() {
-                        stringPhone = country + " " + phoneNo;
+                        stringPhone = country + phoneNo;
                       });
                       Navigator.pop(context);
                     } else if (phoneNo.length < 10) {
