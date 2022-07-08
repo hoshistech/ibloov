@@ -822,7 +822,7 @@ class EventDetailsState extends State<EventDetails> {
                                                       width: height * 0.02,
                                                     ),
                                                     InkWell(
-                                                      onTap: () {
+                                                      onTap: () async {
                                                         if (data['organizers'] !=
                                                                 null &&
                                                             data['organizers']
@@ -835,7 +835,8 @@ class EventDetailsState extends State<EventDetails> {
                                                                   data['link'],
                                                                   data['organizers']
                                                                           [0][
-                                                                      'brandName']);
+                                                                      'brandName'],
+                                                          eventName: data['title']);
                                                       },
                                                       child: Image.asset(
                                                         'assets/images/sms.png',

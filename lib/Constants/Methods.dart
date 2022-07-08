@@ -246,7 +246,10 @@ class Methods {
     if (!await launchUrl(Uri.parse(_url))) throw 'Could not launch $_url';
   }
 
-  static sendEmailToOrganizer(email, url, name) async {
+  static sendEmailToOrganizer(email, url, name, {String eventName}) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var phoneNumber = pref.get("phoneNumber");
+
     String encodeQueryParameters(Map<String, String> params) {
       return params.entries
           .map((e) =>
@@ -257,8 +260,11 @@ class Methods {
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: '$email',
-      query: encodeQueryParameters(
-          <String, String>{'subject': 'Event Enquiry', 'body': "Hey $name,"}),
+      query: encodeQueryParameters(<String, String>{
+        'subject': 'Event Enquiry',
+        'body':
+            "Hey $name, \n\nI want to enquire about the event $eventName.\n\nAccess with this link: $url \n\n\n${phoneNumber != null ? "My contact number is $phoneNumber" : ""}"
+      }),
     );
 
     launchUrl(emailLaunchUri).catchError((error) {
@@ -282,7 +288,7 @@ class Methods {
 
   static Widget getSmallEventCardImage(url, {width, height}) {
     String img = url;
-    if(url != null && url.contains("default_banner")) img = null;
+    if (url != null && url.contains("default_banner")) img = null;
 
     return Container(
       width: width,
@@ -297,8 +303,7 @@ class Methods {
                 image: imageProvider,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.darken)
-            ),
+                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.darken)),
           ),
         ),
         placeholder: (context, url) => Center(
@@ -320,7 +325,7 @@ class Methods {
 
   static Widget getLargeeEventCardImage(String url, {width, height}) {
     String img = url;
-    if(url != null && url.contains("default_banner")) img = null;
+    if (url != null && url.contains("default_banner")) img = null;
 
     return Container(
       width: width,
@@ -335,8 +340,7 @@ class Methods {
                 image: imageProvider,
                 fit: BoxFit.fill,
                 colorFilter: ColorFilter.mode(
-                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.dstOut)
-            ),
+                    ColorList.colorPrimary.withOpacity(0.6), BlendMode.dstOut)),
           ),
         ),
         placeholder: (context, url) => Center(
@@ -493,13 +497,13 @@ class Methods {
           highest = tickets[0]['price'];
         else
           highest = 0;
-        if(tickets[0]['currency'] != null)
+        if (tickets[0]['currency'] != null)
           currency = tickets[0]['currency']['htmlCode'];
       }
       for (int i = 0; i < tickets.length; i++) {
         if (tickets[i]['price'] != null && (highest < tickets[i]['price'])) {
           highest = tickets[i]['price'];
-          if(tickets[i]['currency'] != null)
+          if (tickets[i]['currency'] != null)
             currency = tickets[i]['currency']['htmlCode'];
         }
       }
@@ -521,10 +525,7 @@ class Methods {
   }
 
   static formattedAmount(amount) {
-    final value = new NumberFormat.currency(
-      decimalDigits: 2,
-      name: ""
-    );
+    final value = new NumberFormat.currency(decimalDigits: 2, name: "");
     debugPrint("amount to format: $amount");
     if (amount == null) {
       return "0.00";
@@ -721,7 +722,7 @@ class Methods {
       builder: (context) {
         return Dialog(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           backgroundColor: ColorList.colorPopUpBG,
           elevation: 20,
           child: Container(
@@ -733,8 +734,7 @@ class Methods {
                   child: Column(
                     children: [
                       Image(
-                        image: AssetImage(
-                            "assets/images/icon_error.png"),
+                        image: AssetImage("assets/images/icon_error.png"),
                         width: width * 0.125,
                       ),
                       SizedBox(
