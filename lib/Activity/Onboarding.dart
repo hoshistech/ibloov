@@ -243,52 +243,6 @@ class OnboardingState extends State<Onboarding> {
                         height: height * 0.015,
                       ),
                       Container(
-                        width: width * 0.9,
-                        height: 60.0,
-                        child: Card(
-                          color: ColorList.colorSplashBG,
-                          elevation: 3.0,
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                          ),
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => Signup()),
-                              );
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(27.0, 15.0, 25.0, 15.0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Sign up with Email',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'SF_Pro_600',
-                                      decoration: TextDecoration.none,
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: ColorList.colorAccent,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Image.asset(
-                                    'assets/images/email.png',
-                                    width: 25.0,
-                                    height: 25.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: height * 0.01,
-                      ),
-                      Container(
                         child: Card(
                           color: Colors.transparent,
                           elevation: 3.0,
@@ -337,6 +291,108 @@ class OnboardingState extends State<Onboarding> {
                           ),
                         ),
 
+                      ),
+                      Container(
+                          height: height * 0.01,
+                        ),
+                      if(Platform.isIOS)
+                        Container(
+                          child: Card(
+                            color: Colors.transparent,
+                            elevation: 3.0,
+                            child: ClipRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                                child: Container(
+                                  width: width * 0.9,
+                                  height: 50.0,
+                                  decoration: new BoxDecoration(
+                                    color: Colors.white.withOpacity(0.0),
+                                    border: new Border.all(color: Colors.white, width: 2.0),
+                                    borderRadius: new BorderRadius.circular(10.0),
+                                  ),
+                                  child: InkWell(
+                                    onTap: (){
+                                      // Methods.showComingSoon();
+                                      Methods.authApple(context, 'signup');
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Sign up with Apple',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontFamily: 'SF_Pro_600',
+                                              decoration: TextDecoration.none,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal,
+                                              color: ColorList.colorAccent,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Image.asset(
+                                            'assets/images/apple.png',
+                                            width: 25.0,
+                                            height: 25.0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        ),
+                      if(Platform.isIOS)
+                        Container(
+                        height: height * 0.01,
+                      ),
+                      Container(
+                        width: width * 0.9,
+                        height: 60.0,
+                        child: Card(
+                          color: ColorList.colorSplashBG,
+                          elevation: 3.0,
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(10.0),
+                          ),
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => Signup()),
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(27.0, 15.0, 25.0, 15.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Sign up with Email',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: 'SF_Pro_600',
+                                      decoration: TextDecoration.none,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.normal,
+                                      color: ColorList.colorAccent,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    'assets/images/email.png',
+                                    width: 25.0,
+                                    height: 25.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       Container(
                         height: height * 0.01,
@@ -392,62 +448,6 @@ class OnboardingState extends State<Onboarding> {
                       //   ),
                       //
                       // ),
-                      if(Platform.isIOS)
-                        Container(
-                        height: height * 0.01,
-                      ),
-                      if(Platform.isIOS)
-                        Container(
-                        child: Card(
-                          color: Colors.transparent,
-                          elevation: 3.0,
-                          child: ClipRect(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                              child: Container(
-                                width: width * 0.9,
-                                height: 50.0,
-                                decoration: new BoxDecoration(
-                                  color: Colors.white.withOpacity(0.0),
-                                  border: new Border.all(color: Colors.white, width: 2.0),
-                                  borderRadius: new BorderRadius.circular(10.0),
-                                ),
-                                child: InkWell(
-                                  onTap: (){
-                                    // Methods.showComingSoon();
-                                    Methods.authApple(context, 'signup');
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Sign up with Apple',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: 'SF_Pro_600',
-                                            decoration: TextDecoration.none,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.normal,
-                                            color: ColorList.colorAccent,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Image.asset(
-                                          'assets/images/apple.png',
-                                          width: 25.0,
-                                          height: 25.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      ),
                       Container(
                         height: height * 0.005,
                       ),

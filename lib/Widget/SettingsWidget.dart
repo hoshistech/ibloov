@@ -17,9 +17,11 @@ class SettingsWidget extends StatefulWidget{
 }
 
 class SettingsWidgetState extends State<SettingsWidget>{
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
     return Container(
       height: height,
@@ -43,7 +45,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
                     children: [
                       // account(),
                       // preferences(),
-                      // security(),
+                      security(context, height, width),
                       about(),
                     ],
                   ),
@@ -356,11 +358,11 @@ class SettingsWidgetState extends State<SettingsWidget>{
     );
   }
 
-  Widget security() {
+  Widget security(BuildContext context, double height, double width) {
     return Container(
-      margin: EdgeInsets.only(
-        top: 30,
-      ),
+      // margin: EdgeInsets.only(
+      //   top: 30,
+      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -374,14 +376,44 @@ class SettingsWidgetState extends State<SettingsWidget>{
             ),
           ),
           SizedBox(height: 20),
+          // GestureDetector(
+          //   onTap: (){
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => CreateEvents(),
+          //         )
+          //     );
+          //   },
+          //   child: Row(
+          //     children: [
+          //       Image.asset(
+          //         'assets/images/icon_reset.png',
+          //         width: 24,
+          //       ),
+          //       SizedBox(width: 30),
+          //       Expanded(
+          //         child: Text(
+          //           'Reset Password',
+          //           style: TextStyle(
+          //             fontFamily: 'SF_Pro_400',
+          //             fontSize: 15,
+          //             fontWeight: FontWeight.normal,
+          //             color: ColorList.colorPrimary,
+          //           ),
+          //         ),
+          //       ),
+          //       Image.asset(
+          //         'assets/images/icon_arrow.png',
+          //         width: 8,
+          //         height: 12,
+          //       ),
+          //     ],
+          //   ),
+          // ),
           GestureDetector(
             onTap: (){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateEvents(),
-                  )
-              );
+              Methods.showDeleteAccountDialog(context, height, width);
             },
             child: Row(
               children: [
@@ -392,7 +424,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
                 SizedBox(width: 30),
                 Expanded(
                   child: Text(
-                    'Reset Password',
+                    'Delete my account',
                     style: TextStyle(
                       fontFamily: 'SF_Pro_400',
                       fontSize: 15,
@@ -552,7 +584,7 @@ class SettingsWidgetState extends State<SettingsWidget>{
 
   Widget about() {
     return Container(
-      margin: EdgeInsets.only(top: 0),
+      margin: EdgeInsets.only(top: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

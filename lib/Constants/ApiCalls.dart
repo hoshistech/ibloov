@@ -44,6 +44,7 @@ class ApiCalls {
   static String urlInformation = urlMain + 'business?type=';
   static String urlUpload = urlMain + 'file/upload';
   static String urlUserTicket = urlMain + 'user-ticket?eventId=';
+  static String urlDeleteAccount = urlMain + 'user/';
 
   static var headersJSON = {'Content-Type': 'application/json'};
 
@@ -1211,13 +1212,45 @@ class ApiCalls {
       if (response.statusCode == 200) {
         return data;
       } else {
-        print(await response.stream.bytesToString());
+        debugPrint("${json.decode(data)["error"]}");
         Methods.showError("${json.decode(data)["error"]}");
         return null;
       }
     } on Exception catch (e) {
       Methods.showError('$e');
       return null;
+    }
+  }
+
+  static Future<bool> deleteAccount() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    try {
+      Map<String, String> headers = {};
+      if (pref.getString('token') != null)
+        headers = {
+          'Authorization': 'Bearer ${pref.getString('token')}',
+          'Content-Type': 'application/json'
+        };
+
+      var request = http.Request(
+          'DELETE', Uri.parse(urlDeleteAccount + pref.getString('_id')));
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      var data = await response.stream.bytesToString();
+      debugPrint(data);
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        debugPrint("${json.decode(data)["error"]}");
+        Methods.showError("${json.decode(data)["error"]["error"]}");
+        return false;
+      }
+    } on Exception catch (e) {
+      Methods.showError('$e');
+      return false;
     }
   }
 }
