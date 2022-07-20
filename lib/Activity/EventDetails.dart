@@ -45,6 +45,21 @@ class EventDetailsState extends State<EventDetails> {
     getData();
   }
 
+  bool checkIsInviteOnly() {
+    var res = data['conditions'] != null &&
+        data['conditions'].contains("INVITES_ONLY");
+    return res;
+  }
+
+  Future<bool> isInvited() async {
+    var pref = await SharedPreferences.getInstance();
+    var email = pref.getString('email');
+
+    bool result = data['invitees'] != null && data['invitees'].contains(email);
+
+    return result;
+  }
+
   getData() {
     print(widget.id);
 
@@ -109,11 +124,19 @@ class EventDetailsState extends State<EventDetails> {
                         child: Stack(
                           children: [
                             Positioned(
-                              height: (data != null && data['banner'] != null && !data['banner'].toString().contains("default_banner")) ? height * 0.55 : height - 100,
+                              height: (data != null &&
+                                      data['banner'] != null &&
+                                      !data['banner']
+                                          .toString()
+                                          .contains("default_banner"))
+                                  ? height * 0.55
+                                  : height - 100,
                               top: 0,
                               left: 0,
                               right: 0,
-                              child: Methods.getLargeeEventCardImage(data != null ? data['banner'] : "", width: width,
+                              child: Methods.getLargeeEventCardImage(
+                                  data != null ? data['banner'] : "",
+                                  width: width,
                                   height: height * 0.55),
                             ),
                             Column(
@@ -167,7 +190,9 @@ class EventDetailsState extends State<EventDetails> {
                                         Padding(
                                           padding: EdgeInsets.fromLTRB(
                                               height * 0.02,
-                                              MediaQuery.of(context).padding.top +
+                                              MediaQuery.of(context)
+                                                      .padding
+                                                      .top +
                                                   10,
                                               height * 0.02,
                                               0),
@@ -178,7 +203,8 @@ class EventDetailsState extends State<EventDetails> {
                                                   children: [
                                                     InkWell(
                                                         onTap: () {
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         },
                                                         child: Padding(
                                                           child: Icon(
@@ -187,7 +213,8 @@ class EventDetailsState extends State<EventDetails> {
                                                                   .colorAccent,
                                                               size: 30),
                                                           padding:
-                                                              EdgeInsets.all(0.0),
+                                                              EdgeInsets.all(
+                                                                  0.0),
                                                         )),
                                                     Spacer(),
                                                     InkWell(
@@ -202,7 +229,8 @@ class EventDetailsState extends State<EventDetails> {
                                                         onTap: () {
                                                           setState(() {
                                                             data['userLiked'] =
-                                                                !data['userLiked'];
+                                                                !data[
+                                                                    'userLiked'];
                                                           });
 
                                                           ApiCalls.toggleLike(
@@ -222,8 +250,10 @@ class EventDetailsState extends State<EventDetails> {
                                                               : Icons
                                                                   .favorite_outline,
                                                           size: 30,
-                                                          color: (data['userLiked'])
-                                                              ? ColorList.colorRed
+                                                          color: (data[
+                                                                  'userLiked'])
+                                                              ? ColorList
+                                                                  .colorRed
                                                               : ColorList
                                                                   .colorAccent,
                                                         ))
@@ -237,7 +267,8 @@ class EventDetailsState extends State<EventDetails> {
                                               ),
                                               Spacer(),
                                               Align(
-                                                alignment: Alignment.bottomCenter,
+                                                alignment:
+                                                    Alignment.bottomCenter,
                                                 child: Container(
                                                   child: Row(
                                                     crossAxisAlignment:
@@ -265,8 +296,9 @@ class EventDetailsState extends State<EventDetails> {
                                                             width: width * 0.8,
                                                             child: Text(
                                                               data['title'],
-                                                              overflow: TextOverflow
-                                                                  .visible,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .visible,
                                                               softWrap: true,
                                                               style: TextStyle(
                                                                   fontFamily:
@@ -289,19 +321,23 @@ class EventDetailsState extends State<EventDetails> {
                                                         child: Image.asset(
                                                           "assets/images/more_vert.png",
                                                           height: 25,
-                                                          color:
-                                                              ColorList.colorAccent,
+                                                          color: ColorList
+                                                              .colorAccent,
                                                         ),
-                                                        onTapDown: (TapDownDetails
-                                                            details) {
+                                                        onTapDown:
+                                                            (TapDownDetails
+                                                                details) {
                                                           RenderBox box = context
                                                               .findRenderObject();
-                                                          Offset localOffset = box
-                                                              .globalToLocal(details
-                                                                  .globalPosition);
+                                                          Offset localOffset =
+                                                              box.globalToLocal(
+                                                                  details
+                                                                      .globalPosition);
                                                           setState(() {
-                                                            posx = localOffset.dx;
-                                                            posy = localOffset.dy;
+                                                            posx =
+                                                                localOffset.dx;
+                                                            posy =
+                                                                localOffset.dy;
                                                           });
                                                         },
                                                       ),
@@ -316,12 +352,14 @@ class EventDetailsState extends State<EventDetails> {
                                       ],
                                     )),
                                 Container(
-                                  color: ColorList.colorPrimary.withOpacity(0.6),
+                                  color:
+                                      ColorList.colorPrimary.withOpacity(0.6),
                                   padding: EdgeInsets.fromLTRB(height * 0.02,
                                       height * 0.02, height * 0.02, 0),
                                   width: width,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         crossAxisAlignment:
@@ -329,22 +367,26 @@ class EventDetailsState extends State<EventDetails> {
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.fromLTRB(
-                                                height * 0.01, 0, height * 0.02, 0),
+                                                height * 0.01,
+                                                0,
+                                                height * 0.02,
+                                                0),
                                             child: Image.asset(
                                               "assets/images/event_date.png",
                                               height: 20,
                                             ),
                                           ),
                                           Text(
-                                            DateFormat('EEEE, dd MMM yyyy').format(
-                                                DateTime.tryParse(
+                                            DateFormat('EEEE, dd MMM yyyy')
+                                                .format(DateTime.tryParse(
                                                     data['startTime'])),
                                             style: TextStyle(
                                                 fontFamily: 'SF_Pro_700',
                                                 fontSize: 13.0,
                                                 color: ColorList.colorDetails,
                                                 fontWeight: FontWeight.bold,
-                                                decoration: TextDecoration.none),
+                                                decoration:
+                                                    TextDecoration.none),
                                           ),
                                           Padding(
                                             padding: EdgeInsets.all(5.0),
@@ -362,7 +404,8 @@ class EventDetailsState extends State<EventDetails> {
                                                   fontSize: 13.0,
                                                   color: ColorList.colorDetails,
                                                   fontWeight: FontWeight.bold,
-                                                  decoration: TextDecoration.none),
+                                                  decoration:
+                                                      TextDecoration.none),
                                             ),
                                           ),
                                         ],
@@ -373,7 +416,8 @@ class EventDetailsState extends State<EventDetails> {
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Padding(
@@ -396,25 +440,31 @@ class EventDetailsState extends State<EventDetails> {
                                                   child: Text(
                                                     address,
                                                     style: TextStyle(
-                                                        fontFamily: 'SF_Pro_700',
+                                                        fontFamily:
+                                                            'SF_Pro_700',
                                                         fontSize: 15.0,
-                                                        color:
-                                                            ColorList.colorDetails,
-                                                        fontWeight: FontWeight.w700,
+                                                        color: ColorList
+                                                            .colorDetails,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                         decoration:
-                                                            TextDecoration.none),
+                                                            TextDecoration
+                                                                .none),
                                                   )),
                                               SizedBox(height: 3),
                                               SizedBox(
                                                 width: width - (height * 0.1),
                                                 child: Text(
                                                   location,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       fontFamily: 'SF_Pro_400',
                                                       fontSize: 10.0,
-                                                      color: ColorList.colorDetails,
-                                                      fontWeight: FontWeight.bold,
+                                                      color: ColorList
+                                                          .colorDetails,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       decoration:
                                                           TextDecoration.none),
                                                 ),
@@ -449,7 +499,8 @@ class EventDetailsState extends State<EventDetails> {
                                                 fontSize: 15.0,
                                                 color: ColorList.colorDetails,
                                                 fontWeight: FontWeight.bold,
-                                                decoration: TextDecoration.none),
+                                                decoration:
+                                                    TextDecoration.none),
                                           ),
                                         ],
                                       ),
@@ -473,8 +524,10 @@ class EventDetailsState extends State<EventDetails> {
                                           ),
                                           Text(
                                             (data['organizers'] != null &&
-                                                    data['organizers'].length > 0)
-                                                ? data['organizers'][0]['brandName']
+                                                    data['organizers'].length >
+                                                        0)
+                                                ? data['organizers'][0]
+                                                    ['brandName']
                                                 : "Brand name not available!",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
@@ -482,7 +535,8 @@ class EventDetailsState extends State<EventDetails> {
                                                 fontSize: 15.0,
                                                 color: ColorList.colorDetails,
                                                 fontWeight: FontWeight.bold,
-                                                decoration: TextDecoration.none),
+                                                decoration:
+                                                    TextDecoration.none),
                                           ),
                                         ],
                                       ),
@@ -490,7 +544,8 @@ class EventDetailsState extends State<EventDetails> {
                                         height: height * 0.02,
                                       ),
                                       Visibility(
-                                        visible: getHashtags() != null && getHashtags().isNotEmpty,
+                                        visible: getHashtags() != null &&
+                                            getHashtags().isNotEmpty,
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -510,13 +565,16 @@ class EventDetailsState extends State<EventDetails> {
                                                 width: width - (height * 0.1),
                                                 child: Text(
                                                   getHashtags(),
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   textAlign: TextAlign.start,
                                                   style: TextStyle(
                                                       fontFamily: 'SF_Pro_700',
                                                       fontSize: 15.0,
-                                                      color: ColorList.colorDetails,
-                                                      fontWeight: FontWeight.bold,
+                                                      color: ColorList
+                                                          .colorDetails,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       decoration:
                                                           TextDecoration.none),
                                                 )),
@@ -542,7 +600,8 @@ class EventDetailsState extends State<EventDetails> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Details",
@@ -572,7 +631,8 @@ class EventDetailsState extends State<EventDetails> {
                                                 color: ColorList.colorPrimary
                                                     .withOpacity(0.7),
                                                 fontWeight: FontWeight.normal,
-                                                decoration: TextDecoration.none),
+                                                decoration:
+                                                    TextDecoration.none),
                                           ),
                                           if (data['description'].length > 100)
                                             InkWell(
@@ -618,106 +678,105 @@ class EventDetailsState extends State<EventDetails> {
                                       ),
                                       Container(
                                         //padding: EdgeInsets.only(top: 15.0),
-                                        child:
-                                            (performingArtists == null ||
-                                                    performingArtists.length == 0)
-                                                ? Container()
-                                                : Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        width: width,
-                                                        child: Text(
-                                                          "Performing Artists",
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'SF_Pro_900',
-                                                              fontSize: 18.0,
-                                                              color: ColorList
-                                                                  .colorPrimary,
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .none),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: height * 0.02,
-                                                      ),
-                                                      Container(
-                                                        height: height * 0.085,
-                                                        child: ListView.builder(
-                                                            shrinkWrap: true,
-                                                            scrollDirection:
-                                                                Axis.horizontal,
-                                                            itemCount:
-                                                                performingArtists
-                                                                    .length,
-                                                            itemBuilder:
-                                                                (BuildContext
-                                                                            context,
-                                                                        int item) =>
-                                                                    Column(
+                                        child: (performingArtists == null ||
+                                                performingArtists.length == 0)
+                                            ? Container()
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: width,
+                                                    child: Text(
+                                                      "Performing Artists",
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'SF_Pro_900',
+                                                          fontSize: 18.0,
+                                                          color: ColorList
+                                                              .colorPrimary,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .none),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height * 0.02,
+                                                  ),
+                                                  Container(
+                                                    height: height * 0.085,
+                                                    child: ListView.builder(
+                                                        shrinkWrap: true,
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        itemCount:
+                                                            performingArtists
+                                                                .length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                        context,
+                                                                    int item) =>
+                                                                Column(
+                                                                  children: [
+                                                                    Row(
                                                                       children: [
-                                                                        Row(
-                                                                          children: [
-                                                                            Container(
-                                                                              margin:
-                                                                                  EdgeInsets.only(right: 15),
-                                                                              width:
-                                                                                  height * 0.075,
-                                                                              height:
-                                                                                  height * 0.075,
-                                                                              child:
-                                                                                  CachedNetworkImage(
-                                                                                imageUrl:
-                                                                                    performingArtists[item]['imgUrl'] ?? "",
-                                                                                fit:
-                                                                                    BoxFit.cover,
-                                                                                imageBuilder: (context, imageProvider) =>
-                                                                                    Container(
-                                                                                  decoration: BoxDecoration(
-                                                                                    shape: BoxShape.circle,
-                                                                                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
-                                                                                  ),
-                                                                                ),
-                                                                                placeholder: (context, url) =>
-                                                                                    CircularProgressIndicator(),
-                                                                                errorWidget: (context, url, error) =>
-                                                                                    Image.asset('assets/images/profile.png'),
+                                                                        Container(
+                                                                          margin:
+                                                                              EdgeInsets.only(right: 15),
+                                                                          width:
+                                                                              height * 0.075,
+                                                                          height:
+                                                                              height * 0.075,
+                                                                          child:
+                                                                              CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                performingArtists[item]['imgUrl'] ?? "",
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            imageBuilder: (context, imageProvider) =>
+                                                                                Container(
+                                                                              decoration: BoxDecoration(
+                                                                                shape: BoxShape.circle,
+                                                                                image: DecorationImage(image: imageProvider, fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
                                                                               ),
                                                                             ),
-                                                                            Column(
-                                                                              crossAxisAlignment:
-                                                                                  CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Text(
-                                                                                  performingArtists[item]['name'],
-                                                                                  textAlign: TextAlign.start,
-                                                                                  style: TextStyle(fontFamily: 'SF_Pro_900', fontSize: 13.0, color: ColorList.colorPrimary, fontWeight: FontWeight.bold, decoration: TextDecoration.none),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width:
-                                                                                  width * 0.075,
+                                                                            placeholder: (context, url) =>
+                                                                                CircularProgressIndicator(),
+                                                                            errorWidget: (context, url, error) =>
+                                                                                Image.asset('assets/images/profile.png'),
+                                                                          ),
+                                                                        ),
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              performingArtists[item]['name'],
+                                                                              textAlign: TextAlign.start,
+                                                                              style: TextStyle(fontFamily: 'SF_Pro_900', fontSize: 13.0, color: ColorList.colorPrimary, fontWeight: FontWeight.bold, decoration: TextDecoration.none),
                                                                             ),
                                                                           ],
                                                                         ),
                                                                         SizedBox(
-                                                                          height:
-                                                                              height *
-                                                                                  0.01,
+                                                                          width:
+                                                                              width * 0.075,
                                                                         ),
                                                                       ],
-                                                                    )),
-                                                      )
-                                                    ],
-                                                  ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          height *
+                                                                              0.01,
+                                                                    ),
+                                                                  ],
+                                                                )),
+                                                  )
+                                                ],
+                                              ),
                                       ),
                                       SizedBox(
                                         height: height * 0.03,
@@ -732,16 +791,19 @@ class EventDetailsState extends State<EventDetails> {
                                                     width: width,
                                                     child: Text(
                                                       "Organizers",
-                                                      textAlign: TextAlign.start,
+                                                      textAlign:
+                                                          TextAlign.start,
                                                       style: TextStyle(
-                                                          fontFamily: 'SF_Pro_900',
+                                                          fontFamily:
+                                                              'SF_Pro_900',
                                                           fontSize: 18.0,
                                                           color: ColorList
                                                               .colorPrimary,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           decoration:
-                                                              TextDecoration.none,
+                                                              TextDecoration
+                                                                  .none,
                                                           letterSpacing: 0.35),
                                                     )),
                                                 SizedBox(
@@ -755,27 +817,30 @@ class EventDetailsState extends State<EventDetails> {
                                                       margin: EdgeInsets.only(
                                                           right: 15),
                                                       child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            (data['organizers'] !=
-                                                                        null &&
-                                                                    data['organizers']
-                                                                            .length >
-                                                                        0)
-                                                                ? data['organizers']
-                                                                    [0]['imageUrl']
-                                                                : null,
+                                                        imageUrl: (data['organizers'] !=
+                                                                    null &&
+                                                                data['organizers']
+                                                                        .length >
+                                                                    0)
+                                                            ? data['organizers']
+                                                                [0]['imageUrl']
+                                                            : null,
                                                         imageBuilder: (context,
                                                                 imageProvider) =>
                                                             Container(
-                                                          decoration: BoxDecoration(
-                                                            shape: BoxShape.circle,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
                                                             image: DecorationImage(
                                                                 image:
                                                                     imageProvider,
-                                                                fit: BoxFit.cover,
+                                                                fit: BoxFit
+                                                                    .cover,
                                                                 colorFilter:
                                                                     ColorFilter.mode(
-                                                                        Colors.red,
+                                                                        Colors
+                                                                            .red,
                                                                         BlendMode
                                                                             .colorBurn)),
                                                           ),
@@ -783,15 +848,16 @@ class EventDetailsState extends State<EventDetails> {
                                                         placeholder: (context,
                                                                 url) =>
                                                             CircularProgressIndicator(),
-                                                        errorWidget: (context, url,
-                                                                error) =>
+                                                        errorWidget: (context,
+                                                                url, error) =>
                                                             Image.asset(
                                                                 'assets/images/profile.png'),
                                                       ),
                                                     ),
                                                     Column(
                                                       crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Text(
                                                           (data['organizers'] !=
@@ -800,7 +866,8 @@ class EventDetailsState extends State<EventDetails> {
                                                                           .length >
                                                                       0)
                                                               ? data['organizers']
-                                                                  [0]['brandName']
+                                                                      [0]
+                                                                  ['brandName']
                                                               : "Brand name not available!",
                                                           textAlign:
                                                               TextAlign.start,
@@ -811,7 +878,8 @@ class EventDetailsState extends State<EventDetails> {
                                                               color: ColorList
                                                                   .colorPrimary,
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                               decoration:
                                                                   TextDecoration
                                                                       .none),
@@ -828,20 +896,20 @@ class EventDetailsState extends State<EventDetails> {
                                                             data['organizers']
                                                                     .length >
                                                                 0)
-                                                          Methods
-                                                              .sendEmailToOrganizer(
-                                                                  data['organizers']
-                                                                      [0]['email'],
-                                                                  data['link'],
-                                                                  data['organizers']
-                                                                          [0][
-                                                                      'brandName'],
-                                                          eventName: data['title']);
+                                                          Methods.sendEmailToOrganizer(
+                                                              data['organizers']
+                                                                  [0]['email'],
+                                                              data['link'],
+                                                              data['organizers']
+                                                                      [0]
+                                                                  ['brandName'],
+                                                              eventName: data[
+                                                                  'title']);
                                                       },
                                                       child: Image.asset(
                                                         'assets/images/sms.png',
-                                                        color:
-                                                            ColorList.colorSeeAll,
+                                                        color: ColorList
+                                                            .colorSeeAll,
                                                         height: 31,
                                                       ),
                                                     )
@@ -997,10 +1065,12 @@ class EventDetailsState extends State<EventDetails> {
                                             decoration: new BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    new BorderRadius.circular(10.0),
+                                                    new BorderRadius.circular(
+                                                        10.0),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                      color: ColorList.colorPrimary
+                                                      color: ColorList
+                                                          .colorPrimary
                                                           .withOpacity(0.1),
                                                       blurRadius: 12,
                                                       offset: Offset(0, 4))
@@ -1008,10 +1078,12 @@ class EventDetailsState extends State<EventDetails> {
                                             child: InkWell(
                                               onTap: () {
                                                 // Methods.shareTwitter(data['link']);
-                                                Methods.shareEvent(data['link']);
+                                                Methods.shareEvent(
+                                                    data['link']);
                                               },
                                               child: Padding(
-                                                padding: const EdgeInsets.all(12.0),
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
                                                 child: Image.asset(
                                                   'assets/images/ic_share.png',
                                                   width: 15.0,
@@ -1029,10 +1101,12 @@ class EventDetailsState extends State<EventDetails> {
                                             decoration: new BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    new BorderRadius.circular(10.0),
+                                                    new BorderRadius.circular(
+                                                        10.0),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                      color: ColorList.colorPrimary
+                                                      color: ColorList
+                                                          .colorPrimary
                                                           .withOpacity(0.1),
                                                       blurRadius: 12,
                                                       offset: Offset(0, 4))
@@ -1152,48 +1226,68 @@ class EventDetailsState extends State<EventDetails> {
                               ),
                               elevation: 3.0,
                               onPressed: () async {
-                                SharedPreferences pref = await SharedPreferences.getInstance();
+                                SharedPreferences pref =
+                                    await SharedPreferences.getInstance();
 
-                                if(pref.getString('token') != null) {
-                                  Methods.getProfileCompleteStatus()
-                                      .then((complete) {
-                                    setState(() {
-                                      if (complete) {
-                                        var festEvent = FestEvents(
-                                            data['_id'],
-                                            data['startTime'],
-                                            DateFormat('yyyy').format(DateTime.tryParse(data['startTime'])),
-                                            DateFormat('MMM').format(DateTime.tryParse(data['startTime'])),
-                                            DateFormat('dd').format(DateTime.tryParse(data['startTime'])),
-                                            DateFormat('EEEE').format(DateTime.tryParse(data['startTime'])),
-                                            DateFormat('hh.mm a')
-                                                .format(DateTime.tryParse(data['startTime'])),
-                                            data['location'] != null ? data['location']['name'] : "",
-                                            data['location'] != null ? data['location']['address'] : "",
-                                            Methods.getLowestPrice(data['tickets'], false));
+                                if (pref.getString('token') != null) {
+                                  if (checkIsInviteOnly()) {
+                                    if (!await isInvited()) {
+                                      Methods.showToast(
+                                          "Oops, You were not invited to this event");
+                                      return;
+                                    }
+                                  } else {
+                                    Methods.getProfileCompleteStatus()
+                                        .then((complete) {
+                                      setState(() {
+                                        if (complete) {
+                                          var festEvent = FestEvents(
+                                              data['_id'],
+                                              data['startTime'],
+                                              DateFormat('yyyy').format(DateTime.tryParse(
+                                                  data['startTime'])),
+                                              DateFormat('MMM').format(DateTime.tryParse(
+                                                  data['startTime'])),
+                                              DateFormat('dd').format(DateTime.tryParse(
+                                                  data['startTime'])),
+                                              DateFormat('EEEE').format(DateTime.tryParse(
+                                                  data['startTime'])),
+                                              DateFormat('hh.mm a').format(DateTime.tryParse(
+                                                  data['startTime'])),
+                                              data['location'] != null
+                                                  ? data['location']['name']
+                                                  : "",
+                                              data['location'] != null
+                                                  ? data['location']['address']
+                                                  : "",
+                                              Methods.getLowestPrice(data['tickets'], false));
 
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => SelectTicket(
-                                                    data["_id"],
-                                                    data["title"],
-                                                    "${(data['organizers'] != null && data['organizers'].length > 0) ? data['organizers'][0]['brandName'] : "Brand name not available!"}",
-                                                    festEvent, eventData: data)));
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) =>
-                                        //           MultipleDatesOptions(data)),
-                                        // );
-                                      } else {
-                                        Methods.showCompleteDialog(
-                                            context, height, width, true);
-                                      }
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SelectTicket(
+                                                          data["_id"],
+                                                          data["title"],
+                                                          "${(data['organizers'] != null && data['organizers'].length > 0) ? data['organizers'][0]['brandName'] : "Brand name not available!"}",
+                                                          festEvent,
+                                                          eventData: data)));
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           MultipleDatesOptions(data)),
+                                          // );
+                                        } else {
+                                          Methods.showCompleteDialog(
+                                              context, height, width, true);
+                                        }
+                                      });
                                     });
-                                  });
+                                  }
                                 } else {
-                                  Methods.showSignInSignUpDialog(context, height, width);
+                                  Methods.showSignInSignUpDialog(
+                                      context, height, width);
                                 }
                               },
                               child: Text(
@@ -1401,7 +1495,8 @@ class EventDetailsState extends State<EventDetails> {
                                 //       ),
                                 //     )),
                                 Methods.getSmallEventCardImage(
-                                    more_data[item]['banner'] ?? "", width: width * 0.6,
+                                    more_data[item]['banner'] ?? "",
+                                    width: width * 0.6,
                                     height: width * 0.7),
                                 Container(
                                     width: width * 0.6,
@@ -1693,8 +1788,7 @@ class EventDetailsState extends State<EventDetails> {
                               Radius.circular(10.0),
                             ),
                           ),
-                        )
-                        ),
+                        )),
                   )),
             ),
             height: 200.0,
