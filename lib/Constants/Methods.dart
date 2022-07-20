@@ -463,7 +463,7 @@ class Methods {
         for (int i = 0; i < tickets.length; i++) {
           if (tickets[i]['price'] != null && lowest > tickets[i]['price']) {
             lowest = tickets[i]['price'];
-            currency = tickets[i]['currency']['htmlCode'];
+            currency = tickets[i]['currency'] != null ? tickets[i]['currency']['htmlCode'] : "";
           }
         }
       }

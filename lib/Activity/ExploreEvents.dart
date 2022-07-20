@@ -44,6 +44,8 @@ class ExploreEventsState extends State<ExploreEvents> {
     {'text': 'Happening Near You', 'name': 'happeningNearMe'},
     {'text': 'Happening Today', 'name': 'happeningToday'},
     {'text': 'Happening This Week', 'name': 'happeningThisWeek'},
+    {'text': 'Upcoming', 'name': 'upcoming'},
+    {'text': 'Recommended For You', 'name': 'recommendedForYou'},
   ];
 
   BitmapDescriptor icon;
@@ -457,7 +459,7 @@ class ExploreEventsState extends State<ExploreEvents> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           getFeaturedEventsSlides(),
-          for (int i = 1; i < 5; i++) getEventsWidgets(i),
+          for (int i = 1; i < 7; i++) getEventsWidgets(i),
           getMessage(),
           Container(
             height: 25.0,
@@ -838,6 +840,10 @@ class ExploreEventsState extends State<ExploreEvents> {
         return exploreEventData.happeningToday;
       case 4:
         return exploreEventData.happeningThisWeek;
+      case 5:
+        return exploreEventData.upcoming;
+      case 6:
+        return exploreEventData.recommendedForYou;
       default:
         return <Event>[];
     }

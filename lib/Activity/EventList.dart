@@ -61,6 +61,20 @@ class EventListState extends State<EventList> {
       'details': 'See all the latest events and shows happening this week, in your location.',
       'image': 'assets/images/happening_this_week.jpg'
     },
+    {
+      'key': 5,
+      'text': 'Upcoming',
+      'array': 'upcoming',
+      'details': 'See all the latest upcoming events in your location.',
+      'image': 'assets/images/happening_this_week.jpg'
+    },
+    {
+      'key': 6,
+      'text': 'Recommended for you',
+      'array': 'recommendedForYou',
+      'details': 'See all the recommended events in your location.',
+      'image': 'assets/images/happening_this_week.jpg'
+    },
   ];
 
   @override
