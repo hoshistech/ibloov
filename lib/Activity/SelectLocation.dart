@@ -43,16 +43,30 @@ class SelectLocationState extends State<SelectLocation>{
   @override
   void initState() {
     super.initState();
-    //getCurrentLocation();
-    getAddressFromLatLng(widget.currentPosition.latitude, widget.currentPosition.longitude);
-    getIcons();
+    try {
+      // if(widget.currentPosition != null) {
+      //   getAddressFromLatLng(widget.currentPosition.latitude, widget.currentPosition.longitude);
+      // }
 
-    locationController.addListener(() {
-      _onChanged();
-    });
+      getIcons();
 
-    _center = LatLng(widget.currentPosition.latitude, widget.currentPosition.longitude);
-    currentPosition = widget.currentPosition;
+      // locationController.addListener(() {
+      //   _onChanged();
+      // });
+
+      _center = LatLng(widget.currentPosition?.latitude, widget.currentPosition?.longitude);
+      currentPosition = widget.currentPosition;
+    } catch(e) {
+      debugPrint(e.toString());
+    }
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    getCurrentLocation();
   }
 
   getCurrentLocation() {
@@ -92,7 +106,7 @@ class SelectLocationState extends State<SelectLocation>{
 
       Placemark place = p[0];
 
-      setState(() {
+      // setState(() {
         var placeData = json.decode(json.encode(place.toJson()));
         String thoroughfare = placeData["thoroughfare"].length > 0 ? '${placeData["thoroughfare"]}, ' : "";
         String subLocality = placeData["subLocality"].length > 0 ? '${placeData["subLocality"]}, ' : "";
@@ -100,7 +114,7 @@ class SelectLocationState extends State<SelectLocation>{
         String country = placeData["country"].length > 0 ? placeData["country"] : "";
         //currentAddress = '${placeData["thoroughfare"]}, ${placeData["subLocality"]}, ${placeData["locality"]}, ${placeData["country"]}';
         currentAddress = '$thoroughfare$subLocality$locality$country';
-      });
+      // });
     } catch (e) {
       print(e);
     }
@@ -162,9 +176,12 @@ class SelectLocationState extends State<SelectLocation>{
 
   @override
   Widget build(BuildContext context) {
-
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
+
+    locationController.addListener(() {
+      _onChanged();
+    });
 
     return Scaffold(
       body: WillPopScope(

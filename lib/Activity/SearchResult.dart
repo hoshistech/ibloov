@@ -12,8 +12,9 @@ import 'package:intl/intl.dart';
 
 var width, height;
 
-class SearchResult extends StatefulWidget{
+class SearchResult extends StatefulWidget {
   final searchController;
+
   SearchResult(this.searchController);
 
   @override
@@ -21,7 +22,6 @@ class SearchResult extends StatefulWidget{
 }
 
 class SearchResultState extends State<SearchResult> {
-
   List categories = ['Events', 'Artists', 'People', 'Hashtags'];
   int catIndex = 0;
   var searchController = TextEditingController();
@@ -42,7 +42,6 @@ class SearchResultState extends State<SearchResult> {
   bool isLoading2 = false;
   bool isLoading3 = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -52,14 +51,13 @@ class SearchResultState extends State<SearchResult> {
 
   @override
   Widget build(BuildContext context) {
-
     searchController = widget.searchController;
 
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
 
-    if(widget.searchController.text == null
-        || widget.searchController.text == "") {
+    if (widget.searchController.text == null ||
+        widget.searchController.text == "") {
       clearSearch();
       isLoading0 = isLoading1 = isLoading2 = isLoading3 = false;
     }
@@ -75,9 +73,7 @@ class SearchResultState extends State<SearchResult> {
                 gradient: LinearGradient(
                     begin: const Alignment(0.0, -1),
                     end: const Alignment(0.0, 0.6),
-                    colors: [ColorList.colorBackground, Colors.white]
-                )
-            ),
+                    colors: [ColorList.colorBackground, Colors.white])),
             child: Column(
               children: [
                 Card(
@@ -95,52 +91,58 @@ class SearchResultState extends State<SearchResult> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Search for events, people or hashtag',
-                        hintStyle: TextStyle(color: ColorList.colorGray, fontSize: 14.0),
+                        hintStyle: TextStyle(
+                            color: ColorList.colorGray, fontSize: 14.0),
                         alignLabelWithHint: true,
                         prefixIcon: IconButton(
-                          icon: searchController.text.isNotEmpty ? Icon(
-                            Icons.close,
-                            color: ColorList.colorGray,
-                          ) : Icon(
-                            Icons.arrow_back,
-                            color: ColorList.colorGray,
-                          ),
+                          icon: searchController.text.isNotEmpty
+                              ? Icon(
+                                  Icons.close,
+                                  color: ColorList.colorGray,
+                                )
+                              : Icon(
+                                  Icons.arrow_back,
+                                  color: ColorList.colorGray,
+                                ),
                           color: ColorList.colorPrimary,
-                          onPressed: (){
-                            if(searchController.text.isEmpty) {
+                          onPressed: () {
+                            if (searchController.text.isEmpty) {
                               Navigator.pop(context);
-                              SystemChannels.textInput.invokeMethod('TextInput.hide');
+                              SystemChannels.textInput
+                                  .invokeMethod('TextInput.hide');
                             } else {
                               clearSearch();
                               clearArrays();
                             }
                           },
                         ),
-                        // suffixIcon: IconButton(
-                        //   icon: Icon(
-                        //     Icons.tune,
-                        //     color: ColorList.colorGray,
-                        //   ),
-                        //   color: ColorList.colorPrimary,
-                        //   onPressed: (){
-                        //     setState(() {
-                        //       search = true;
-                        //     });
-                        //     Methods.openSearchFilter(context, height, width, searchFocusNode);
-                        //   },
-                        // )
-                    ),
-                    onChanged: (value){
-                      if(value.length > 3)
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.tune,
+                            color: ColorList.colorGray,
+                          ),
+                          color: ColorList.colorPrimary,
+                          onPressed: () {
+                            setState(() {
+                              search = true;
+                            });
+
+                            Methods.openSearchFilter(
+                                context, height, width, searchFocusNode, () {
+                              filterEvents(true);
+                            });
+                          },
+                        )),
+                    onChanged: (value) {
+                      if (value.length > 3)
                         getData(true);
                       else {
                         clearArrays();
                       }
                     },
-                    onEditingComplete: (){
-                      if(searchController.text.length > 0){
-                        if(search)
-                          getData(true);
+                    onEditingComplete: () {
+                      if (searchController.text.length > 0) {
+                        if (search) getData(true);
                         FocusScope.of(context).requestFocus(new FocusNode());
                         SystemChannels.textInput.invokeMethod('TextInput.hide');
                       } else {
@@ -160,7 +162,9 @@ class SearchResultState extends State<SearchResult> {
                         child: MaterialButton(
                           elevation: 0.0,
                           splashColor: Colors.transparent,
-                          textColor: (index == catIndex) ? ColorList.colorPrimary : ColorList.colorPrimary.withOpacity(0.3),
+                          textColor: (index == catIndex)
+                              ? ColorList.colorPrimary
+                              : ColorList.colorPrimary.withOpacity(0.3),
                           child: Text(
                             categories[index],
                             style: TextStyle(
@@ -171,20 +175,21 @@ class SearchResultState extends State<SearchResult> {
                             ),
                           ),
                           onPressed: () {
-                            if(index != catIndex){
+                            if (index != catIndex) {
                               setState(() {
                                 catIndex = index;
                                 int page = 0;
-                                if(catIndex == 0) {
+                                if (catIndex == 0) {
                                   page = page0;
-                                } else if(catIndex == 1) {
+                                } else if (catIndex == 1) {
                                   page = page1;
-                                } else if(catIndex == 2) {
+                                } else if (catIndex == 2) {
                                   page = page2;
-                                } else if(catIndex == 3) {
+                                } else if (catIndex == 3) {
                                   page = page3;
                                 }
-                                if(searchController.text != keyword || page == 1) {
+                                if (searchController.text != keyword ||
+                                    page == 1) {
                                   keyword = searchController.text;
                                   getData(true);
                                 }
@@ -228,676 +233,866 @@ class SearchResultState extends State<SearchResult> {
   getResult() {
     Widget body = Container();
 
-    if(catIndex == 0){
+    if (catIndex == 0) {
       body = Container(
-        height: height * 0.75,
-        child: (isLoading0 && page0 == 1)
-          ? Center(child: new CircularProgressIndicator())
-          : (result0.length > 0)
-            ? Column(
-              children: [
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (!isLoading0 && page0 <= totalCount0 && totalCount0 > 0
-                          && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent
-                      ) {
-                        getData(false);
-                      }
-                      return true;
-                    },
-                    child: RefreshIndicator(
-                      child: ListView(
-                        //shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        children: new List.generate(result0.length, (int index) {
-                          return InkWell(
-                            onTap: (){
-                              Methods.openEventDetails(context, result0[index]['_id']);
-                            },
-                            child: Container(
-                              width: width,
-                              //height: 50.0,
-                              padding: EdgeInsets.all(5.0),
-                              child: Row(
-                                children: [
-                                  // Container(
-                                  //   margin: EdgeInsets.only(right: 10),
-                                  //   width: height * 0.11,
-                                  //   height: height * 0.08,
-                                  //   decoration: BoxDecoration(
-                                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                  //     //shape: BoxShape.circle,
-                                  //     image: DecorationImage(
-                                  //         image: Methods.getSmallEventCardImage(result0[index]['banner']),
-                                  //         fit: BoxFit.fill
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Methods.getSmallEventCardImage(
-                                        result0[index]['banner'] ?? "", width: height * 0.11,
-                                      height: height * 0.08,),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        (result0[index]['startTime'] != null)
-                                            ? DateFormat('EEEE, dd MMM yyyy hh.mm a').format(DateTime.tryParse(result0[index]['startTime']))
-                                            : "Undefined",
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_900',
-                                            fontSize: 9.0,
-                                            color: ColorList.colorPrimary,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 3,
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.5,
-                                        child: Text(
-                                          result0[index]['title'],
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontFamily: 'SF_Pro_700',
-                                              fontSize: 15.0,
-                                              color: ColorList.colorSearchList,
-                                              fontWeight: FontWeight.bold,
-                                              decoration: TextDecoration.none
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 3,
-                                      ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: width * 0.25,
-                                            child: Text(
-                                              (result0[index]['location'] != null) ? result0[index]['location']['name'] : "Location not available",
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontFamily: 'SF_Pro_700',
-                                                  fontSize: 10.0,
-                                                  color: ColorList.colorSearchListPlace,
-                                                  fontWeight: FontWeight.normal,
-                                                  decoration: TextDecoration.none
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 5,),
-                                          SizedBox(
-                                            width: width * 0.25,
-                                            child: Text(
-                                              "Starting from ${Methods.getLowestPrice(result0[index]['tickets'], false)}",
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                  fontFamily: 'SF_Pro_700',
-                                                  fontSize: 10.0,
-                                                  color: ColorList.colorSearchListPlace,
-                                                  fontWeight: FontWeight.normal,
-                                                  decoration: TextDecoration.none
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                      splashColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      onTap: (){
-                                        setState(() {
-                                          result0[index]['userLiked'] = !result0[index]['userLiked'];
-                                        });
-
-                                        ApiCalls.toggleLike(result0[index]['_id'])
-                                            .then((value){
-                                          if(!value)
-                                            setState(() {
-                                              result0[index]['userLiked'] = !result0[index]['userLiked'];
-                                            });
-                                        });
+          height: height * 0.75,
+          child: (isLoading0 && page0 == 1)
+              ? Center(child: new CircularProgressIndicator())
+              : (result0.length > 0)
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                              onNotification: (ScrollNotification scrollInfo) {
+                                if (!isLoading0 &&
+                                    page0 <= totalCount0 &&
+                                    totalCount0 > 0 &&
+                                    scrollInfo.metrics.pixels ==
+                                        scrollInfo.metrics.maxScrollExtent) {
+                                  getData(false);
+                                }
+                                return true;
+                              },
+                              child: RefreshIndicator(
+                                child: ListView(
+                                  //shrinkWrap: true,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  children: new List.generate(result0.length,
+                                      (int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Methods.openEventDetails(
+                                            context, result0[index]['_id']);
                                       },
                                       child: Container(
-                                        child: Icon(
-                                          (result0[index]['userLiked']) ? Icons.favorite : Icons.favorite_outline,
-                                          size: 20,
-                                          color: (result0[index]['userLiked']) ? ColorList.colorRed : ColorList.colorPrimary,
-                                        ),
+                                        width: width,
+                                        //height: 50.0,
                                         padding: EdgeInsets.all(5.0),
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      onRefresh: () {
-                        return Future.delayed(
-                          Duration(seconds: 1),
-                              () {
-                            getData(true);
-                          },
-                        );
-                      },
-                    )
-                  ),
-                ),
-                Container(
-                  height: (isLoading0) ? 50.0 : 0,
-                  color: Colors.transparent,
-                  child: Center(
-                    child: new CircularProgressIndicator(),
-                  ),
-                ),
-              ],
-            )
-            : noResult()
-      );
-    }
-    else if(catIndex == 1){
-      body = Container(
-        height: height * 0.75,
-        child: (isLoading1 && page1 == 1)
-          ? Center(child: new CircularProgressIndicator())
-          : (result1.length > 0)
-            ? Column(
-              children: [
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (!isLoading1 && page1 <= totalCount1 && totalCount1 > 0
-                          && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent
-                      ) {
-                        getData(false);
-                      }
-                      return true;
-                    },
-                    child: RefreshIndicator(
-                      child: ListView(
-                        //shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        children: new List.generate(result1.length, (int index) {
-                          return InkWell(
-                            onTap: (){
-                              Methods.openArtistDetails(context, result1[index]['_id']);
-                            },
-                            child: Container(
-                              width: width,
-                              //height: 50.0,
-                              padding: EdgeInsets.all(5.0),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 15),
-                                    width: height * 0.075,
-                                    height: height * 0.075,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: Methods.getImage(result1[index]['imgUrl'], 'profile'),
-                                          fit: BoxFit.cover
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        result1[index]['name'],
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_900',
-                                            fontSize: 14.0,
-                                            color: ColorList.colorPrimary,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none
-                                        ),
-                                      ),
-                                      Text(
-                                        getGenres(result1[index]),
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_400',
-                                            fontSize: 13.0,
-                                            color: ColorList.colorDetails,
-                                            fontWeight: FontWeight.normal,
-                                            decoration: TextDecoration.none
-                                        ),
-                                      ),
-                                      Text(
-                                        "No Next Event",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_400',
-                                            fontSize: 13.0,
-                                            color: ColorList.colorDetails,
-                                            fontWeight: FontWeight.normal,
-                                            decoration: TextDecoration.none
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      onRefresh: () {
-                        return Future.delayed(
-                          Duration(seconds: 1),
-                              () {
-                            getData(true);
-                          },
-                        );
-                      },
-                    )
-                  ),
-                ),
-                Container(
-                  height: (isLoading1) ? 50.0 : 0,
-                  color: Colors.transparent,
-                  child: Center(
-                    child: new CircularProgressIndicator(),
-                  ),
-                ),
-              ],
-            )
-            : noResult()
-      );
-    }
-    else if(catIndex == 2){
-      body = Container(
-        height: height * 0.75,
-        child: (isLoading2 && page2 == 1)
-            ? Center(child: new CircularProgressIndicator())
-            : (result2.length > 0)
-              ? Column(
-                children: [
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (!isLoading2 && page2 <= totalCount2 && totalCount2 > 0
-                          && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent
-                      ) {
-                        getData(false);
-                      }
-                      return true;
-                    },
-                    child: RefreshIndicator(
-                      child: ListView(
-                        //shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        children: new List.generate(result2.length, (int index) {
-                          return InkWell(
-                            onTap: (){
-                              Methods.openUserDetails(context, result2[index]['_id']);
-                            },
-                            child: Container(
-                              width: width,
-                              //height: 50.0,
-                              padding: EdgeInsets.all(5.0),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 15),
-                                    width: height * 0.075,
-                                    height: height * 0.075,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: Methods.getImage(result2[index]['imageUrl'], 'profile'),
-                                          fit: BoxFit.cover
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        result2[index]['fullName'],
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_900',
-                                            fontSize: 14.0,
-                                            color: ColorList.colorPrimary,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      onRefresh: () {
-                        return Future.delayed(
-                          Duration(seconds: 1),
-                              () {
-                            getData(true);
-                          },
-                        );
-                      },
-                    )
-                  ),
-                ),
-                Container(
-                  height: (isLoading2) ? 50.0 : 0,
-                  color: Colors.transparent,
-                  child: Center(
-                    child: new CircularProgressIndicator(),
-                  ),
-                ),
-              ],
-            )
-              : noResult()
-      );
-    }
-    else if(catIndex == 3){
-      body = Container(
-        height: height * 0.75,
-        child: (isLoading3 && page3 == 1)
-            ? Center(child: new CircularProgressIndicator())
-            : (result3.length > 0)
-            ? Column(
-              children: [
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (!isLoading3 && page3 <= totalCount3 && totalCount3 > 0
-                          && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent
-                      ) {
-                        getData(false);
-                      }
-                      return true;
-                    },
-                    child: RefreshIndicator(
-                      child: ListView(
-                        //shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        children: new List.generate(result3.length, (int index) {
-                          return InkWell(
-                            onTap: (){
-                              Methods.openEventDetails(context, result3[index]['_id']);
-                            },
-                            child: Container(
-                              width: width,
-                              //height: 50.0,
-                              padding: EdgeInsets.all(5.0),
-                              child: Row(
-                                children: [
-                                  // Container(
-                                  //   margin: EdgeInsets.only(right: 10),
-                                  //   width: height * 0.11,
-                                  //   height: height * 0.08,
-                                  //   decoration: BoxDecoration(
-                                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                  //     //shape: BoxShape.circle,
-                                  //     image: DecorationImage(
-                                  //         image: Methods.getSmallEventCardImage(result3[index]['banner']),
-                                  //         fit: BoxFit.fill
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Methods.getSmallEventCardImage(
-                                        result3[index]['banner'] ?? "", width: height * 0.11,
-                                      height: height * 0.08),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        (result3[index]['startTime'] != null)
-                                            ? DateFormat('EEEE, dd MMM yyyy hh.mm a').format(DateTime.tryParse(result3[index]['startTime']))
-                                            : "Undefined",
-                                        style: TextStyle(
-                                            fontFamily: 'SF_Pro_900',
-                                            fontSize: 9.0,
-                                            color: ColorList.colorPrimary,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 3,
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.5,
-                                        child: Text(
-                                          result3[index]['title'],
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontFamily: 'SF_Pro_700',
-                                              fontSize: 15.0,
-                                              color: ColorList.colorSearchList,
-                                              fontWeight: FontWeight.bold,
-                                              decoration: TextDecoration.none
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 3,
-                                      ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: width * 0.25,
-                                            child: Text(
-                                              (result3[index]['location'] != null) ? result3[index]['location']['name'] : "Location not available",
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontFamily: 'SF_Pro_700',
-                                                  fontSize: 10.0,
-                                                  color: ColorList.colorSearchListPlace,
-                                                  fontWeight: FontWeight.normal,
-                                                  decoration: TextDecoration.none
+                                        child: Row(
+                                          children: [
+                                            // Container(
+                                            //   margin: EdgeInsets.only(right: 10),
+                                            //   width: height * 0.11,
+                                            //   height: height * 0.08,
+                                            //   decoration: BoxDecoration(
+                                            //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                            //     //shape: BoxShape.circle,
+                                            //     image: DecorationImage(
+                                            //         image: Methods.getSmallEventCardImage(result0[index]['banner']),
+                                            //         fit: BoxFit.fill
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: Methods
+                                                  .getSmallEventCardImage(
+                                                result0[index]['banner'] ?? "",
+                                                width: height * 0.11,
+                                                height: height * 0.08,
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(width: 5,),
-                                          SizedBox(
-                                            width: width * 0.25,
-                                            child: Text(
-                                              "Starting from ${Methods.getLowestPrice(result3[index]['tickets'], false)}",
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                  fontFamily: 'SF_Pro_700',
-                                                  fontSize: 10.0,
-                                                  color: ColorList.colorSearchListPlace,
-                                                  fontWeight: FontWeight.normal,
-                                                  decoration: TextDecoration.none
-                                              ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (result0[index]
+                                                              ['startTime'] !=
+                                                          null)
+                                                      ? DateFormat(
+                                                              'EEEE, dd MMM yyyy hh.mm a')
+                                                          .format(DateTime
+                                                              .tryParse(result0[
+                                                                      index][
+                                                                  'startTime']))
+                                                      : "Undefined",
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_900',
+                                                      fontSize: 9.0,
+                                                      color: ColorList
+                                                          .colorPrimary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ),
+                                                SizedBox(
+                                                  width: width * 0.5,
+                                                  child: Text(
+                                                    result0[index]['title'],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'SF_Pro_700',
+                                                        fontSize: 15.0,
+                                                        color: ColorList
+                                                            .colorSearchList,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .none),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: width * 0.25,
+                                                      child: Text(
+                                                        (result0[index][
+                                                                    'location'] !=
+                                                                null)
+                                                            ? result0[index]
+                                                                    ['location']
+                                                                ['name']
+                                                            : "Location not available",
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'SF_Pro_700',
+                                                            fontSize: 10.0,
+                                                            color: ColorList
+                                                                .colorSearchListPlace,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    SizedBox(
+                                                      width: width * 0.25,
+                                                      child: Text(
+                                                        "Starting from ${Methods.getLowestPrice(result0[index]['tickets'], false)}",
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'SF_Pro_700',
+                                                            fontSize: 10.0,
+                                                            color: ColorList
+                                                                .colorSearchListPlace,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                      splashColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      onTap: (){
-                                        setState(() {
-                                          result3[index]['userLiked'] = !result3[index]['userLiked'];
-                                        });
+                                            Spacer(),
+                                            InkWell(
+                                                splashColor: Colors.transparent,
+                                                hoverColor: Colors.transparent,
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                focusColor: Colors.transparent,
+                                                onTap: () {
+                                                  setState(() {
+                                                    result0[index]
+                                                            ['userLiked'] =
+                                                        !result0[index]
+                                                            ['userLiked'];
+                                                  });
 
-                                        ApiCalls.toggleLike(result3[index]['_id'])
-                                            .then((value){
-                                          if(!value)
-                                            setState(() {
-                                              result3[index]['userLiked'] = !result3[index]['userLiked'];
-                                            });
-                                        });
+                                                  ApiCalls.toggleLike(
+                                                          result0[index]['_id'])
+                                                      .then((value) {
+                                                    if (!value)
+                                                      setState(() {
+                                                        result0[index]
+                                                                ['userLiked'] =
+                                                            !result0[index]
+                                                                ['userLiked'];
+                                                      });
+                                                  });
+                                                },
+                                                child: Container(
+                                                  child: Icon(
+                                                    (result0[index]
+                                                            ['userLiked'])
+                                                        ? Icons.favorite
+                                                        : Icons
+                                                            .favorite_outline,
+                                                    size: 20,
+                                                    color: (result0[index]
+                                                            ['userLiked'])
+                                                        ? ColorList.colorRed
+                                                        : ColorList
+                                                            .colorPrimary,
+                                                  ),
+                                                  padding: EdgeInsets.all(5.0),
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                                onRefresh: () {
+                                  return Future.delayed(
+                                    Duration(seconds: 1),
+                                    () {
+                                      getData(true);
+                                    },
+                                  );
+                                },
+                              )),
+                        ),
+                        Container(
+                          height: (isLoading0) ? 50.0 : 0,
+                          color: Colors.transparent,
+                          child: Center(
+                            child: new CircularProgressIndicator(),
+                          ),
+                        ),
+                      ],
+                    )
+                  : noResult());
+    } else if (catIndex == 1) {
+      body = Container(
+          height: height * 0.75,
+          child: (isLoading1 && page1 == 1)
+              ? Center(child: new CircularProgressIndicator())
+              : (result1.length > 0)
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                              onNotification: (ScrollNotification scrollInfo) {
+                                if (!isLoading1 &&
+                                    page1 <= totalCount1 &&
+                                    totalCount1 > 0 &&
+                                    scrollInfo.metrics.pixels ==
+                                        scrollInfo.metrics.maxScrollExtent) {
+                                  getData(false);
+                                }
+                                return true;
+                              },
+                              child: RefreshIndicator(
+                                child: ListView(
+                                  //shrinkWrap: true,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  children: new List.generate(result1.length,
+                                      (int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Methods.openArtistDetails(
+                                            context, result1[index]['_id']);
                                       },
                                       child: Container(
-                                        child: Icon(
-                                          (result0[index]['userLiked']) ? Icons.favorite : Icons.favorite_outline,
-                                          size: 20,
-                                          color: (result0[index]['userLiked']) ? ColorList.colorRed : ColorList.colorPrimary,
-                                        ),
+                                        width: width,
+                                        //height: 50.0,
                                         padding: EdgeInsets.all(5.0),
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      onRefresh: () {
-                        return Future.delayed(
-                          Duration(seconds: 1),
-                              () {
-                            getData(true);
-                          },
-                        );
-                      },
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(right: 15),
+                                              width: height * 0.075,
+                                              height: height * 0.075,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                    image: Methods.getImage(
+                                                        result1[index]
+                                                            ['imgUrl'],
+                                                        'profile'),
+                                                    fit: BoxFit.cover),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  result1[index]['name'],
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_900',
+                                                      fontSize: 14.0,
+                                                      color: ColorList
+                                                          .colorPrimary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                ),
+                                                Text(
+                                                  getGenres(result1[index]),
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_400',
+                                                      fontSize: 13.0,
+                                                      color: ColorList
+                                                          .colorDetails,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                ),
+                                                Text(
+                                                  "No Next Event",
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_400',
+                                                      fontSize: 13.0,
+                                                      color: ColorList
+                                                          .colorDetails,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                                onRefresh: () {
+                                  return Future.delayed(
+                                    Duration(seconds: 1),
+                                    () {
+                                      getData(true);
+                                    },
+                                  );
+                                },
+                              )),
+                        ),
+                        Container(
+                          height: (isLoading1) ? 50.0 : 0,
+                          color: Colors.transparent,
+                          child: Center(
+                            child: new CircularProgressIndicator(),
+                          ),
+                        ),
+                      ],
                     )
-                  ),
-                ),
-                Container(
-                  height: (isLoading1) ? 50.0 : 0,
-                  color: Colors.transparent,
-                  child: Center(
-                    child: new CircularProgressIndicator(),
-                  ),
-                ),
-              ],
-            )
-            : noResult()
-      );
+                  : noResult());
+    } else if (catIndex == 2) {
+      body = Container(
+          height: height * 0.75,
+          child: (isLoading2 && page2 == 1)
+              ? Center(child: new CircularProgressIndicator())
+              : (result2.length > 0)
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                              onNotification: (ScrollNotification scrollInfo) {
+                                if (!isLoading2 &&
+                                    page2 <= totalCount2 &&
+                                    totalCount2 > 0 &&
+                                    scrollInfo.metrics.pixels ==
+                                        scrollInfo.metrics.maxScrollExtent) {
+                                  getData(false);
+                                }
+                                return true;
+                              },
+                              child: RefreshIndicator(
+                                child: ListView(
+                                  //shrinkWrap: true,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  children: new List.generate(result2.length,
+                                      (int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Methods.openUserDetails(
+                                            context, result2[index]['_id']);
+                                      },
+                                      child: Container(
+                                        width: width,
+                                        //height: 50.0,
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(right: 15),
+                                              width: height * 0.075,
+                                              height: height * 0.075,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                    image: Methods.getImage(
+                                                        result2[index]
+                                                            ['imageUrl'],
+                                                        'profile'),
+                                                    fit: BoxFit.cover),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  result2[index]['fullName'],
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_900',
+                                                      fontSize: 14.0,
+                                                      color: ColorList
+                                                          .colorPrimary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                                onRefresh: () {
+                                  return Future.delayed(
+                                    Duration(seconds: 1),
+                                    () {
+                                      getData(true);
+                                    },
+                                  );
+                                },
+                              )),
+                        ),
+                        Container(
+                          height: (isLoading2) ? 50.0 : 0,
+                          color: Colors.transparent,
+                          child: Center(
+                            child: new CircularProgressIndicator(),
+                          ),
+                        ),
+                      ],
+                    )
+                  : noResult());
+    } else if (catIndex == 3) {
+      body = Container(
+          height: height * 0.75,
+          child: (isLoading3 && page3 == 1)
+              ? Center(child: new CircularProgressIndicator())
+              : (result3.length > 0)
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                              onNotification: (ScrollNotification scrollInfo) {
+                                if (!isLoading3 &&
+                                    page3 <= totalCount3 &&
+                                    totalCount3 > 0 &&
+                                    scrollInfo.metrics.pixels ==
+                                        scrollInfo.metrics.maxScrollExtent) {
+                                  getData(false);
+                                }
+                                return true;
+                              },
+                              child: RefreshIndicator(
+                                child: ListView(
+                                  //shrinkWrap: true,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  children: new List.generate(result3.length,
+                                      (int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Methods.openEventDetails(
+                                            context, result3[index]['_id']);
+                                      },
+                                      child: Container(
+                                        width: width,
+                                        //height: 50.0,
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Row(
+                                          children: [
+                                            // Container(
+                                            //   margin: EdgeInsets.only(right: 10),
+                                            //   width: height * 0.11,
+                                            //   height: height * 0.08,
+                                            //   decoration: BoxDecoration(
+                                            //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                            //     //shape: BoxShape.circle,
+                                            //     image: DecorationImage(
+                                            //         image: Methods.getSmallEventCardImage(result3[index]['banner']),
+                                            //         fit: BoxFit.fill
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: Methods
+                                                  .getSmallEventCardImage(
+                                                      result3[index]
+                                                              ['banner'] ??
+                                                          "",
+                                                      width: height * 0.11,
+                                                      height: height * 0.08),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (result3[index]
+                                                              ['startTime'] !=
+                                                          null)
+                                                      ? DateFormat(
+                                                              'EEEE, dd MMM yyyy hh.mm a')
+                                                          .format(DateTime
+                                                              .tryParse(result3[
+                                                                      index][
+                                                                  'startTime']))
+                                                      : "Undefined",
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF_Pro_900',
+                                                      fontSize: 9.0,
+                                                      color: ColorList
+                                                          .colorPrimary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ),
+                                                SizedBox(
+                                                  width: width * 0.5,
+                                                  child: Text(
+                                                    result3[index]['title'],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'SF_Pro_700',
+                                                        fontSize: 15.0,
+                                                        color: ColorList
+                                                            .colorSearchList,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .none),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: width * 0.25,
+                                                      child: Text(
+                                                        (result3[index][
+                                                                    'location'] !=
+                                                                null)
+                                                            ? result3[index]
+                                                                    ['location']
+                                                                ['name']
+                                                            : "Location not available",
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'SF_Pro_700',
+                                                            fontSize: 10.0,
+                                                            color: ColorList
+                                                                .colorSearchListPlace,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    SizedBox(
+                                                      width: width * 0.25,
+                                                      child: Text(
+                                                        "Starting from ${Methods.getLowestPrice(result3[index]['tickets'], false)}",
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'SF_Pro_700',
+                                                            fontSize: 10.0,
+                                                            color: ColorList
+                                                                .colorSearchListPlace,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Spacer(),
+                                            InkWell(
+                                                splashColor: Colors.transparent,
+                                                hoverColor: Colors.transparent,
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                focusColor: Colors.transparent,
+                                                onTap: () {
+                                                  setState(() {
+                                                    result3[index]
+                                                            ['userLiked'] =
+                                                        !result3[index]
+                                                            ['userLiked'];
+                                                  });
+
+                                                  ApiCalls.toggleLike(
+                                                          result3[index]['_id'])
+                                                      .then((value) {
+                                                    if (!value)
+                                                      setState(() {
+                                                        result3[index]
+                                                                ['userLiked'] =
+                                                            !result3[index]
+                                                                ['userLiked'];
+                                                      });
+                                                  });
+                                                },
+                                                child: Container(
+                                                  child: Icon(
+                                                    (result0[index]
+                                                            ['userLiked'])
+                                                        ? Icons.favorite
+                                                        : Icons
+                                                            .favorite_outline,
+                                                    size: 20,
+                                                    color: (result0[index]
+                                                            ['userLiked'])
+                                                        ? ColorList.colorRed
+                                                        : ColorList
+                                                            .colorPrimary,
+                                                  ),
+                                                  padding: EdgeInsets.all(5.0),
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                                onRefresh: () {
+                                  return Future.delayed(
+                                    Duration(seconds: 1),
+                                    () {
+                                      getData(true);
+                                    },
+                                  );
+                                },
+                              )),
+                        ),
+                        Container(
+                          height: (isLoading1) ? 50.0 : 0,
+                          color: Colors.transparent,
+                          child: Center(
+                            child: new CircularProgressIndicator(),
+                          ),
+                        ),
+                      ],
+                    )
+                  : noResult());
     }
 
     return body;
   }
 
+  filterEvents(state) {
+    setState(() {
+      isLoading0 = true;
+      if (state) page0 = 1;
+
+      // if (catIndex == 0) {
+      //   isLoading0 = true;
+      //   if (state) page0 = 1;
+      // }
+    });
+
+    ApiCalls.filterEvents(
+            context,
+            Methods.currentPosition.latitude,
+            Methods.currentPosition.longitude,
+            Methods.conditionString,
+            Methods.rangeValues.end.toInt(),
+            Methods.startDateString,
+            Methods.endDateString)
+        .then((value) {
+      if (value != null) {
+        setState(() {
+          isLoading0 = false;
+          if (value != null) {
+            result0.clear(); //TODO: revisit this later @Val
+            // if(page0 == 1) {
+            //   totalCount0 = json.decode(value)['data']['pagination']['total'];
+            //   totalCount0 = (totalCount0/10 + 1).toInt();
+            // }
+
+            if (json.decode(value)['data']['filtered'] != null) {
+              for (int i = 0;
+                  i < json.decode(value)['data']['filtered'].length;
+                  i++) {
+                result0.add(json.decode(value)['data']['filtered'][i]);
+                // debugPrint("addedEvent: ${result0[i]}");
+              }
+              page0++;
+              // result0 = filterResult(result0);
+            }
+          }
+        });
+
+        // final eventData = json.decode(value);
+        // final exploreEventModel = ExploreEventResponse.fromJson(eventData);
+        // final filteredEvents = exploreEventModel?.data?.filtered;
+        // widget.onFetched(filteredEvents);
+        // Navigator.pop(context);
+      }
+    });
+  }
+
   void getData(state) {
     setState(() {
-      if(catIndex == 0) {
+      if (catIndex == 0) {
         isLoading0 = true;
-        if(state)
-          page0 = 1;
-      } else if(catIndex == 1) {
+        if (state) page0 = 1;
+      } else if (catIndex == 1) {
         isLoading1 = true;
-        if(state)
-          page1 = 1;
-      } else if(catIndex == 2) {
+        if (state) page1 = 1;
+      } else if (catIndex == 2) {
         isLoading2 = true;
-        if(state)
-          page2 = 1;
-      } else if(catIndex == 3) {
+        if (state) page2 = 1;
+      } else if (catIndex == 3) {
         isLoading3 = true;
-        if(state)
-          page3 = 1;
+        if (state) page3 = 1;
       }
       search = false;
     });
 
-    if(catIndex == 0){
+    if (catIndex == 0) {
       ApiCalls.searchEvents(widget.searchController.text, page0)
           .then((value) => {
-            setState((){
-              isLoading0 = false;
-              if(value != null){
-                result0.clear();  //TODO: revisit this later @Val
-                if(page0 == 1) {
-                  // result0.clear();
-                  totalCount0 = json.decode(value)['data']['pagination']['total'];
-                  totalCount0 = (totalCount0/10 + 1).toInt();
-                }
+                setState(() {
+                  isLoading0 = false;
+                  if (value != null) {
+                    result0.clear(); //TODO: revisit this later @Val
+                    if (page0 == 1) {
+                      // result0.clear();
+                      totalCount0 =
+                          json.decode(value)['data']['pagination']['total'];
+                      totalCount0 = (totalCount0 / 10 + 1).toInt();
+                    }
 
-                for(int i=0; i<json.decode(value)['data']['data'].length; i++){
-                  result0.add(json.decode(value)['data']['data'][i]);
-                  // debugPrint("addedEvent: ${result0[i]}");
-                }
-                page0++;
-                result0 = filterResult(result0);
-              }
-            })
-          });
-    } else if(catIndex == 1){
+                    for (int i = 0;
+                        i < json.decode(value)['data']['data'].length;
+                        i++) {
+                      result0.add(json.decode(value)['data']['data'][i]);
+                      // debugPrint("addedEvent: ${result0[i]}");
+                    }
+                    page0++;
+                    result0 = filterResult(result0);
+                  }
+                })
+              });
+    } else if (catIndex == 1) {
       ApiCalls.searchArtists(widget.searchController.text, page1)
           .then((value) => {
-            setState(() {
-              isLoading1 = false;
-              if(value != null){
-                if(page1 == 1) {
-                  result1.clear();
-                  totalCount1 = json.decode(value)['data']['pagination']['total'];
-                  totalCount1 = (totalCount1/10 + 1).toInt();
-                }
+                setState(() {
+                  isLoading1 = false;
+                  if (value != null) {
+                    if (page1 == 1) {
+                      result1.clear();
+                      totalCount1 =
+                          json.decode(value)['data']['pagination']['total'];
+                      totalCount1 = (totalCount1 / 10 + 1).toInt();
+                    }
 
-                for(int i=0; i<json.decode(value)['data']['data'].length; i++){
-                  result1.add(json.decode(value)['data']['data'][i]);
-                }
-                page1++;
-              }
-            })
-          });
-    } else if(catIndex == 2){
+                    for (int i = 0;
+                        i < json.decode(value)['data']['data'].length;
+                        i++) {
+                      result1.add(json.decode(value)['data']['data'][i]);
+                    }
+                    page1++;
+                  }
+                })
+              });
+    } else if (catIndex == 2) {
       ApiCalls.searchUsers(widget.searchController.text, page2)
           .then((value) => {
-            setState(() {
-              isLoading2 = false;
-              if(value != null){
-                if(page2 == 1) {
-                  result2.clear();
-                  totalCount2 = json.decode(value)['data']['pagination']['total'];
-                  totalCount2 = (totalCount2/10 + 1).toInt();
-                }
+                setState(() {
+                  isLoading2 = false;
+                  if (value != null) {
+                    if (page2 == 1) {
+                      result2.clear();
+                      totalCount2 =
+                          json.decode(value)['data']['pagination']['total'];
+                      totalCount2 = (totalCount2 / 10 + 1).toInt();
+                    }
 
-                for(int i=0; i<json.decode(value)['data']['data'].length; i++){
-                  result2.add(json.decode(value)['data']['data'][i]);
-                }
-                page2++;
-              }
-            })
-          });
-    } else if(catIndex == 3){
+                    for (int i = 0;
+                        i < json.decode(value)['data']['data'].length;
+                        i++) {
+                      result2.add(json.decode(value)['data']['data'][i]);
+                    }
+                    page2++;
+                  }
+                })
+              });
+    } else if (catIndex == 3) {
       ApiCalls.searchHashtags(widget.searchController.text, page3)
           .then((value) => {
-            setState(() {
-              isLoading3 = false;
-              if(value != null){
-                if(page3 == 1) {
-                  result3.clear();
-                  totalCount3 = json.decode(value)['data']['pagination']['total'];
-                  totalCount3 = (totalCount3/10 + 1).toInt();
-                }
+                setState(() {
+                  isLoading3 = false;
+                  if (value != null) {
+                    if (page3 == 1) {
+                      result3.clear();
+                      totalCount3 =
+                          json.decode(value)['data']['pagination']['total'];
+                      totalCount3 = (totalCount3 / 10 + 1).toInt();
+                    }
 
-                for(int i=0; i<json.decode(value)['data']['data'].length; i++){
-                  result3.add(json.decode(value)['data']['data'][i]);
-                }
-                page3++;
-                result3 = filterResult(result3);
-              }
-            })
-          });
+                    for (int i = 0;
+                        i < json.decode(value)['data']['data'].length;
+                        i++) {
+                      result3.add(json.decode(value)['data']['data'][i]);
+                    }
+                    page3++;
+                    result3 = filterResult(result3);
+                  }
+                })
+              });
     }
   }
 
@@ -905,14 +1100,14 @@ class SearchResultState extends State<SearchResult> {
     String genres = '';
     var list = data['genre'];
 
-    for(int i=0; i<list.length; i++){
+    for (int i = 0; i < list.length; i++) {
       genres += list[i] + ', ';
     }
 
-    return genres.substring(0, genres.length-2);
+    return genres.substring(0, genres.length - 2);
   }
 
-  noResult(){
+  noResult() {
     return Container(
         alignment: Alignment.center,
         child: ListView(
@@ -928,17 +1123,14 @@ class SearchResultState extends State<SearchResult> {
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: ColorList.colorPrimary,
-                        decoration: TextDecoration.none
-                    ),
+                        decoration: TextDecoration.none),
                   ),
-                )
-            ),
+                )),
             const SizedBox(height: 25),
             Container(
                 width: MediaQuery.of(context).size.width * 0.5,
                 height: MediaQuery.of(context).size.width * 0.5,
-                child: Image.asset('assets/images/img_astronaut.png')
-            ),
+                child: Image.asset('assets/images/img_astronaut.png')),
             Container(
                 padding: EdgeInsets.only(top: 15),
                 child: Center(
@@ -950,13 +1142,12 @@ class SearchResultState extends State<SearchResult> {
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: ColorList.colorPrimary,
-                        decoration: TextDecoration.none
-                    ),
+                        decoration: TextDecoration.none),
                   ),
-                )
-            ),
+                )),
             Container(
-              padding: EdgeInsets.only(top: 60, left: width * 0.2, right: width * 0.2),
+              padding: EdgeInsets.only(
+                  top: 60, left: width * 0.2, right: width * 0.2),
               child: MaterialButton(
                 height: 50.0,
                 shape: new RoundedRectangleBorder(
@@ -982,28 +1173,38 @@ class SearchResultState extends State<SearchResult> {
               ),
             )
           ],
-        )
-    );
+        ));
   }
 
   filterResult(result) {
-    if(Methods.data != null){
+    if (Methods.data != null) {
       print(Methods.data['latitude']);
       print(Methods.data['longitude']);
       print(Methods.data['start_date']);
       print(Methods.data['end_date']);
-      result = result.where(
-              (data) => (((data['location']['coordinates'][0] >= Methods.data['latitude'] - 0.0011
-                            && data['location']['coordinates'][0] <= Methods.data['latitude'] + 0.0011)
-                        || (data['location']['coordinates'][1] >= Methods.data['longitude'] - 0.0055
-                            && data['location']['coordinates'][1] <= Methods.data['longitude'] + 0.0055))
-                        && Methods.locationIndex != 0)
-                        && (getPriceComparison(Methods.data['min_price'], Methods.data['max_price'], data['tickets'])
-                        && (Methods.rangeValues.end.toInt() - Methods.rangeValues.start.toInt()) > 0)
-                        && (getDateComparison(Methods.data['start_date'], Methods.data['end_date'], data['startTime'], data['endTime'])
-                        && Methods.dateIndex != 0)
-
-      ).toList();
+      result = result
+          .where((data) =>
+              (((data['location']['coordinates'][0] >=
+                              Methods.data['latitude'] - 0.0011 &&
+                          data['location']['coordinates'][0] <=
+                              Methods.data['latitude'] + 0.0011) ||
+                      (data['location']['coordinates'][1] >=
+                              Methods.data['longitude'] - 0.0055 &&
+                          data['location']['coordinates'][1] <=
+                              Methods.data['longitude'] + 0.0055)) &&
+                  Methods.locationIndex != 0) &&
+              (getPriceComparison(Methods.data['min_price'],
+                      Methods.data['max_price'], data['tickets']) &&
+                  (Methods.rangeValues.end.toInt() -
+                          Methods.rangeValues.start.toInt()) >
+                      0) &&
+              (getDateComparison(
+                      Methods.data['start_date'],
+                      Methods.data['end_date'],
+                      data['startTime'],
+                      data['endTime']) &&
+                  Methods.dateIndex != 0))
+          .toList();
     }
 
     return result;
@@ -1014,9 +1215,9 @@ class SearchResultState extends State<SearchResult> {
     int lowest = 0;
     int highest = 0;
 
-    if(dataTickets != null){
-      if(dataTickets.length > 0) {
-        if(dataTickets[0]['price'] != null) {
+    if (dataTickets != null) {
+      if (dataTickets.length > 0) {
+        if (dataTickets[0]['price'] != null) {
           lowest = dataTickets[0]['price'];
           highest = dataTickets[0]['price'];
         } else {
@@ -1025,18 +1226,18 @@ class SearchResultState extends State<SearchResult> {
         }
       }
 
-      for(int i=0; i<dataTickets.length; i++){
-        if(dataTickets[0]['price'] != null && lowest > dataTickets[i]['price']) {
+      for (int i = 0; i < dataTickets.length; i++) {
+        if (dataTickets[0]['price'] != null &&
+            lowest > dataTickets[i]['price']) {
           lowest = dataTickets[i]['price'];
         }
-        if(dataTickets[0]['price'] != null && highest < dataTickets[i]['price']) {
+        if (dataTickets[0]['price'] != null &&
+            highest < dataTickets[i]['price']) {
           highest = dataTickets[i]['price'];
         }
       }
 
-      if(lowest <= dataMax && highest >= dataMax)
-        compare = true;
-
+      if (lowest <= dataMax && highest >= dataMax) compare = true;
     } else
       compare = false;
 
@@ -1046,15 +1247,14 @@ class SearchResultState extends State<SearchResult> {
   getDateComparison(dataMin, dataMax, dataStart, dataEnd) {
     bool compare = false;
 
-    if(dataMin != '' && dataMax != '')
-      if((DateTime.parse(dataMin).isAtSameMomentAs(DateTime.parse(dataStart))
-          || DateTime.parse(dataMin).isAfter(DateTime.parse(dataStart)))
-          && (DateTime.parse(dataMax).isAtSameMomentAs(DateTime.parse(dataEnd))
-              || DateTime.parse(dataMax).isBefore(DateTime.parse(dataEnd)))) {
-        compare = true;
-      }
-    else
-        compare = false;
+    if (dataMin != '' && dataMax != '') if ((DateTime.parse(dataMin)
+                .isAtSameMomentAs(DateTime.parse(dataStart)) ||
+            DateTime.parse(dataMin).isAfter(DateTime.parse(dataStart))) &&
+        (DateTime.parse(dataMax).isAtSameMomentAs(DateTime.parse(dataEnd)) ||
+            DateTime.parse(dataMax).isBefore(DateTime.parse(dataEnd)))) {
+      compare = true;
+    } else
+      compare = false;
 
     return compare;
   }

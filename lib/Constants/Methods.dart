@@ -536,7 +536,7 @@ class Methods {
   static Future<void> logoutUser(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
-    if (pref.getBool('isLoggedIn')) {
+    if (pref.getBool('isLoggedIn') ?? false) {
       GoogleSignIn().disconnect();
     }
 
@@ -601,7 +601,7 @@ class Methods {
         ));
   }
 
-  static openSearchFilter(context, height, width, focusNode) {
+  static openSearchFilter(context, height, width, focusNode, VoidCallback onApply) {
     FocusScope.of(context).requestFocus(focusNode);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     showModalBottomSheet(
@@ -610,8 +610,7 @@ class Methods {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(50.0))),
         context: context,
-        builder: (context) => FilterFrame(context, height, width));
-    //FilterFrame(context, height, width).slideSheet();
+        builder: (context) => FilterFrame(context, height, width, onApply));
   }
 
   static getProfileCompleteStatus() async {

@@ -514,8 +514,6 @@ class ApiCalls {
       if (response.statusCode == 200) {
         var data = jsonString;
 
-        print('Events: $data');
-
         return data;
       } else {
         Methods.showError("${json.decode(jsonString)["error"]}");
@@ -525,6 +523,35 @@ class ApiCalls {
       //Navigator.pop(context);
       Methods.showError('$e');
       print('Error: $e');
+      return null;
+    }
+  }
+
+  static Future<String> filterEvents(context, latitude, longitude, String condition, price, startDate, endDate) async {
+    try {
+      var request = http.Request('GET',
+          Uri.parse(urlEventList + 'longitude=$longitude&latitude=$latitude&conditions[]=$condition&startDate=$startDate&endDate=$endDate'));
+
+      http.StreamedResponse response = await request.send();
+
+      debugPrint('Request header: ${request.headers}');
+      debugPrint('Request Urls: ${request.url}');
+      final jsonString = await response.stream.bytesToString();
+
+      debugPrint('Filtered Events:: $jsonString');
+
+      if (response.statusCode == 200) {
+        var data = jsonString;
+
+        return data;
+      } else {
+        Methods.showError("${json.decode(jsonString)["error"]}");
+        return null;
+      }
+    } on Exception catch (e) {
+      //Navigator.pop(context);
+      Methods.showError('$e');
+      debugPrint('Error: $e');
       return null;
     }
   }

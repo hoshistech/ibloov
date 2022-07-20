@@ -71,16 +71,18 @@ class SearchWidgetState extends State<SearchWidget>{
                           Icons.search,
                           color: ColorList.colorGray
                       ),
-                      // suffixIcon: IconButton(
-                      //   icon: Icon(
-                      //     Icons.tune,
-                      //     color: ColorList.colorGray,
-                      //   ),
-                      //   color: ColorList.colorPrimary,
-                      //   onPressed: (){
-                      //     Methods.openSearchFilter(context, height, width, new FocusNode());
-                      //   },
-                      // ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.tune,
+                          color: ColorList.colorGray,
+                        ),
+                        color: ColorList.colorPrimary,
+                        onPressed: (){
+                          Methods.openSearchFilter(context, height, width, new FocusNode(), () {
+
+                          });
+                        },
+                      ),
                     ),
                     onEditingComplete: (){
                       if(searchController.text == null
