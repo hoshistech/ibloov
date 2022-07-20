@@ -10,7 +10,9 @@ class ExploreEventResponse {
   ExploreEventResponse.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
     message = json['message'];
-    data = json['data'] != null ? new ExploreEventData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? new ExploreEventData.fromJson(json['data'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +33,8 @@ class ExploreEventData {
   List<Event> trendingEvents;
   List<Event> featuredEvents;
   List<Event> filtered;
+  List<Event> recommendedForYou;
+  List<Event> upcoming;
 
   ExploreEventData(
       {this.happeningToday,
@@ -38,7 +42,9 @@ class ExploreEventData {
       this.happeningNearMe,
       this.trendingEvents,
       this.featuredEvents,
-      this.filtered});
+      this.filtered,
+      this.recommendedForYou,
+      this.upcoming});
 
   ExploreEventData.fromJson(Map<String, dynamic> json) {
     if (json['happeningToday'] != null) {
@@ -77,6 +83,18 @@ class ExploreEventData {
         filtered.add(Event.fromJson(v));
       });
     }
+    if (json['recommendedForYou'] != null) {
+      recommendedForYou = <Event>[];
+      json['recommendedForYou'].forEach((v) {
+        recommendedForYou.add(Event.fromJson(v));
+      });
+    }
+    if (json['upcoming'] != null) {
+      upcoming = <Event>[];
+      json['upcoming'].forEach((v) {
+        upcoming.add(Event.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +121,12 @@ class ExploreEventData {
     }
     if (this.filtered != null) {
       data['filtered'] = this.filtered.map((v) => v.toJson()).toList();
+    }
+    if (this.recommendedForYou != null) {
+      data['recommendedForYou'] = this.recommendedForYou.map((v) => v.toJson()).toList();
+    }
+    if (this.upcoming != null) {
+      data['upcoming'] = this.upcoming.map((v) => v.toJson()).toList();
     }
     return data;
   }
